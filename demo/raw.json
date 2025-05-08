@@ -1,0 +1,44 @@
+[
+    {
+        "name": "document 0",
+        "type": "text",
+        "content": "Tantivy is a full-text search engine library inspired by Apache Lucene and written in Rust.",
+        "date": "2016-12-11 12:16:00"
+    },
+    {
+        "name": "document 1",
+        "type": "text",
+        "content": "Lorem ipsum dolor sit amet consectetur adipiscing elit sed diam",
+        "date": "2025-01-01 10:00:00"
+    },
+    {
+        "name": "document 2",
+        "type": "text",
+        "content": "enim eget ullamcorper conubia torquent montes auctor aptent vivamus",
+        "date": "2025-01-02 10:00:00"
+    },
+    {
+        "name": "document 3",
+        "type": "text",
+        "content": "fermentum commodo maecenas turpis nunc et iaculis aenean",
+        "date": "2025-01-03 10:00:00"
+    },
+    {
+        "name": "document 4",
+        "type": "text",
+        "content": "Aptent condimentum ut adipiscing cubilia integer vestibulum quisque blandit rhoncus eu mollis",
+        "date": "2025-01-04 10:00:00"
+    },
+    {
+        "name": "document 5",
+        "type": "text",
+        "content": "eget tellus pharetra semper dictum porta justo arcu penatibus fusce nam volutpat",
+        "date": "2025-01-05 10:00:00"
+    },
+    {
+        "name": "document 6",
+        "type": "text",
+        "content": "turpis pellentesque cursus ante consectetur taciti nisl metus a pulvinar",
+        "date": "'2025-01-06 10:00:00'"
+    }
+]

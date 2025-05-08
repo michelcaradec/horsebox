@@ -1,0 +1,36 @@
+# https://docs.astral.sh/ruff/configuration/
+line-length = 120
+indent-width = 4
+
+target-version = "py39"
+
+[format]
+# Like Black, use double quotes for strings.
+quote-style = "single"
+indent-style = "space"
+
+# https://docs.astral.sh/ruff/settings/#format_skip-magic-trailing-comma
+skip-magic-trailing-comma = false
+
+# https://docs.astral.sh/ruff/faq/#does-ruff-support-numpy-or-google-style-docstrings
+
+[lint]
+# COM818: https://docs.astral.sh/ruff/rules/trailing-comma-on-bare-tuple/
+select = ["D", "E", "F", "COM818"]
+ignore = [
+    "D100",
+    "D104",
+    "D203",
+    "D212",
+    "D401",
+    "D406",
+    "D407",
+    "D413",
+]
+
+[lint.pycodestyle]
+# E501 reports lines that exceed the length of 120.
+max-line-length = 120
+
+[lint.pydocstyle]
+convention = "pep257"

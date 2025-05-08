@@ -1,0 +1,2 @@
+FILENAME_PREFIX = '@'
+ELLIPSIS = '...'

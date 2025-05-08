@@ -1,0 +1,56 @@
+[project]
+name = "horsebox"
+version = "0.1.1"
+description = "You Know, for local Search."
+readme = "README.md"
+authors = [
+    { name = "Michel Caradec", email = "mcaradec@proton.me" }
+]
+maintainers = [
+  { name = "Michel Caradec", email = "mcaradec@proton.me" }
+]
+keywords = ["Tantivy", "Search", "CLI"]
+classifiers = [
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.9,<=3.12"
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "click>=8.1.8",
+    "feedparser>=6.0.11",
+    "ijson>=3.3.0",
+    "tantivy>=0.24.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/michelcaradec/horsebox"
+Issues = "https://github.com/michelcaradec/horsebox/issues"
+
+[project.optional-dependencies]
+# Run `uv sync --extra dev`
+dev = [
+    "ruff",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+# https://hatch.pypa.io/latest/config/build/#patterns
+include = [
+  "src/**/*.py",
+]
+
+[tool.hatch.build.targets.wheel]
+# https://hatch.pypa.io/latest/config/build/#packages
+packages = ["src/horsebox"]
+# https://hatch.pypa.io/latest/config/build/#excluding-files-outside-packages
+only-packages = true
+
+[project.scripts]
+horsebox = "horsebox.main:main"
+hb = "horsebox.main:main"

@@ -1,0 +1,49 @@
+{
+    // Python
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.languageServer": "Pylance",
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": false,
+    },
+    "python.analysis.typeCheckingMode": "basic",
+    // https://devblogs.microsoft.com/python/python-in-visual-studio-code-december-2024-release/#pylance-“full”-language-server-mode
+    "python.analysis.languageServerMode": "full",
+    "python.analysis.supportDocstringTemplate": false,
+    // https://code.visualstudio.com/updates/v1_92#_inline-variable-values-in-source-code
+    "debugpy.showPythonInlineValues": false,
+    // https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff
+    "ruff.enable": true,
+    "ruff.organizeImports": true,
+    "ruff.configurationPreference": "filesystemFirst",
+    // Peacock
+    "peacock.color": "#7ace26",
+    "workbench.colorCustomizations": {
+        "activityBar.activeBorder": "#428fdd",
+        "activityBar.activeBackground": "#93de49",
+        "activityBar.background": "#93de49",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#428fdd",
+        "activityBarBadge.foreground": "#15202b",
+        "commandCenter.border": "#15202b99",
+        "sash.hoverBorder": "#93de49",
+        "statusBar.background": "#7ace26",
+        "statusBar.foreground": "#15202b",
+        "statusBarItem.hoverBackground": "#60a31e",
+        "statusBarItem.remoteBackground": "#7ace26",
+        "statusBarItem.remoteForeground": "#15202b",
+        "titleBar.activeBackground": "#7ace26",
+        "titleBar.activeForeground": "#15202b",
+        "titleBar.inactiveBackground": "#7ace2699",
+        "titleBar.inactiveForeground": "#15202b99"
+    },
+    "spellright.language": [
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ]
+}
