@@ -49,8 +49,8 @@ def __cli() -> None:
 )
 @click.option(
     '--format',
-    type=click.Choice([Format.TXT, Format.JSON]),
-    default=Format.TXT.value,
+    type=click.Choice(list(Format), case_sensitive=False),
+    default=Format.TXT,
     show_default=True,
     help='Format of the output.',
 )
@@ -68,8 +68,8 @@ def __schema_cmd(**kwargs: Any) -> None:
 )
 @click.option(
     '--format',
-    type=click.Choice([Format.TXT, Format.JSON]),
-    default=Format.TXT.value,
+    type=click.Choice(list(Format), case_sensitive=False),
+    default=Format.TXT,
     show_default=True,
     help='Format of the output.',
 )
@@ -97,17 +97,8 @@ def __config_cmd(**kwargs: Any) -> None:
     '--using',
     '-u',
     'collector_type',
-    type=click.Choice(
-        [
-            CollectorType.FS_BY_FILENAME,
-            CollectorType.FS_BY_CONTENT,
-            CollectorType.FS_BY_LINE,
-            CollectorType.RSS,
-            CollectorType.RAW,
-            CollectorType.HTML,
-        ]
-    ),
-    default=CollectorType.FS_BY_CONTENT.value,
+    type=click.Choice(list(CollectorType), case_sensitive=False),
+    default=CollectorType.FILECONTENT,
     show_default=True,
     help='Collector to use for indexing.',
 )
@@ -116,8 +107,8 @@ def __config_cmd(**kwargs: Any) -> None:
 )
 @click.option(
     '--format',
-    type=click.Choice([Format.TXT, Format.JSON]),
-    default=Format.TXT.value,
+    type=click.Choice(list(Format), case_sensitive=False),
+    default=Format.TXT,
     show_default=True,
     help='Format of the output.',
 )
@@ -136,8 +127,8 @@ def __build_cmd(**kwargs: Any) -> None:
 )
 @click.option(
     '--format',
-    type=click.Choice([Format.TXT, Format.JSON]),
-    default=Format.TXT.value,
+    type=click.Choice(list(Format), case_sensitive=False),
+    default=Format.TXT,
     show_default=True,
     help='Format of the output.',
 )
@@ -175,17 +166,8 @@ def __inspect_cmd(**kwargs: Any) -> None:
     '--using',
     '-u',
     'collector_type',
-    type=click.Choice(
-        [
-            CollectorType.FS_BY_FILENAME,
-            CollectorType.FS_BY_CONTENT,
-            CollectorType.FS_BY_LINE,
-            CollectorType.RSS,
-            CollectorType.RAW,
-            CollectorType.HTML,
-        ]
-    ),
-    default=CollectorType.FS_BY_CONTENT.value,
+    type=click.Choice(list(CollectorType), case_sensitive=False),
+    default=CollectorType.FILECONTENT,
     show_default=True,
     help='Collector to use for indexing.',
 )
@@ -206,8 +188,8 @@ def __inspect_cmd(**kwargs: Any) -> None:
 )
 @click.option(
     '--format',
-    type=click.Choice([Format.TXT, Format.JSON]),
-    default=Format.TXT.value,
+    type=click.Choice(list(Format), case_sensitive=False),
+    default=Format.TXT,
     show_default=True,
     help='Format of the output.',
 )
@@ -224,17 +206,8 @@ def __search_cmd(**kwargs: Any) -> None:
 @click.option(
     '--tokenizer',
     'tokenizer_type',
-    type=click.Choice(
-        [
-            TokenizerType.RAW,
-            TokenizerType.SIMPLE,
-            TokenizerType.WHITESPACE,
-            TokenizerType.FACET,
-            TokenizerType.REGEX,
-            TokenizerType.NGRAM,
-        ]
-    ),
-    default=TokenizerType.SIMPLE.value,
+    type=click.Choice(list(TokenizerType), case_sensitive=False),
+    default=TokenizerType.SIMPLE,
     show_default=True,
     help='Tokenizer.',
 )
@@ -242,18 +215,7 @@ def __search_cmd(**kwargs: Any) -> None:
 @click.option(
     '--filter',
     'filter_types',
-    type=click.Choice(
-        [
-            FilterType.ALPHANUM_ONLY,
-            FilterType.ASCII_FOLD,
-            FilterType.LOWERCASE,
-            FilterType.REMOVE_LONG,
-            FilterType.STEMMER,
-            FilterType.STOPWORD,
-            FilterType.CUSTOM_STOPWORD,
-            FilterType.SPLIT_COMPOUND,
-        ]
-    ),
+    type=click.Choice(list(FilterType), case_sensitive=False),
     multiple=True,
     default=[],
     show_default=True,
@@ -265,8 +227,8 @@ def __search_cmd(**kwargs: Any) -> None:
 )
 @click.option(
     '--format',
-    type=click.Choice([Format.TXT, Format.JSON]),
-    default=Format.TXT.value,
+    type=click.Choice(list(Format), case_sensitive=False),
+    default=Format.TXT,
     show_default=True,
     help='Format of the output.',
 )

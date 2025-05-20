@@ -16,9 +16,9 @@ from horsebox.collectors.collector_raw import CollectorRaw
 from horsebox.model.collector import Collector
 
 __COLLECTORS: Dict[CollectorType, Type[Collector]] = {
-    CollectorType.FS_BY_FILENAME: CollectorFSByFilename,
-    CollectorType.FS_BY_CONTENT: CollectorFSByContent,
-    CollectorType.FS_BY_LINE: CollectorFSByLine,
+    CollectorType.FILENAME: CollectorFSByFilename,
+    CollectorType.FILECONTENT: CollectorFSByContent,
+    CollectorType.FILELINE: CollectorFSByLine,
     CollectorType.RSS: CollectorRSS,
     CollectorType.RAW: CollectorRaw,
     CollectorType.HTML: CollectorHtml,
