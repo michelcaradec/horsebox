@@ -28,7 +28,9 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/michelcaradec/horsebox"
+Repository = "https://github.com/michelcaradec/horsebox.git"
 Issues = "https://github.com/michelcaradec/horsebox/issues"
+Changelog = "https://github.com/michelcaradec/horsebox/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 # Run `uv sync --extra dev`
