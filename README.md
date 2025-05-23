@@ -21,6 +21,7 @@ A versatile and autonomous command line tool for search.
   - [Analyzing Some Text](#analyzing-some-text)
 - [Concepts](#concepts)
   - [Collectors](#collectors)
+    - [Raw Collector](#raw-collector)
   - [Index](#index)
   - [Strategies](#strategies)
 - [Annexes](#annexes)
@@ -297,14 +298,33 @@ Horsebox supports different types of collectors:
 | `fileline`    | One document per line and per file.                            |
 | `rss`         | RSS feed, one document per article.                            |
 | `html`        | Collect the content of an HTML page.                           |
-| `raw`         | Collect ready to index JSON documents [^4].                    |
+| `raw`         | Collect ready to index [JSON documents](#raw-collector).       |
 
 The collector to use is specified with the option `--using`.  
 The default collector is `filecontent`.
 
 *See the script [usage.sh](./demo/usage.sh) for sample commands.*
 
-[^4]: The accepted fields are `name`, `type`, `content`, `path`, `size` and `date` (run the command `hb schema` for a full description).
+#### Raw Collector
+
+The collector `raw` can be used to collect ready to index JSON documents.
+
+Each document must have the following fields [^4]:
+
+- `name` (`text`): name of the [container](#naming-conventions).
+- `type` (`text`): type of the container.
+- `content` (`text`): content of the container.
+- `path` (`text`): full path to the content.
+- `size` (`integer`): size of the content.
+- `date` (`text`): date-time of the content (formatted as `YYYY-mm-dd H:M:S`, for example `2025-03-14 12:34:56`).
+
+The JSON file can contain either an **array** of JSON objects (default), or one JSON object per **line** ([JSON Lines](https://jsonlines.org/) format).  
+The JSON Lines format is automatically detected from the file extension (`.jsonl` or `ndjson`).  
+The option `--jsonl` can be used to **force** the detection (this is for example required when the data source is provided by pipe).
+
+Some examples can be found with the files [raw.json](./demo/raw.json) (array of objects) and [raw.jsonl](./demo/raw.jsonl) (JSON Lines).
+
+[^4]: Run the command `hb schema` for a full description.
 
 ### Index
 

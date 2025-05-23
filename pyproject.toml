@@ -1,6 +1,6 @@
 [project]
 name = "horsebox"
-version = "0.1.5"
+version = "0.2.0"
 description = "You Know, for local Search."
 readme = "README.md"
 authors = [

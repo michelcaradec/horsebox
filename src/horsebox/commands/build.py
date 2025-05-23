@@ -11,6 +11,7 @@ def build(
     pattern: List[str],
     index: str,
     collector_type: CollectorType,
+    collect_as_jsonl: bool,
     format: Format,
 ) -> None:
     """
@@ -21,6 +22,7 @@ def build(
         pattern (List[str]): The containers to index.
         index (str): The location where to persist the index.
         collector_type (CollectorType): The collector to use.
+        collect_as_jsonl (bool): Whether the JSON documents should be collected as JSON Lines or not.
         format (Format): The rendering format to use.
     """
     collector = get_collector(collector_type)
@@ -29,6 +31,7 @@ def build(
         collector.create_instance(
             root_path=source,
             pattern=pattern,
+            collect_as_jsonl=collect_as_jsonl,
         ),
         index,
     )
