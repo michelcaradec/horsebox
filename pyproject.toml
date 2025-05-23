@@ -1,6 +1,6 @@
 [project]
 name = "horsebox"
-version = "0.1.5"
+version = "0.2.0"
 description = "You Know, for local Search."
 readme = "README.md"
 authors = [
@@ -28,7 +28,9 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/michelcaradec/horsebox"
+Repository = "https://github.com/michelcaradec/horsebox.git"
 Issues = "https://github.com/michelcaradec/horsebox/issues"
+Changelog = "https://github.com/michelcaradec/horsebox/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 # Run `uv sync --extra dev`

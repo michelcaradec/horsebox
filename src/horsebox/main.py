@@ -103,6 +103,14 @@ def __config_cmd(**kwargs: Any) -> None:
     help='Collector to use for indexing.',
 )
 @click.option(
+    '--jsonl',
+    'collect_as_jsonl',
+    type=bool,
+    is_flag=True,
+    default=False,
+    help='Collect JSON documents as JSON Lines (only with --using raw).',
+)
+@click.option(
     '--json', type=bool, is_flag=True, default=False, help='Format the output as JSON (same as --format json).'
 )
 @click.option(
@@ -170,6 +178,14 @@ def __inspect_cmd(**kwargs: Any) -> None:
     default=CollectorType.FILECONTENT,
     show_default=True,
     help='Collector to use for indexing.',
+)
+@click.option(
+    '--jsonl',
+    'collect_as_jsonl',
+    type=bool,
+    is_flag=True,
+    default=False,
+    help='Collect JSON documents as JSON Lines (only with --using raw).',
 )
 @click.option(
     '--query',

@@ -104,6 +104,9 @@ HB_RENDER_MAX_CONTENT=200 hb search --from "https://en.wikipedia.org/wiki/Python
 # Search in JSON documents (using pipe).
 cat ./demo/raw.json | hb search --from - --using raw --query "adipiscing" --highlight --limit 5
 
+# Search in JSONL documents (using pipe).
+cat ./demo/raw.jsonl | hb search --from - --using raw --query "adipiscing" --highlight --limit 5 --jsonl
+
 #######################
 # Analyzing Some Text #
 #######################

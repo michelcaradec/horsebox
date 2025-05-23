@@ -1,3 +1,4 @@
+import os
 from typing import (
     Any,
     Iterable,
@@ -21,17 +22,23 @@ class CollectorRaw(Collector):
     """
 
     root_path: List[str]
+    collect_as_jsonl: bool
 
     def __init__(  # noqa: D107
         self,
         root_path: List[str],
+        collect_as_jsonl: bool,
     ) -> None:
         self.root_path = root_path
+        self.collect_as_jsonl = collect_as_jsonl
 
     @staticmethod
     def create_instance(**kwargs: Any) -> Collector:
         """Create an instance of the collector."""
-        return CollectorRaw(kwargs['root_path'])
+        return CollectorRaw(
+            kwargs['root_path'],
+            kwargs['collect_as_jsonl'],
+        )
 
     def collect(self) -> Iterable[TDocument]:
         """
@@ -44,5 +51,18 @@ class CollectorRaw(Collector):
             filename = root_path[1:] if root_path.startswith(FILENAME_PREFIX) else root_path
 
             with click.open_file(filename, 'r') as file:
-                for item in ijson.items(file, 'item'):
+                if self.__is_jsonl(filename):
+                    # See https://pypi.org/project/ijson/#options-1
+                    items = ijson.items(file, '', multiple_values=True)
+                else:
+                    items = ijson.items(file, 'item')
+
+                for item in items:
                     yield prepare_doc(**item)
+
+    def __is_jsonl(
+        self,
+        filename: str,
+    ) -> bool:
+        _, fileext = os.path.splitext(filename)
+        return self.collect_as_jsonl or fileext in ['.jsonl', '.ndjson']

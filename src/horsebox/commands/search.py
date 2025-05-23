@@ -53,6 +53,7 @@ def search(
     pattern: List[str],
     index: Optional[str],
     collector_type: CollectorType,
+    collect_as_jsonl: bool,
     query_string: str,
     limit: int,
     highlight: bool,
@@ -68,6 +69,7 @@ def search(
         pattern (List[str]): The pattern to identify the containers to index.
         index (Optional[str]): Location of the index to build/search.
         collector_type (CollectorType): The collector to use for indexing.
+        collect_as_jsonl (bool): Whether the JSON documents should be collected as JSON Lines or not.
         query_string (str): The search query.
             See https://docs.rs/tantivy/latest/tantivy/query/struct.QueryParser.html.
         limit (int): the number of search results to return.
@@ -88,6 +90,7 @@ def search(
             collector.create_instance(
                 root_path=source,
                 pattern=pattern,
+                collect_as_jsonl=collect_as_jsonl,
             ),
             # If an index is provided, the index will be (re) built
             index,
