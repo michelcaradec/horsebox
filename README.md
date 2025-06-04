@@ -489,16 +489,17 @@ The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tan
 
 Horsebox can be configured through **environment variables**:
 
-| Setting                  | Description                                                                 | Default Value |
-| ------------------------ | --------------------------------------------------------------------------- | ------------: |
-| `HB_INDEX_BATCH_SIZE`    | Batch size when indexing.                                                   |          1000 |
-| `HB_HIGHLIGHT_MAX_CHARS` | Maximum number of characters to show for highlights.                        |           200 |
-| `HB_PARSER_MAX_LINE`     | Maximum size of a line in a container (unlimited if null).                  |               |
-| `HB_PARSER_MAX_CONTENT`  | Maximum size of a container (unlimited if null).                            |               |
-| `HB_RENDER_MAX_CONTENT`  | Maximum size of a document content to render (unlimited if null).           |               |
-| `HB_INDEX_EXPIRATION`    | Index freshness threshold (in seconds).                                     |          3600 |
-| `HB_CUSTOM_STOPWORDS`    | Custom list of stop-words (separated by a comma).                           |               |
-| `HB_STRING_NORMALIZE`    | Normalize strings [^7] when reading files (0=disabled, other value=enabled) |             1 |
+| Setting                  | Description                                                                  | Default Value |
+| ------------------------ | ---------------------------------------------------------------------------- | ------------: |
+| `HB_INDEX_BATCH_SIZE`    | Batch size when indexing.                                                    |          1000 |
+| `HB_HIGHLIGHT_MAX_CHARS` | Maximum number of characters to show for highlights.                         |           200 |
+| `HB_PARSER_MAX_LINE`     | Maximum size of a line in a container (unlimited if null).                   |               |
+| `HB_PARSER_MAX_CONTENT`  | Maximum size of a container (unlimited if null).                             |               |
+| `HB_RENDER_MAX_CONTENT`  | Maximum size of a document content to render (unlimited if null).            |               |
+| `HB_INDEX_EXPIRATION`    | Index freshness threshold (in seconds).                                      |          3600 |
+| `HB_CUSTOM_STOPWORDS`    | Custom list of stop-words (separated by a comma).                            |               |
+| `HB_STRING_NORMALIZE`    | Normalize strings [^7] when reading files (0=disabled, other value=enabled). |             1 |
+| `HB_TOP_MIN_CHARS`       | Minimum number of characters of a top keyword.                               |             1 |
 
 To get help on configuration:
 

@@ -11,6 +11,12 @@
 
 *NA*
 
+## [0.3.0] - 2025-06-04
+
+### Added
+
+- Configuration `HB_TOP_MIN_CHARS` to set the minimum number of characters of a top keyword.
+
 ## [0.2.0] - 2025-05-24
 
 ### Added
