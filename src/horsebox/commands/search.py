@@ -313,7 +313,7 @@ def __top_keywords_impl(
 
     for bucket in top_keywords['buckets']:
         key: str = bucket['key']
-        if len(key) == 1 or key.isdigit() or is_stopword(key):
+        if len(key) < config.top_min_chars or key.isdigit() or is_stopword(key):
             # Exclude single characters, digits, stop-words
             sum_other_doc_count += bucket['doc_count']
             continue

@@ -16,6 +16,7 @@ _CONFIG_RENDER_MAX_CONTENT = 'HB_RENDER_MAX_CONTENT'
 _CONFIG_INDEX_EXPIRATION = 'HB_INDEX_EXPIRATION'
 _CONFIG_CUSTOM_STOPWORDS = 'HB_CUSTOM_STOPWORDS'
 _CONFIG_STRING_NORMALIZE = 'HB_STRING_NORMALIZE'
+_CONFIG_TOP_MIN_CHARS = 'HB_TOP_MIN_CHARS'
 
 
 @dataclass
@@ -35,6 +36,7 @@ CONFIGS: Dict[str, Config] = {
     _CONFIG_INDEX_EXPIRATION: Config('Index freshness threshold (in seconds).', 3_600),
     _CONFIG_CUSTOM_STOPWORDS: Config('Custom list of stop-words (separated by a comma).'),
     _CONFIG_STRING_NORMALIZE: Config('Normalize strings when reading files (0=disabled, other value=enabled).', 1),
+    _CONFIG_TOP_MIN_CHARS: Config('Minimum number of characters of a top keyword.', 1),
 }
 
 
@@ -49,6 +51,7 @@ class __Config:
     __index_expiration: timedelta
     __custom_stopwords: Optional[str]
     __string_normalize: bool
+    __top_min_chars: int
 
     def __init__(self) -> None:  # noqa: D107
         self.__index_batch_size = cast(int, self.__get_int(_CONFIG_INDEX_BATCH_SIZE))
@@ -59,6 +62,7 @@ class __Config:
         self.__index_expiration = timedelta(seconds=cast(int, self.__get_int(_CONFIG_INDEX_EXPIRATION)))
         self.__custom_stopwords = os.environ.get(_CONFIG_CUSTOM_STOPWORDS)
         self.__string_normalize = bool(self.__get_int(_CONFIG_STRING_NORMALIZE))
+        self.__top_min_chars = cast(int, self.__get_int(_CONFIG_TOP_MIN_CHARS))
 
     def __get_int(
         self,
@@ -127,6 +131,11 @@ class __Config:
     def string_normalize(self) -> bool:
         """Custom list of stop-words."""
         return self.__string_normalize
+
+    @property
+    def top_min_chars(self) -> int:
+        """Minimum number of characters of a top keyword."""
+        return self.__top_min_chars
 
 
 config = __Config()
