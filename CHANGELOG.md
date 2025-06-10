@@ -11,6 +11,17 @@
 
 *NA*
 
+## [0.4.0] - 2025-06-11
+
+### Added
+
+- Store build arguments to the index metadata.
+- New command `refresh` to refresh an index.
+
+### Fixed
+
+- Improve index existence check.
+
 ## [0.3.0] - 2025-06-04
 
 ### Added
