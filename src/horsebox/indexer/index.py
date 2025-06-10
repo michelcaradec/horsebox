@@ -89,7 +89,13 @@ def open_index(
         Optional[Tuple[tantivy.Index, Optional[datetime]]]:
             (index object, date of creation of the index).
     """
-    if not tantivy.Index.exists(index):
+    exists: bool
+    try:
+        exists = tantivy.Index.exists(index)
+    except ValueError:
+        exists = False
+
+    if not exists:
         render_error(f'No index was found at {index}')
         return (None, None)
 
