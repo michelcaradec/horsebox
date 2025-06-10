@@ -85,6 +85,7 @@ def feed_index(
 def open_index(
     index: str,
     format: Format,
+    skip_expiration_warning: bool = False,
 ) -> Tuple[Optional[tantivy.Index], Optional[datetime]]:
     """
     Open an index.
@@ -92,6 +93,8 @@ def open_index(
     Args:
         index (str): The path of the index.
         format (Format): The rendering format to use.
+        skip_expiration_warning (bool): Whether the warning on index expiry should be silenced or show.
+            Default to False.
 
     Returns:
         Optional[Tuple[tantivy.Index, Optional[datetime]]]:
@@ -110,7 +113,7 @@ def open_index(
     t_index = tantivy.Index.open(index)
     timestamp = get_timestamp(index)
 
-    if timestamp and format == Format.TXT:
+    if not skip_expiration_warning and timestamp and format == Format.TXT:
         # Do not render warning in JSON mode, as it may be part of a processing pipeline
         age = datetime.now() - timestamp
         if age > config.index_expiration:
