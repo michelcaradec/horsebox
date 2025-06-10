@@ -1,9 +1,11 @@
 from typing import List
+
 from horsebox.cli.render import Format
 from horsebox.collectors import CollectorType
 from horsebox.collectors.factory import get_collector
 from horsebox.commands.inspect import inspect
 from horsebox.indexer.index import feed_index
+from horsebox.indexer.metadata import IndexBuildArgs
 
 
 def build(
@@ -34,6 +36,12 @@ def build(
             collect_as_jsonl=collect_as_jsonl,
         ),
         index,
+        IndexBuildArgs(
+            source=source,
+            pattern=pattern,
+            collector_type=collector_type,
+            collect_as_jsonl=collect_as_jsonl,
+        ),
     )
 
     inspect(index, format)

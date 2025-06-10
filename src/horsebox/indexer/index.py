@@ -15,8 +15,9 @@ from horsebox.cli.render import (
     render_warning,
 )
 from horsebox.indexer.metadata import (
+    IndexBuildArgs,
     get_timestamp,
-    set_timestamp,
+    set_metadata,
 )
 from horsebox.indexer.schema import get_schema
 from horsebox.model.collector import Collector
@@ -26,6 +27,7 @@ from horsebox.utils.batch import batched
 def feed_index(
     collector: Collector,
     index: Optional[str] = None,
+    build_args: Optional[IndexBuildArgs] = None,
 ) -> Tuple[tantivy.Index, int]:
     """
     Build an index.
@@ -33,6 +35,8 @@ def feed_index(
     Args:
         collector (Collector): The collector used to collect the documents.
         index (Optional[str]): The path of the index.
+            Defaults to None.
+        build_args (Optional[IndexBuildArgs]): The arguments used to build the index.
             Defaults to None.
 
     Returns:
@@ -66,7 +70,11 @@ def feed_index(
     took = monotonic_ns() - start
 
     if index:
-        set_timestamp(index, datetime.now())
+        set_metadata(
+            index,
+            datetime.now(),
+            build_args,
+        )
 
     # Index must be reloaded for search to work
     t_index.reload()
