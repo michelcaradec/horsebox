@@ -1,4 +1,7 @@
 {
+    // "window.zoomLevel": 1,
+    // Telemetry
+    "sonarlint.disableTelemetry": true,
     // Python
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.languageServer": "Pylance",
@@ -36,7 +39,8 @@
         "titleBar.activeBackground": "#7ace26",
         "titleBar.activeForeground": "#15202b",
         "titleBar.inactiveBackground": "#7ace2699",
-        "titleBar.inactiveForeground": "#15202b99"
+        "titleBar.inactiveForeground": "#15202b99",
+        "tab.activeBorder": "#93de49"
     },
     "spellright.language": [
         "en"
@@ -45,5 +49,11 @@
         "markdown",
         "latex",
         "plaintext"
-    ]
+    ],
+    "cSpell.language": "en",
+    "cSpell.enabled": true,
+    "#cSpell.enableFiletypes": [
+        "!markdown",
+        "!plaintext"
+    ],
 }

@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        // Code
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "charliermarsh.ruff",
+        "SonarSource.sonarlint-vscode",
+        // Extra
+        "KaustubhPaturi.py-scope",
+        // Code Documentation
+        "njpwerner.autodocstring",
+        "streetsidesoftware.code-spell-checker"
+    ]
+}
