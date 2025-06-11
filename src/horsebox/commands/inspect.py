@@ -1,6 +1,7 @@
 import os
 from collections import OrderedDict
 from functools import reduce
+from typing import Any
 
 import tantivy
 
@@ -9,6 +10,7 @@ from horsebox.cli.render import (
     render,
 )
 from horsebox.indexer.index import open_index
+from horsebox.indexer.metadata import get_build_args
 
 
 def inspect(
@@ -26,6 +28,8 @@ def inspect(
     if not t_index:
         return
 
+    build_args = get_build_args(index)
+
     searcher: tantivy.Searcher = t_index.searcher()
 
     size = reduce(
@@ -34,10 +38,16 @@ def inspect(
         0,
     )
 
-    output = OrderedDict(
+    output: OrderedDict[str, Any] = OrderedDict(
         documents=searcher.num_docs,
         segments=searcher.num_segments,
         size=size,
         timestamp=timestamp,
     )
+    if build_args:
+        output['using'] = build_args.collector_type
+        output['from'] = build_args.source
+        output['pattern'] = build_args.pattern
+        output['jsonl'] = build_args.collect_as_jsonl
+        
     render(output, format)

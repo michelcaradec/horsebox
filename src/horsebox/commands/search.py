@@ -27,6 +27,7 @@ from horsebox.indexer.index import (
     feed_index,
     open_index,
 )
+from horsebox.indexer.metadata import IndexBuildArgs
 from horsebox.indexer.schema import (
     DEFAULT_FIELD_NAMES,
     SCHEMA_FIELD_CONTENT,
@@ -94,6 +95,12 @@ def search(
             ),
             # If an index is provided, the index will be (re) built
             index,
+            IndexBuildArgs(
+                source=source,
+                pattern=pattern,
+                collector_type=collector_type,
+                collect_as_jsonl=collect_as_jsonl,
+            ),
         )
     elif index:
         # Search on an existing index

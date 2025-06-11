@@ -72,6 +72,13 @@ hb build --from ./demo/ --pattern "*.txt" --index ./.index-demo
 hb search --index ./.index-demo --query "better" --highlight
 
 #######################
+# Refreshing An Index #
+#######################
+
+# Refresh the previously built index `.index-demo`.
+hb refresh --index ./.index-demo
+
+#######################
 # Inspecting An Index #
 #######################
 

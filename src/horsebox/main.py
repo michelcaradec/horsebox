@@ -14,6 +14,7 @@ from horsebox.commands import (
     build,
     config,
     inspect,
+    refresh,
     schema,
     search,
 )
@@ -122,6 +123,26 @@ def __config_cmd(**kwargs: Any) -> None:
 )
 def __build_cmd(**kwargs: Any) -> None:
     build(**__refine_args(**kwargs))
+
+
+# endregion
+# region Refresh Command
+
+
+@__cli.command('refresh', help='Refresh an index.')
+@click.option('--index', '-i', required=True, help='Location of the index.')
+@click.option(
+    '--json', type=bool, is_flag=True, default=False, help='Format the output as JSON (same as --format json).'
+)
+@click.option(
+    '--format',
+    type=click.Choice(list(Format), case_sensitive=False),
+    default=Format.TXT,
+    show_default=True,
+    help='Format of the output.',
+)
+def __refresh_cmd(**kwargs: Any) -> None:
+    refresh(**__refine_args(**kwargs))
 
 
 # endregion

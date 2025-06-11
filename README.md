@@ -17,6 +17,7 @@ A versatile and autonomous command line tool for search.
   - [Rendering](#rendering)
   - [Searching](#searching)
   - [Building An Index](#building-an-index)
+  - [Refreshing An Index](#refreshing-an-index)
   - [Inspecting An Index](#inspecting-an-index)
   - [Analyzing Some Text](#analyzing-some-text)
 - [Concepts](#concepts)
@@ -237,7 +238,23 @@ The built index can be searched:
 hb search --index ./.index-demo --query "better" --highlight
 ```
 
-Searching on a persisted index will trigger a warning if the age of the index (i.e. the time elapsed since it was built) goes over a given threshold (which can be [configured](#configuration)).
+Searching on a persisted index will trigger a warning if the age of the index (i.e. the time elapsed since it was built) goes over a given threshold (which can be [configured](#configuration)).  
+The index can be [refreshed](#refreshing-an-index) to contain the most up-to-date data.
+
+### Refreshing An Index
+
+A built index can be refreshed to contain the most up-to-date data.
+
+Example: refresh the index `.index-demo` [previously built](#building-an-index).
+
+```bash
+hb refresh --index ./.index-demo
+```
+
+There are cases where an index can't be refreshed:
+
+- The index was built with a version prior to `0.4.0`.
+- The index data source was provided by pipe (see [Raw Collector](#raw-collector)).
 
 ### Inspecting An Index
 
