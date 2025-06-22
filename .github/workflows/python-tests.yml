@@ -27,4 +27,4 @@ jobs:
           uv sync --python ${{ matrix.python }} --active --all-extras
 
       - name: Run test with tox
-        run: tox -e ${{ matrix.python }}
+        run: uv run tox -e ${{ matrix.python }}
