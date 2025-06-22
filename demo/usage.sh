@@ -35,11 +35,20 @@ hb search --from ./demo/raw.json --using raw --query "'engine inspired'~1" --hig
 hb search --from ./demo/raw.json --using raw --query "engne~1"
 
 # Search on multiple datasources.
-hb search \
-    --from "https://www.blog.pythonlibrary.org/feed/" \
-    --from "https://planetpython.org/rss20.xml" \
-    --from "https://realpython.com/atom.xml?format=xml" \
-    --using rss --query "duckdb" --highlight
+if [[ "${HB_TEST_MODE}" == "1" ]]
+then
+    hb search \
+        --from "@demo/rss/pythonlibrary.xml" \
+        --from "@demo/rss/planetpython.xml" \
+        --from "@demo/rss/realpython.xml" \
+        --using rss --query "duckdb" --highlight
+else
+    hb search \
+        --from "https://www.blog.pythonlibrary.org/feed/" \
+        --from "https://planetpython.org/rss20.xml" \
+        --from "https://realpython.com/atom.xml?format=xml" \
+        --using rss --query "duckdb" --highlight
+fi
 
 #-----------------#
 # Search on dates #
@@ -103,10 +112,20 @@ hb search --from ./demo/ --pattern "*.txt" --using filecontent --query "better" 
 hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --highlight --limit 5
 
 # Get the top keywords of an RSS feed.
-hb search --from "https://planetpython.org/rss20.xml" --using rss --top
+if [[ "${HB_TEST_MODE}" == "1" ]]
+then
+    hb search --from "@demo/rss/planetpython.xml" --using rss --top
+else
+    hb search --from "https://planetpython.org/rss20.xml" --using rss --top
+fi
 
 # Search in an HTML page (and limit the size of the content to render).
-HB_RENDER_MAX_CONTENT=200 hb search --from "https://en.wikipedia.org/wiki/Python_(programming_language)" --using html --query "python" --limit 5
+if [[ "${HB_TEST_MODE}" == "1" ]]
+then
+    HB_RENDER_MAX_CONTENT=200 hb search --from "@demo/html/python_programming_language.html" --using html --query "python" --limit 5
+else
+    HB_RENDER_MAX_CONTENT=200 hb search --from "https://en.wikipedia.org/wiki/Python_(programming_language)" --using html --query "python" --limit 5
+fi
 
 # Search in JSON documents (using pipe).
 cat ./demo/raw.json | hb search --from - --using raw --query "adipiscing" --highlight --limit 5

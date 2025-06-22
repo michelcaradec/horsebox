@@ -1,0 +1,1085 @@
+
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Mouse Vs Python</title>
+	<atom:link href="https://www.blog.pythonlibrary.org/feed/" rel="self" type="application/rss+xml" />
+	<link>https://www.blog.pythonlibrary.org/</link>
+	<description>Where You Can Learn All About Python Programming</description>
+	<lastBuildDate>Fri, 13 Jun 2025 13:26:23 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.8.1</generator>
+
+<image>
+	<url>https://www.blog.pythonlibrary.org/wp-content/uploads/2019/05/cropped-narnyish_highres-32x32.png</url>
+	<title>Mouse Vs Python</title>
+	<link>https://www.blog.pythonlibrary.org/</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<item>
+		<title>Python 201 &#8211; All About the TypedDict</title>
+		<link>https://www.blog.pythonlibrary.org/2025/06/17/python-201-all-about-the-typeddict/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Tue, 17 Jun 2025 13:25:53 +0000</pubDate>
+				<category><![CDATA[intermediate]]></category>
+		<category><![CDATA[Python]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12592</guid>
+
+					<description><![CDATA[<p>Python has supported the concept of type hinting for quite a while now. However, unlike other programming languages, Python does not enforce type hints. You must use an external tool, such as Mypy, for that. In this tutorial, you will learn all about TypedDict, a special way of adding type hinting to Heterogeneous dictionaries. A [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/06/17/python-201-all-about-the-typeddict/">Python 201 &#8211; All About the TypedDict</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>Python has supported the concept of type hinting for quite a while now. However, unlike other programming languages, Python does not enforce type hints. You must use an external tool, such as Mypy, for that.</p>
+<p>In this tutorial, you will learn all about <a href="https://peps.python.org/pep-0589/"><strong>TypedDict</strong></a>, a special way of adding type hinting to <strong>Heterogeneous dictionaries</strong>. A heterogeneous dictionary is a dictionary that has values that are not all the same type.</p>
+<p>But before you learn how to use the TypedDict, you should review how to type hint a regular dictionary.</p>
+<h2>Type Hinting a Regular Dictionary</h2>
+<p>A regular Python dictionary is defined as follows:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">my_dictionary = {"some_key": "some_value"}</pre>
+<p>You can use any hashable type for the key, such as a string or an integer. The value of a dictionary can be any type whatsoever.</p>
+<p>When you want to type hint a dictionary, you would use the following: <strong>dict[key_type, value_type]</strong></p>
+<p>Now let&#8217;s apply that to the example above:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">my_dictionary: dict[str, str] = {"some_key": "some_value"}</pre>
+<p>If you are using a version of Python before 3.9, you will need to do the following instead:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">from typing import Dict
+
+my_dictionary: Dict[str, str] = {"some_key": "some_value"}</pre>
+<p>Fortunately, modern Python no longer requires that extra import.</p>
+<p>Now you&#8217;re ready to learn about how and why you might want to use the TypedDict</p>
+<h2>Creating a TypedDict</h2>
+<p>The TypedDict was introduced to Python in 3.8. You can read the full details about it in <a href="https://peps.python.org/pep-0589/">PEP 589</a>. The reason you would use a TypedDict over a regular dictionary is when you have a dictionary with values of different types.</p>
+<p>Here&#8217;s an example:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">my_dictionary = {"names": ["Mike", "Andrea", "John"],
+                 "type": "employee",
+                 "code": 123456
+                }</pre>
+<p>Type hinting this type of dictionary is more complex. You can do something like this, though:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">my_dictionary: dict[str, list | str | int] = {"names": ["Mike", "Andrea", "John"], "otype": "employee", "code": 123456 }</pre>
+<p>Depending on how your type checker is configured, this might work. However, if you write code that modifies the list, your type checker may complain that a string doesn&#8217;t have an append method or vice versa.</p>
+<p>To make the type checker happier, you should use a <strong>TypedDict</strong>.</p>
+<p>Here&#8217;s how you would use one with this example:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic">from typing import TypedDict
+
+class MultiTypeDict(TypedDict):
+    names: list
+    otype: str
+    code: int
+
+my_dictionary: MultiTypeDict = {"names": ["Mike", "Andrea", "John"], "otype": "employee", "code": 123456 }</pre>
+<p>Isn&#8217;t that great? There&#8217;s just one problem. What if your dictionary&#8217;s keys have spaces in them? You cannot create class attributes with spaces!</p>
+<p>There&#8217;s a workaround for that. Check it out in the next section.</p>
+<h2>Creating a TypedDict with Keys that Have Spaces</h2>
+<p>For this example, you will create a new dictionary with four keys, three of which contain spaces.</p>
+<p>To make a TypedDict for this type of dictionary, you need to call the TypedDict constructor instead of subclassing it:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">from typing import TypedDict
+
+Results = TypedDict("Results",{"Animal Habitats": list,
+                               "Tested": bool,
+                               "Animal Name": str,
+                               "Animal Location": str})
+
+actual_results: Results = {
+    "Animal Habitats": ["Asia", "N. America"],
+    "Tested": False,
+    "Animal Name": "Tigris",
+    "Animal Location": "North Bay",
+}</pre>
+<p>When you call TypedDict, you pass in the typename (what you would have named the class) and the fields the dictionary should have. You&#8217;ll note that the fields are a dictionary. This is where you will put the keys that contain spaces and those without spaces.</p>
+<p>Give it a try and you&#8217;ll find it works great!</p>
+<h2>Wrapping Up</h2>
+<p><strong>TypedDict</strong> is a handy tool for storing a complex dictionary. You will find that sometimes you even have these complex dictionaries inside of lists, tuples or even other dictionaries. Using the TypedDict can make type-hinting these data structures easier and prevent hard-to-detect defects from creeping in.</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/06/17/python-201-all-about-the-typeddict/">Python 201 &#8211; All About the TypedDict</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Parsing XML Comments with Python</title>
+		<link>https://www.blog.pythonlibrary.org/2025/06/05/parsing-xml-comments-with-python/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Thu, 05 Jun 2025 13:30:24 +0000</pubDate>
+				<category><![CDATA[beginner]]></category>
+		<category><![CDATA[Python]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12586</guid>
+
+					<description><![CDATA[<p>The Extensible Markup Language (XML) is a markup format originally for XML. Some companies use XML as a data serialization format or for configuration. Recently, I needed to learn how to uncomment some lines in an XML file to enable some settings that were defined in the XML. Fortunately, Python&#8217;s xml module provides a way [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/06/05/parsing-xml-comments-with-python/">Parsing XML Comments with Python</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>The Extensible Markup Language (XML) is a markup format originally for XML. Some companies use XML as a data serialization format or for configuration. Recently, I needed to learn how to uncomment some lines in an XML file to enable some settings that were defined in the XML.</p>
+<p>Fortunately, Python&#8217;s <code>xml</code> module provides a way to do this. Let&#8217;s find out how!</p>
+<h2>AI Answers Might Not Work</h2>
+<p>When I used Google to search for an answer to this question: &#8220;How to edit comments in XML with Python&#8221;, Google Gemini piped up with this answer:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">import xml.etree.ElementTree as ET
+
+xml_file = "PATH_TO_XML"
+
+tree = ET.parse(xml_file)
+root = tree.getroot()
+
+for element in root.iter():
+    if isinstance(element.tag, str) and element.tag.startswith('{'):
+        continue
+    if element.tag == ET.Comment:
+        text = element.text.strip()
+        print(text)</pre>
+<p>Unfortunately, this code does not work. But it is close.</p>
+<p>If you look through StackOverflow and similar forums, you will discover that you need a custom parser. Here&#8217;s how to create one:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic">import xml.etree.ElementTree as ET
+
+xml_file = r"PATH_TO_XML"
+
+parser = ET.XMLParser(target=ET.TreeBuilder(insert_comments=True))
+tree = ET.parse(xml_file, parser)
+root = tree.getroot()
+
+for element in root.iter():
+    if isinstance(element.tag, str) and element.tag.startswith('{'):
+        continue
+
+    if element.tag == ET.Comment:
+        text = element.text.strip()        
+        print(text)</pre>
+<p>The key point here is to create an instance of ET.XMLParser and set <strong>insert_comments</strong> to True. Then the code will work.</p>
+<p>Note that this example just prints out the commented text. You would need to do something like this to grab the commented text and reinsert it as a valid XML element:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">for element in root.iter():
+   if isinstance(element.tag, str) and element.tag.startswith('{'):
+      continue
+   if element.tag == ET.Comment:
+      text = element.text.strip()
+      if "COMMENTED CODE SUBSTRING" in text:
+         new_element = ET.fromstring(f"&lt;{text}&gt;")
+         # Insert the uncommented text as a new XML element
+         root.insert(list(root).index(element), new_element)
+         # Remove the element that was commented out originally
+         root.remove(element)
+
+# Make indentation work for the output
+ET.indent(tree, space="\t", level=0)
+
+with open(XML_PATH, "wb") as f:
+   tree.write(f)</pre>
+<p>Here, you loop over each element or tag in the XML. You check if the element is a comment type. If it is, you check for the substring you are looking for in the comment&#8217;s text. When you find the substring, you extract the entire string from the comment, create a new element, insert it as a regular element, and remove the comment.</p>
+<h2>Wrapping Up</h2>
+<p>XML is a handy format, and Python includes several different methods of working with XML in its <code>xml</code> module. Several different third-party XML modules, such as lxml, are also great alternatives. If you work with XML, hopefully you will find this article helpful.</p>
+<p>Have fun and happy coding!</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/06/05/parsing-xml-comments-with-python/">Parsing XML Comments with Python</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Creating TUI Applications with Textual and Python Kickstarter Launched</title>
+		<link>https://www.blog.pythonlibrary.org/2025/04/28/creating-tui-applications-with-textual-and-python-kickstarter-launched/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Mon, 28 Apr 2025 14:01:27 +0000</pubDate>
+				<category><![CDATA[Cross-Platform]]></category>
+		<category><![CDATA[GUI Toolkits]]></category>
+		<category><![CDATA[Python]]></category>
+		<category><![CDATA[Textual]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12575</guid>
+
+					<description><![CDATA[<p>Text-based user interfaces (TUIs) are making a BIG comeback. Many developers of today need to easy-to-use applications to configure and run jobs on headless servers. You can make your own life and the lives of your team so much easier by learning how to create a TUI yourself. Textual is a rapid application development framework [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/28/creating-tui-applications-with-textual-and-python-kickstarter-launched/">Creating TUI Applications with Textual and Python Kickstarter Launched</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>Text-based user interfaces (TUIs) are making a BIG comeback. Many developers of today need to easy-to-use applications to configure and run jobs on headless servers. You can make your own life and the lives of your team so much easier by learning how to create a TUI yourself.</p>
+<p><strong>Textual</strong> is a rapid application development framework for your terminal or web browser that is written in <strong>Python</strong>. You can build complex, sophisticated applications in your terminal. While terminal applications are text-based rather than pixel-based, they still provide fantastic user interfaces.</p>
+<h3><a href="https://www.kickstarter.com/projects/driscollis/creating-tui-applications-with-textual-and-python">Back the Kickstarter Now!</a></h3>
+<p>&nbsp;</p>
+<p><img fetchpriority="high" decoding="async" class="aligncenter wp-image-12578 size-full" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/csv_loader.gif" alt="CSV Viewer TUI" width="1292" height="764" /></p>
+<p>The Textual package allows you to create widgets in your terminal that mimic those used in a web or GUI application.</p>
+<p><strong>Creating TUI Applications with Textual and Python</strong> is to teach you how to use Textual to make striking applications of your own. The book&#8217;s first half will teach you everything you need to know to develop a terminal application.</p>
+<p>The book&#8217;s second half has many small applications you will learn how to create. Each chapter also includes challenges to complete to help cement what you learn or give you ideas for continued learning.</p>
+<p>Here are some of the applications you will create:</p>
+<ul>
+<li>A basic calculator</li>
+<li>A CSV viewer</li>
+<li>A Text Editor</li>
+<li>An MP3 player</li>
+<li>An ID3 Editor</li>
+<li>A Weather application</li>
+<li>A TUI for pre-commit</li>
+<li>RSS Reader</li>
+<li>and more!</li>
+</ul>
+<h4>Calculator</h4>
+<p><img decoding="async" class="aligncenter size-full wp-image-12577" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/calculator.gif" alt="" width="743" height="664" /></p>
+<h4>CSV Viewer</h4>
+<p><img fetchpriority="high" decoding="async" class="aligncenter wp-image-12578 size-full" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/csv_loader.gif" alt="CSV Viewer TUI" width="1292" height="764" /></p>
+<h4>MP3 Player</h4>
+<p><img decoding="async" class="aligncenter wp-image-12580 size-full" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/mp3_player.jpg" alt="MP3 Player TUI" width="1290" height="780" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/mp3_player.jpg 1290w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/mp3_player-300x181.jpg 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/mp3_player-1024x619.jpg 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/mp3_player-768x464.jpg 768w" sizes="(max-width: 1290px) 100vw, 1290px" /></p>
+<h4>Weather Application</h4>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-12581 size-full" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/weather.gif" alt="Weather TUI" width="1667" height="775" /></p>
+<h4>Text Editor</h4>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-12579 size-full" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/file_editor.gif" alt="Text Editor TUI" width="1292" height="764" /></p>
+<h3><strong>What You&#8217;ll Learn</strong></h3>
+<p>In this book, you will learn about the following:</p>
+<ul>
+<li>Chapter 1 &#8211; Application Basics</li>
+<li>Chapter 2 &#8211; Adding Styles in Textual</li>
+<li>Chapter 3 &#8211; Using CSS in Textual</li>
+<li>Chapter 4 &#8211; Content Markup</li>
+<li>Chapter 5 &#8211; Working with DOM Queries</li>
+<li>Chapter 6 &#8211; Laying Out Your Widgets</li>
+<li>Chapter 7 &#8211; Textual Events and Messages</li>
+<li>Chapter 8 &#8211; Key and Mouse Events</li>
+<li>Chapter 9 &#8211; Reactive Attributes</li>
+<li>Chapter 10 &#8211; Screens</li>
+<li>Chapter 11 &#8211; Textual Dev Tools</li>
+<li>Chapter 12 &#8211; Creating a Calculator</li>
+<li>Chapter 13 &#8211; Viewing Tabular Data with Textual</li>
+<li>Chapter 14 &#8211; Creating a Text Editor</li>
+<li>Chapter 15 &#8211; Creating an MP3 Player</li>
+<li>Chapter 16 &#8211; Creating an ID3 Editor</li>
+<li>Chapter 17 &#8211; Creating a Weather App</li>
+<li>Chapter 18 &#8211; pre-commit TUI</li>
+<li>Chapter 19 &#8211; RSS Reader TUI</li>
+<li>Chapter 20 &#8211; SMTP Client</li>
+<li>Chapter 21 &#8211; SQLite Viewer/Editor</li>
+</ul>
+<h3><strong>Rewards to Choose From</strong></h3>
+<p>As a backer of this Kickstarter, you have some choices to make. You can receive one or more of the following, depending on which level you choose when backing the project:</p>
+<ul>
+<li>An early copy of <strong>Creating TUI Applications with Textual and Python</strong> + all updates including the final version (ALL BACKERS)</li>
+<li>A <strong>signed</strong> paperback copy (If you choose the appropriate perk)</li>
+<li>Get all by Python courses (If you choose the appropriate perk)</li>
+<li>Get all TEN of my other Python eBooks (if you choose the appropriate perk)</li>
+<li>T-shirt with the book cover  (If you choose the appropriate perk)</li>
+</ul>
+<h3><strong>Writing Style</strong></h3>
+<p>This book will be written in my conversational style. <strong>Creating TUI Applications with Textual and Python </strong>is over <strong>400</strong> pages long and will teach you all you need to know to be able to use the Textual package effectively.</p>
+<p>If you&#8217;ve never read anything of mine before, you can download the original <a href="https://leanpub.com/python_101">Python 101 </a>for free or read it <a href="http://python101.pythonlibrary.org/">online</a>. You can also check out this <a href="https://www.blog.pythonlibrary.org/">blog</a> for writing examples.</p>
+<h3><strong>About the Author</strong></h3>
+<p>My name is Michael Driscoll, and I am a professional full-time Python programmer by day and Python blogger by night. I have been programming almost exclusively in Python for almost 15 years. I am also a contributor to Real Python. My previous successful campaigns include these other books:</p>
+<ul>
+<li><a href="https://leanpub.com/python_101">Python 101 (1st Edition)</a></li>
+<li><a href="https://leanpub.com/python201">Python 201: Intermediate Python</a></li>
+<li><a href="https://leanpub.com/reportlab/">ReportLab: PDF Processing with Python</a></li>
+<li><a href="https://leanpub.com/jupyternotebook101/">Jupyter Notebook 101</a></li>
+<li><a href="https://leanpub.com/creatingapplicationswithwxpython/">Creating GUI Applications with wxPython</a></li>
+<li><a href="https://www.amazon.com/dp/B08ZCQM1C1">Pillow: Image Processing with Python</a></li>
+<li><a href="https://www.kickstarter.com/projects/driscollis/automating-excel-with-python">Automating Excel with Python</a></li>
+<li>and more!</li>
+</ul>
+<p>I also have two books that are published by Apress and Packt Publishing:</p>
+<ul>
+<li> <a href="https://www.apress.com/us/book/9781484232361">wxPython Recipes</a> (Apress)</li>
+<li> <a href="https://www.packtpub.com/web-development/python-interviews">Python Interviews </a>(Packt)</li>
+</ul>
+<h3><strong>Book formats</strong></h3>
+<p>The finished book will be made available in the following formats:</p>
+<ul>
+<li>paperback (at the appropriate reward level)</li>
+<li>PDF</li>
+<li>epub</li>
+</ul>
+<p>The paperback is a 8.5&#8243; x 11&#8243; book and approximately 450+ pages in length.</p>
+<h3><a href="https://www.kickstarter.com/projects/driscollis/creating-tui-applications-with-textual-and-python">Back the Kickstarter Today!</a></h3>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/28/creating-tui-applications-with-textual-and-python-kickstarter-launched/">Creating TUI Applications with Textual and Python Kickstarter Launched</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Python 101 &#8211; An Intro to Working with INI files Using configparser</title>
+		<link>https://www.blog.pythonlibrary.org/2025/04/09/python-101-an-intro-to-working-with-ini-files-using-configparser/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Wed, 09 Apr 2025 12:30:20 +0000</pubDate>
+				<category><![CDATA[beginner]]></category>
+		<category><![CDATA[Python]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12562</guid>
+
+					<description><![CDATA[<p>Many programs require configuration. Most have a default configuration and many allow the user to adjust that configuration. There are many different types of configuration files. Some use text files while others use databases. Python has a standard library called configparser that you can use to work with Microsoft Windows INI files. In this tutorial, [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/09/python-101-an-intro-to-working-with-ini-files-using-configparser/">Python 101 &#8211; An Intro to Working with INI files Using configparser</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>Many programs require configuration. Most have a default configuration and many allow the user to adjust that configuration. There are many different types of configuration files. Some use text files while others use databases. Python has a standard library called <code>configparser</code> that you can use to work with Microsoft Windows INI files.</p>
+<p>In this tutorial, you will cover the following topics:</p>
+<ul>
+<li>An example INI file</li>
+<li>Creating a config file</li>
+<li>Editing a config file</li>
+<li>Reading a config file</li>
+</ul>
+<p>By the end of this tutorial, you will be able to use INI configuration files programmatically with Python.</p>
+<p>Let&#8217;s get started!</p>
+<h2>Example INI File</h2>
+<p>There are many examples of INI files on the Internet. You can find one over in the <a href="https://mypy.readthedocs.io/en/stable/config_file.html">Mypy documentation</a>. Mypy is a popular type checker for Python. Here is the <code>mypy.ini</code> file that they use as an example:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="ini"># Global options:
+
+[mypy]
+warn_return_any = True
+warn_unused_configs = True
+
+# per-module options:
+
+[mypy-mycode.foo.*]
+disallow_untyped_defs = True
+
+[ypy-mycode.bar]
+warn_return_any = False
+
+[mypy-somelibrary]
+ignore_missing_imports = True</pre>
+<p>Sections are denoted by being placed inside square braces. Then, each section can have zero or more settings. In the next section, you will learn how to create this configuration file programmatically with Python.</p>
+<h2>Creating a Config File</h2>
+<p>The <a href="https://docs.python.org/3/library/configparser.html">documentation</a> for Python&#8217;s <code>configparser</code>module is helpful. They tell you how to recreate an example INI file right in the documentation. Of course, their example is not the Mypy example above. Your job is a little bit harder as you need to be able to insert comments into your configuration, which isn&#8217;t covered in the documentation. Don&#8217;t worry. You&#8217;ll learn how to do that now!</p>
+<p>Open up your Python editor and create a new file called <code>create_config.py</code>. Then enter the following code:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># create_config.py
+
+import configparser
+
+config = configparser.ConfigParser(allow_no_value=True)
+
+config["mypy"] = {"warn_return_any": "True",
+                  "warn_unused_configs": "True",}
+config.set("mypy", "\n# Per-module options:")
+
+config["mypy-mycode.foo.*"] = {"disallow_untyped_defs": "True"}
+config["ypy-mycode.bar"] = {"warn_return_any": "False"}
+config["mypy-somelibrary"] = {"ignore_missing_imports": "True"}
+
+with open("custom_mypy.ini", "w") as config_file:
+    config_file.write("# Global options:\n\n")
+    config.write(config_file)
+
+</pre>
+<p>The documentation states that <span style="box-sizing: border-box;">the<strong> allow_no_value</strong></span> parameter allows for including sections that do not have values. You need to add this to be able to add comments in the middle of a section to be added as well. Otherwise, you will get a <strong>TypeError</strong>.</p>
+<p>To add entire sections, you use a dictionary-like interface. Each section is denoted by the key, and that section&#8217;s values are added by setting that key to another dictionary.</p>
+<p>Once you finish creating each section and its contents, you can write the configuration file to disk. You open a file for writing, then write the first comment. Next, you use the <code>config.write()</code> method to write the rest of the file.</p>
+<p>Try running the code above; you should get the same INI file as the one at the beginning of this article.</p>
+<h2>Editing a Config File</h2>
+<p>The <code>configparser</code>library makes editing your configuration files mostly painless. You will learn how to change a setting in the config file and add a new section to your pre-existing configuration.</p>
+<p>Create a new file named <code>edit_config.py</code> and add the following code to it:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># edit_config.py
+
+import configparser
+
+config = configparser.ConfigParser()
+config.read("custom_mypy.ini")
+
+# Change an item's value
+config.set("mypy-somelibrary", "ignore_missing_imports", "False")
+
+# Add a new section
+config["new-random-section"] = {"compressed": "True"}
+
+with open("modified_mypy.ini", "w") as config_file:
+    config.write(config_file)
+</pre>
+<p>In this case, after create the <code>ConfigParser()</code>instance, you call <code>read()</code>to read the specified configuration file. Then you can set any value you want.</p>
+<p>Unfortunately, you cannot use dictionary-like syntax to set values. Instead, you must use <code>set()</code>which takes the following parameters:</p>
+<ul>
+<li><strong>section</strong> &#8211; The name of the section.</li>
+<li><strong>option</strong> &#8211; The option you wish to change.</li>
+<li><strong>value</strong> &#8211; The new value you want to set.</li>
+</ul>
+<p>Adding a new section works like it did when you created the initial sections in the last code example. You still use dictionary-like syntax where the new section is the key and the value is a dictionary of one or more settings to go in your section.</p>
+<p>When you run this code, it will create an INI file with the following contents:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="ini">[mypy]
+warn_return_any = True
+warn_unused_configs = True
+
+[mypy-mycode.foo.*]
+disallow_untyped_defs = True
+
+[ypy-mycode.bar]
+warn_return_any = False
+
+[mypy-somelibrary]
+ignore_missing_imports = False
+
+[new-random-section]
+compressed = True
+
+</pre>
+<p>Good job! You&#8217;ve just learned how to modify an INI file with Python!</p>
+<p>Now you are ready to learn about reading INI files.</p>
+<h2>Reading a Config File</h2>
+<p>You already caught a glimpse of how to read a configuration file in the previous section. The primary method is by calling the <code>ConfigParser</code>&#8216;s <code>read()</code>method.</p>
+<p>Here&#8217;s an example using the new INI file you just created:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">&gt;&gt;&gt; import configparser
+&gt;&gt;&gt; config = configparser.ConfigParser()
+&gt;&gt;&gt; config.read(r"C:\code\modified_mypy.ini")
+['C:\\code\\modified_mypy.ini']
+&gt;&gt;&gt; config["mypy"]
+&lt;Section: mypy&gt;
+&gt;&gt;&gt; config["mypy"]["warn_return_any"]
+'True'
+&gt;&gt;&gt; config["unknown"]
+Traceback (most recent call last):
+  Python Shell, prompt 8, line 1
+    config["unknown"]
+  File "c:\users\Mike\appdata\local\programs\python\python312\lib\configparser.py", line 941, in __getitem__
+    raise KeyError(key)
+builtins.KeyError: 'unknown'</pre>
+<p>You can access individual values using dictionary syntax. If you happen to try to access a section or an option that does not exist, you will receive a <code>KeyError</code>.</p>
+<p>The <code>configparser</code> has a second reading method called <code>read_string()</code> that you can use as well. Here is an example:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">&gt;&gt;&gt; sample_config = """
+... [mypy]
+... warn_return_any = True
+... warn_unused_configs = True
+... 
+... # Per-module options:
+... 
+... [mypy-mycode.foo.*]
+... disallow_untyped_defs = True
+... """
+&gt;&gt;&gt; config = configparser.ConfigParser(allow_no_value=True)
+&gt;&gt;&gt; config.read_string(sample_config)
+&gt;&gt;&gt; config["mypy"]["warn_return_any"]
+'True'</pre>
+<p>You use <code>read_string()</code> to read in a multiline string and then access values inside of it. Pretty neat, eh?</p>
+<p>You can also grab the section and them use list comprehensions to extract the options from each section:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">&gt;&gt;&gt; config.sections()
+['mypy', 'mypy-mycode.foo.*']
+&gt;&gt;&gt; [option for option in config["mypy"]]
+['warn_return_any', 'warn_unused_configs']</pre>
+<p>The code above is a handy example for getting at the configuration options quickly and easily.</p>
+<h2>Wrapping Up</h2>
+<p>Having a way to configure your application makes it more useful and allows the user more control over how their copy of the application works. In this article, you learned how about the following topics:</p>
+<ul>
+<li>An example INI file</li>
+<li>Creating a config file</li>
+<li>Editing a config file</li>
+<li>Reading a config file</li>
+</ul>
+<p>The <a href="https://docs.python.org/3/library/configparser.html">configparser library</a> has more features than what is covered here. For example, you can use interpolation to preprocess values or customize the parser process. Check out the documentation for full details on those and other features.</p>
+<p>In the meantime, have fun and enjoy this neat feature of Python!</p>
+<h2>Related Articles</h2>
+<p>You might also be interested in these related articles:</p>
+<ul>
+<li><a href="https://www.blog.pythonlibrary.org/2013/10/25/python-101-an-intro-to-configparser/">The Python 2 Intro to ConfigParser</a></li>
+<li><a href="https://www.blog.pythonlibrary.org/2020/09/15/python-101-an-intro-to-working-with-json/" rel="bookmark">Python 101: An Intro to Working with JSON</a></li>
+<li>
+<p class="entry-title ast-blog-single-element"><a href="https://www.blog.pythonlibrary.org/2021/09/30/sqlite/" rel="bookmark">Python 101 – How to Work with a Database Using sqlite3</a></p>
+</li>
+</ul>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/09/python-101-an-intro-to-working-with-ini-files-using-configparser/">Python 101 &#8211; An Intro to Working with INI files Using configparser</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>How to Download the Latest Release Assets from GitHub with Python</title>
+		<link>https://www.blog.pythonlibrary.org/2025/04/07/how-to-download-the-latest-release-assets-from-github-with-python/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Mon, 07 Apr 2025 20:25:33 +0000</pubDate>
+				<category><![CDATA[beginner]]></category>
+		<category><![CDATA[Python]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12507</guid>
+
+					<description><![CDATA[<p>I recently needed to figure out how to write an updater script for a project I was working on. The application is released on an internal GitHub page with compressed files and an executable. I needed a way to check the latest release artifacts in GitHub and download them. Let&#8217;s find out how all this [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/07/how-to-download-the-latest-release-assets-from-github-with-python/">How to Download the Latest Release Assets from GitHub with Python</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>I recently needed to figure out how to write an updater script for a project I was working on. The application is released on an internal GitHub page with compressed files and an executable. I needed a way to check the latest release artifacts in GitHub and download them.</p>
+<p>Let&#8217;s find out how all this works!</p>
+<h2>Getting Set Up</h2>
+<p>You will need to download and install a couple of packages to make this all work. Specifically, you will need the following:</p>
+<ul>
+<li><a href="https://requests.readthedocs.io/en/latest/">requests</a></li>
+<li><a href="https://github.com/PyGithub/PyGithub">PyGitHub</a></li>
+</ul>
+<p>You can install both of these using pip. Open up your terminal and run the following command:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic">python -m pip install PyGithub requests</pre>
+<p>Once this finishes, you should have everything you need to get the latest GitHub release assets.</p>
+<h2>Downloading the Latest Release Assets</h2>
+<p>The only other item you will need to make this work is a <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">GitHub personal access token</a>. You will need to create one of those. Depending on your use case, you may want to create what amounts to a bot account to make your token last a little longer.</p>
+<p>The next step is to write some code. Open up your favorite Python IDE and create a new file. Then add the following code to it:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python">import requests
+
+from github import Auth
+from github import Github
+from pathlib import Path
+
+token =  "YOUR_PERSONAL_ACCESS_TOKEN"
+
+headers = CaseInsensitiveDict()
+headers["Authorization"] = f"token {token}"
+headers["Accept"] = "application/octet-stream"
+session = requests.Session()
+
+auth = Auth.Token(token)  # Token can be None if the repo is public
+g = Github(auth=auth)
+
+# Use this one if you have an internal GitHub instance:
+#g = Github(auth=auth, base_url="https://YOUR_COMPANY_URL/api/v3")
+
+repo = g.get_repo("user/repo")  # Replace with the proper user and repo combo
+for release in repo.get_releases():
+    # Releases are returned with the latest first
+    print(release)
+    break
+
+for asset in release.get_assets():
+    print(asset.name)
+    destination = Path(r"C:\Temp") / asset.name
+    response = session.get(asset.url, stream=True, headers=headers)
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(1024*1024):
+            f.write(chunk)
+    print(f"Downloaded asset to {destination}")
+</pre>
+<p>The first half of this code is your imports and boilerplate for creating a GitHub authentication token and a requests Session object. If you work for a company and have an internal GitHub instance, see the commented-out code and use that instead for your GitHub authentication.</p>
+<p>The next step is to get the GitHub repository and loop over its releases. By default, the iterable will return the items with the latest first and the oldest last. So you break out of the loop on the first release found to get the latest.</p>
+<p>At this point, you loop over the assets in the release. In my case, I wanted to find an asset that was an executable and download it, but this code downloads all the assets.</p>
+<h2>Wrapping Up</h2>
+<p>This is a pretty short example, but it demonstrates one of the many things you can do with the handy <a href="https://github.com/PyGithub/PyGithub">PyGitHub</a> package. You should check it out if you need to script other tasks in GitHub.</p>
+<p>Happy coding!</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/07/how-to-download-the-latest-release-assets-from-github-with-python/">How to Download the Latest Release Assets from GitHub with Python</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>ANN: Spring Python eBook Sale 2025</title>
+		<link>https://www.blog.pythonlibrary.org/2025/04/03/ann-spring-python-ebook-sale-2025/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Thu, 03 Apr 2025 12:11:01 +0000</pubDate>
+				<category><![CDATA[beginner]]></category>
+		<category><![CDATA[Python]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12556</guid>
+
+					<description><![CDATA[<p>I am running a Spring sale on all my currently published Python books. You can get 25% off any of my complete books by using this code at checkout: MSON4QP &#160; Learn Python Today! I have books on the following topics: Basic Python Intermediate Python Python and PDFs Python and Excel Image Processing with Python [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/03/ann-spring-python-ebook-sale-2025/">ANN: Spring Python eBook Sale 2025</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p data-pm-slice="1 1 []">I am running a Spring sale on all my currently published Python books. You can get 25% off any of my complete books by using this code at checkout: <strong>MSON4QP</strong></p>
+<p data-pm-slice="1 1 []"><a href="https://driscollis.gumroad.com/"><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12558" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/spring_sale_2025-1024x576.jpg" alt="" width="1024" height="576" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/spring_sale_2025-1024x576.jpg 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/spring_sale_2025-300x169.jpg 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/spring_sale_2025-768x432.jpg 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/spring_sale_2025-1536x864.jpg 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/spring_sale_2025.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a></p>
+<p>&nbsp;</p>
+<p><a class="tiptap__button button primary" href="https://driscollis.gumroad.com/" target="_blank" rel="noopener noreferrer nofollow">Learn Python Today!</a></p>
+<p>I have books on the following topics:</p>
+<ul>
+<li>Basic Python</li>
+<li>Intermediate Python</li>
+<li>Python and PDFs</li>
+<li>Python and Excel</li>
+<li>Image Processing with Python</li>
+<li>Python Logging</li>
+<li>JupyterLab and Jupyter Notebook</li>
+<li>Creating GUIs with wxPython</li>
+<li>and more!</li>
+</ul>
+<p>Start learning some Python today!</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/03/ann-spring-python-ebook-sale-2025/">ANN: Spring Python eBook Sale 2025</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Textual &#8211; How to Add Widgets to a Container</title>
+		<link>https://www.blog.pythonlibrary.org/2025/04/01/textual-how-to-add-widgets-to-a-container/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Tue, 01 Apr 2025 13:44:16 +0000</pubDate>
+				<category><![CDATA[GUI Toolkits]]></category>
+		<category><![CDATA[intermediate]]></category>
+		<category><![CDATA[Python]]></category>
+		<category><![CDATA[GUI]]></category>
+		<category><![CDATA[Textual]]></category>
+		<category><![CDATA[TUI]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12525</guid>
+
+					<description><![CDATA[<p>Textual is an excellent Python package for creating beautiful user interfaces in your terminal. By default, Textual will arrange your widgets starting at the top of the screen and appending them in a vertically oriented stack. Each GUI or TUI toolkit provides a way to lay out your widgets. Textual is no different in this [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/01/textual-how-to-add-widgets-to-a-container/">Textual &#8211; How to Add Widgets to a Container</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>Textual is an excellent Python package for creating beautiful user interfaces in your terminal. By default, Textual will arrange your widgets starting at the top of the screen and appending them in a vertically oriented stack. Each GUI or TUI toolkit provides a way to lay out your widgets. Textual is no different in this respect. They use an object called a <strong>container</strong>.</p>
+<p>You can use containers to create the following types of layouts:</p>
+<ul>
+<li>Vertical layout</li>
+<li>Horizontal layout</li>
+<li>Grid layout</li>
+<li>and more!</li>
+</ul>
+<p>You will be learning how to use all three of these types of layouts. You will also learn how to add more widgets at runtime.</p>
+<p>Let&#8217;s get started!</p>
+<h2>Creating a Vertical Layout</h2>
+<p>The default orientation in Textual is to arrange widgets vertically. You don&#8217;t even need to use a CSS file to apply this orientation.</p>
+<p>But what does a vertical layout mean anyway? A vertical layout is when you add widgets to your application vertically, from top to bottom. Here is an illustration of what that might look like:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter size-full wp-image-12536" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_layout.png" alt="Textual vertical layout illustration" width="900" height="520" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_layout.png 900w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_layout-300x173.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_layout-768x444.png 768w" sizes="auto, (max-width: 900px) 100vw, 900px" /></p>
+<p>&nbsp;</p>
+<p>Adding widgets to a Textual application will lay out the widgets similarly to the image above. If you want to see that for yourself, then open up your Python editor and create a new file named `vertical.py`.</p>
+<p>Then enter the following code into your new script:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># vertical.py
+
+from textual.app import App, ComposeResult
+from textual.widgets import Button
+
+
+class VerticalApp(App):
+
+    def compose(self) -&gt; ComposeResult:
+        yield Button("OK")
+        yield Button("Cancel")
+        yield Button("Go!")
+
+
+if __name__ == "__main__":
+    app = VerticalApp()
+    app.run()</pre>
+<p>Now open up a terminal and run your code. When you do so, you will see three buttons onscreen, with the topmost being your &#8220;OK&#8221; button and the bottom being the &#8220;Go!&#8221; button.</p>
+<p>Here is a screenshot of the application to give you an idea of what it looks like:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12538" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical-1024x551.png" alt="Textual vertical (no CSS)" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /><br />
+You can change the widget size, color, and more using each widget&#8217;s <code>styles</code> attribute, but using CSS is simpler. Let&#8217;s update the code above to use a <code>vertical.tcss</code> file:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># verical_css.py
+
+from textual.app import App, ComposeResult
+from textual.widgets import Button
+
+
+class VerticalApp(App):
+    CSS_PATH = "vertical.tcss"
+
+    def compose(self) -&gt; ComposeResult:
+        yield Button("OK")
+        yield Button("Cancel")
+        yield Button("Go!")
+
+
+if __name__ == "__main__":
+    app = VerticalApp()
+    app.run()</pre>
+<p>Now that you are referring to a CSS file, you should go ahead and write one. If you don&#8217;t, you will get an error when you attempt to run the code that says the CSS file could not be found.</p>
+<p>Go ahead and open your favorite text editor or use your Python editor to create a file named `vertical.tcss`. Then enter the following code:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="css">Screen {
+    layout: vertical;
+}
+
+Button {
+    width: 100%;
+    color: yellow;
+    background: red;
+}</pre>
+<p dir="auto">You do not need the <code>Screen</code> portion of the CSS since that is technically taken care of automatically by Textual. Remember, <code>Screen</code> is the default widget when you launch an application. However, it is always good to be explicit so you understand what is happening. If you want the output to look exactly like the previous example, you can delete this CSS&#8217;s <code>Button</code> portion and try running the code that way.</p>
+<p dir="auto">If you decide to include the <code>Button</code> portion of the CSS, you will make all of the <code>Button</code> widgets 100% wide, which means they will all stretch across the entire width of the screen. The CSS also defines the button text to be yellow and the buttons themselves to have a read background color.</p>
+<p dir="auto">When you run this code, you will see something like the following:</p>
+<p dir="auto"><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12539" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css-1024x551.png" alt="Textual vertical layout with CSS" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p dir="auto">That&#8217;s a fun way to change your vertically oriented widget layout. But what happens if you set the height of the <code>Button</code> widgets to 50%? Well, you have three widgets. Three times 50 will be 150%, which is greater than what can be shown all at once. Textual will add a scrollbar if you add widgets that go off-screen.</p>
+<p dir="auto">Try adding that setting to your CSS and re-run the code. You should see something like the following:</p>
+<p dir="auto"><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12540" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css2-1024x551.png" alt="Textual with vertical layout CSS and height at 50%" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css2-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css2-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css2-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css2-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/vertical_css2.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p dir="auto">You should spend a few moments trying out various width and height sizes. Remember, you don&#8217;t have to use percentages. You can also use Textual&#8217;s other unit types.</p>
+<p dir="auto"><strong>Note</strong>: All style attributes can be adjusted at runtime, which means you can modify the layout at runtime, too. Use this wisely so as not to confuse the user!</p>
+<p dir="auto">When you finish experimenting, you will be ready to learn how horizontal layouts work!</p>
+<div class="markdown-heading" dir="auto">
+<h2 class="heading-element" dir="auto" tabindex="-1">Horizontal Layout</h2>
+<p>&nbsp;</p>
+</div>
+<p dir="auto">Laying widgets out horizontally, left-to-right, requires a little more work than laying them out vertically. But the change is still pretty minor, and in many ways, it affects only one line in the CSS file.</p>
+<p dir="auto">But before you change the CSS, you will want to update your Python code to point to the new CSS file. Open your Python editor and copy the previous example to a new file. Save it with the same <code>horizontal.py</code> and update the <code>CSS_PATH</code> to point to a new CSS file named <code>horizontal.tcss</code>:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># horizontal.py
+
+from textual.app import App, ComposeResult
+from textual.widgets import Button
+
+
+class HorizontalApp(App):
+    CSS_PATH = "horizontal.tcss"
+
+    def compose(self) -&gt; ComposeResult:
+        yield Button("OK")
+        yield Button("Cancel")
+        yield Button("Go!")
+
+
+if __name__ == "__main__":
+    app = HorizontalApp()
+    app.run()</pre>
+<p dir="auto">Yes, this code is almost the same as the previous example, except the <code>CSS_PATH</code> variable. That&#8217;s okay. The point is to show you how you can change the layout.</p>
+<p dir="auto">Create your <code>horizontal.tcss</code> file in a Python or text editor to make a horizontally oriented layout. Then enter the following CSS:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="css">Screen {
+    layout: horizontal;
+}
+
+Button {
+    height: 100%;
+    color: yellow;
+    background: red;
+    border: solid green;
+}</pre>
+<p dir="auto">The CSS above added a border to the buttons to make them stand out a bit more. Depending on the terminal, the widgets appear to blend together more when arranged horizontally. You can add space around the widgets by setting the <code>margin</code> style, though.</p>
+<p dir="auto">When you run this code, you should see something like the following:</p>
+<p dir="auto"><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12541" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal-1024x551.png" alt="Textual horizontal layout with CSS" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p>When using a horizontal layout, the horizontal scrollbar will not automatically appear if the widgets do not fit the screen. If you want to have a horizontal scrollbar, then you will need to set <code>overflow-x: auto;</code>, like in the following CSS:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="css">Screen {
+    layout: horizontal;
+    overflow-x: auto;
+}
+
+Button {
+    height: 100%;
+    color: yellow;
+    background: red;
+    border: solid green;
+}</pre>
+<p dir="auto">Now, set the widgets&#8217; width to greater than 33% so that the scrollbar will appear. Spend some time experimenting, and you&#8217;ll soon figure it out!</p>
+<div class="markdown-heading" dir="auto">
+<h2 class="heading-element" dir="auto" tabindex="-1">Layouts with Containers</h2>
+<p>&nbsp;</p>
+</div>
+<p dir="auto">The Textual package has several <a href="https://textual.textualize.io/api/containers" rel="nofollow">utility containers</a> you can use to lay out your widgets. You are most likely to use <code>Vertical</code>, <code>Horizontal</code>, or <code>Grid</code> containers. You can also combine the containers to create more complex layouts.</p>
+<p dir="auto">Here is a full list of the containers included with Textual at the time of writing:</p>
+<ul dir="auto">
+<li>Center</li>
+<li>Container</li>
+<li>Horizontal</li>
+<li>HorizontalScroll</li>
+<li>Middle</li>
+<li>ScrollableContainer</li>
+<li>Vertical</li>
+<li>VerticalScroll</li>
+</ul>
+<p dir="auto">You will most likely use the <code>Center</code>, <code>Middle</code>, <code>Horizontal</code>, and <code>Vertical</code> containers the most.</p>
+<p dir="auto">Practicing is the best learning method, especially when laying out user interfaces. You can start your container journey by opening your Python editor and creating a new file called <code>horizontal_container.py</code>. Then enter the following code:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># horizontal_container.py
+
+from textual.app import App, ComposeResult
+from textual.widgets import Button
+from textual.containers import Horizontal
+
+
+class HorizontalApp(App):
+
+    def compose(self) -&gt; ComposeResult:
+        yield Horizontal(
+            Button("OK"),
+            Button("Cancel"),
+            Button("Go!"),
+        )
+
+
+if __name__ == "__main__":
+    app = HorizontalApp()
+    app.run()</pre>
+<p dir="auto">You import the <code>Horizontal</code> container from <code>textual.containers</code>. The main contents of a container is its widgets. You reuse the widgets from the previous example here. Pay attention and note that you do not need to use <code>yield</code> inside the container. You can simply add the widget instances instead.</p>
+<p dir="auto">When you run this code, you will see something like this:</p>
+<p dir="auto"><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12543" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container-1024x551.png" alt="Textual horizontal container" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p dir="auto">What will happen if you use your <code>horizontal.tcss</code> file with this code? Try adding it to the code above and re-run your example.</p>
+<p dir="auto">The result will look familiar:</p>
+<p dir="auto"><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12544" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container_css-1024x551.png" alt="Textual horizontal container plus CSS" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container_css-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container_css-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container_css-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container_css-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/horizontal_container_css.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p dir="auto">The real benefit using containers comes when you nest them. You&#8217;ll find out about that concept next!</p>
+<div class="markdown-heading" dir="auto">
+<h3 class="heading-element" dir="auto" tabindex="-1">Nesting Containers</h3>
+<p><a id="user-content-nesting-containers" class="anchor" href="https://github.com/driscollis/creating_tuis/blob/main/manuscript/05_layout.md#nesting-containers" aria-label="Permalink: Nesting Containers"></a></div>
+<p dir="auto">Nesting containers allows you to combine horizontally and vertically oriented widgets, resulting in rows and columns of widgets. This design pattern can create some pretty nice layouts.</p>
+<p dir="auto">To start, create a new file called <code>nested_containers.py</code> in your Python editor. Then add this code to it:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># nested_containers.py
+
+from textual.app import App, ComposeResult
+from textual.widgets import Button
+from textual.containers import Horizontal, Vertical
+
+
+class NestedApp(App):
+
+    def compose(self) -&gt; ComposeResult:
+        yield Vertical(
+            Horizontal(
+                Button("One"),
+                Button("Two"),
+                classes="row",
+            ),
+            Horizontal(
+                Button("Three"),
+                Button("Four"),
+                classes="row",
+            ),
+        )
+
+
+if __name__ == "__main__":
+    app = NestedApp()
+    app.run()</pre>
+<p dir="auto">Your code above has a single <code>Vertical</code> container with two <code>Horizontal</code> containers inside. You can think of the <code>Horizontal</code> containers as &#8220;rows&#8221;. You can see that you set the <code>classes</code> parameters to &#8220;row&#8221; to identify them. Each row contains two <code>Button</code> widgets.</p>
+<p dir="auto">When you run this code, you will see something like this:</p>
+<p dir="auto"><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12545" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested-1024x551.png" alt="Textual nested containers" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p dir="auto">This example doesn&#8217;t use any CSS. You should do that! Update the code to include a CSS file called <code>nested.tcss</code>, like the code below:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># nested_containers.py
+
+from textual.app import App, ComposeResult
+from textual.widgets import Button
+from textual.containers import Horizontal, Vertical
+
+
+class NestedApp(App):
+    CSS_PATH = "nested.tcss"
+
+    def compose(self) -&gt; ComposeResult:
+        yield Vertical(
+            Horizontal(
+                Button("One"),
+                Button("Two"),
+                classes="row",
+            ),
+            Horizontal(
+                Button("Three"),
+                Button("Four"),
+                classes="row",
+            ),
+        )
+
+
+if __name__ == "__main__":
+    app = NestedApp()
+    app.run()</pre>
+<p>Then, create the <code>nested.tcss</code> file. You will be putting the following CSS rules into it:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="css">Button {
+    content-align: center middle;
+    background: green;
+    border: yellow;
+    height: 1fr;
+    width: 1fr;
+}</pre>
+<p dir="auto">Here, you set various rules for the <code>Button</code> widgets to follow. You want the buttons to be green with a yellow border. You also set the width and height to <code>1fr</code>, which causes the buttons to expand to fit all the horizontal and vertical space.</p>
+<p dir="auto">When you run this version of your code, you can see that the user interface has changed significantly:</p>
+<p dir="auto"><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12546" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested_containers-1024x551.png" alt="Textual nested containers" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested_containers-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested_containers-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested_containers-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested_containers-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/04/nested_containers.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p dir="auto">Nice! You should spend some time adjusting the style rules and seeing how to change these layouts.</p>
+<div class="markdown-heading" dir="auto">
+<h2 class="heading-element" dir="auto" tabindex="-1">Wrapping Up</h2>
+<p><a id="user-content-wrapping-up" class="anchor" href="https://github.com/driscollis/creating_tuis/blob/main/manuscript/05_layout.md#wrapping-up" aria-label="Permalink: Wrapping Up"></a></div>
+<p dir="auto">Learning how to create layouts is a fundamental skill that you will need to master to be able to create engaging, intuitive user interfaces. Fortunately, Textual gives you enough tools that you can create your user interfaces fairly easily. No; you don&#8217;t get a What-you-see-is-what-you-get (WYSIWYG) tool as you do with some GUI toolkits, such as QT Creator. But you do get live-coding with CSS, and since most of your user interface layouts are controlled there, tweaking the user interface is so nicer.</p>
+<h2 dir="auto">Want to Learn More Textual?</h2>
+<p>This tutorial is based on a chapter from my latest book, <a href="https://driscollis.gumroad.com/l/textual">Creating TUI Applications with Textual and Python</a>.</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-12535 size-full" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/02/textual_thumb.jpg" alt="Creating TUI Applications with Textual and Python" width="200" height="259" /></p>
+<p>You will learn everything you need to know about Textual from this book. You will also create TEN small applications to apply what you learn. Check it out today!</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/04/01/textual-how-to-add-widgets-to-a-container/">Textual &#8211; How to Add Widgets to a Container</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Textual &#8211; Switching Screens in Your Terminal</title>
+		<link>https://www.blog.pythonlibrary.org/2025/01/14/textual-switching-screens-in-your-terminal/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Tue, 14 Jan 2025 21:09:19 +0000</pubDate>
+				<category><![CDATA[Python]]></category>
+		<category><![CDATA[CLI]]></category>
+		<category><![CDATA[Textual]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12519</guid>
+
+					<description><![CDATA[<p>The Screen is a container for your widgets. These screens occupy the dimensions of your terminal by default. While you can have many different screens in a single application, only one screen may be active at a time. When you create your App class, Textual will create a screen object implicitly. Yes, Textual requires you to have at [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/01/14/textual-switching-screens-in-your-terminal/">Textual &#8211; Switching Screens in Your Terminal</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>The <code>Screen</code> is a container for your widgets. These screens occupy the dimensions of your terminal by default. While you can have many different screens in a single application, only one screen may be active at a time.</p>
+<p>When you create your <code>App</code> class, Textual will create a screen object implicitly. Yes, Textual requires you to have at least one screen or your application won&#8217;t work. If you do not create a new screen or switch to a different one, the default screen is where your widgets will get mounted or composed to.</p>
+<p>Screens are a great way to organize your application. Many applications have settings pages, help pages, and more. These are just a few examples of how you can use screens.</p>
+<p>Now that you know what a screen is, you&#8217;re ready to learn how to create new ones!</p>
+<h2>Creating Screens</h2>
+<p>When you create an application, you create a <code>Screen</code> implicitly. But how do you create your own <code>Screen</code>? Fortunately, Textual has made that easy. All you need to do is import the <code>Screen</code> class from <code>textual.screen</code> and extend it as needed.</p>
+<p>You can style screens the same way you do other widgets, except for the dimensions as screens are always the same size as your terminal window.</p>
+<p>To see how this all works, you will create an application with two screens:</p>
+<ul>
+<li>Your main screen</li>
+<li>You second screen, which will be green</li>
+</ul>
+<p>You will be able to switch between the screens using a button. Each screen has its own button and its own event or message handler.</p>
+<p>Open up your favorite Python IDE and create a new file called <code>two_screens.py</code> with the following contents:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># two_screens.py
+
+from textual import on
+from textual.app import App, ComposeResult
+from textual.screen import Screen
+from textual.widgets import Button
+
+class GreenScreen(Screen):
+
+    def compose(self) -&gt; ComposeResult:
+        self.styles.background = "green"
+        yield Button("Main Screen", id="main")
+
+    @on(Button.Pressed, "#main")
+    def on_main(self) -&gt; None:
+        self.dismiss()
+
+
+class MainAop(App):
+
+    def compose(self) -&gt; ComposeResult:
+        yield Button("Switch", id="switch")
+
+    @on(Button.Pressed, "#switch")
+    def on_switch(self) -&gt; None:
+        self.push_screen(GreenScreen())
+
+
+if __name__ == "__main__":
+    app = MainAop()
+    app.run()</pre>
+<p>You use Textual&#8217;s handy <code>on</code> decorator to match against the button&#8217;s <code>id</code>. That keeps the message from bubbling around to other event handlers, which is what could happen if you had used <code>on_button_pressed()</code>, for example.</p>
+<p>When you run your application, you will see something like this:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12520" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens-1024x551.png" alt="Textual screens" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p>Try clicking the buttons and switching between the screens.</p>
+<p>Of course, you don&#8217;t need to use button&#8217;s at all, if you don&#8217;t want to. You could use keyboard shortcuts instead. Why not give that a try?</p>
+<p>Go back to your Python IDE and create a new file called <code>two_screens_keys_only.py</code> with this code in it:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="python"># two_screens_keys_only.py
+
+from textual.app import App, ComposeResult
+from textual.screen import Screen
+from textual.widgets import Label
+
+
+class GreenScreen(Screen):
+    BINDINGS = [("escape", "app.pop_screen", "Dismiss the screen")]
+
+    def compose(self) -&gt; ComposeResult:
+        self.styles.background = "green"
+        yield Label("Second Screen")
+
+
+class MainAop(App):
+    SCREENS = {"green": GreenScreen}
+    BINDINGS = [("n", "push_screen('green')", "Green Screen")]
+
+    def compose(self) -&gt; ComposeResult:
+        yield Label("Main screen")
+
+
+if __name__ == "__main__":
+    app = MainAop()
+    app.run()</pre>
+<p>Using keyboard shortcuts makes your code a little less verbose. However, since you aren&#8217;t using a <code>Footer</code> widget, the shortcuts are not shown on-screen to the user. When you are on the main screen, you must press the letter &#8220;n&#8221; on your keyboard to switch to the <code>GreenScreen</code>. Then when you want to switch back, you press &#8220;Esc&#8221; or escape.</p>
+<p>Here&#8217;s what the screen looks like on the <code>GreenScreen</code>:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter size-large wp-image-12521" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens2-1024x551.png" alt="Textual screens using keyboard shortcuts" width="1024" height="551" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens2-1024x551.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens2-300x161.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens2-768x413.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens2-1536x827.png 1536w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/two_screens2.png 2018w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></p>
+<p>Now try using the keys mentioned to swap between the two screens. Feel free to change the keyboard bindings to keys of your own choosing.</p>
+<h2>Wrapping Up</h2>
+<p>Textual can do much more with Screens than what is covered in this brief tutorial. However, you can use this information as a great starting point for learning how to add one more additional screens to your GUI in your terminal.</p>
+<p>Play around with these examples and then run over to the Textual documentation to learn about some of the other widgets you can add to bring your application to life.</p>
+<h2>Want to Learn More?</h2>
+<p>If you&#8217;d like to learn more about Textual, check out my book: <strong>Creating TUI Applications with Textual and Python</strong>, which you can find on the following websites:</p>
+<p><a href="https://driscollis.gumroad.com/l/textual"><img loading="lazy" decoding="async" class="aligncenter wp-image-12523 size-medium" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/3D-Mockup-1-300x277.png" alt="Creating TUI Applications with Textual and Python (paperback)" width="300" height="277" srcset="https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/3D-Mockup-1-300x277.png 300w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/3D-Mockup-1-1024x944.png 1024w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/3D-Mockup-1-768x708.png 768w, https://www.blog.pythonlibrary.org/wp-content/uploads/2025/01/3D-Mockup-1.png 1500w" sizes="auto, (max-width: 300px) 100vw, 300px" /></a></p>
+<ul>
+<li><a href="https://driscollis.gumroad.com/l/textual">Gumroad</a> (eBook)</li>
+<li><a href="https://leanpub.com/textual/">Leanpub</a> (eBook)</li>
+<li>Paperback is coming soon!</li>
+</ul>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2025/01/14/textual-switching-screens-in-your-terminal/">Textual &#8211; Switching Screens in Your Terminal</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>An Intro to pre-commit</title>
+		<link>https://www.blog.pythonlibrary.org/2024/12/23/an-intro-to-pre-commit/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Mon, 23 Dec 2024 13:09:42 +0000</pubDate>
+				<category><![CDATA[beginner]]></category>
+		<category><![CDATA[Python]]></category>
+		<category><![CDATA[Tooling]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12509</guid>
+
+					<description><![CDATA[<p>You can use many great tools to help you in your software development journey. One such tool is pre-commit, a framework for managing and maintaining multi-language pre-commit hooks. You use pre-commit to run one or more tools before allowing you to commit your code locally. For example, you might run the Flake8 linter or the Ruff formatter [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2024/12/23/an-intro-to-pre-commit/">An Intro to pre-commit</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>You can use many great tools to help you in your software development journey. One such tool is <a href="http://A framework for managing and maintaining multi-language pre-commit hooks">pre-commit</a>, a framework for managing and maintaining multi-language <span class="text-nowrap">pre-commit</span> hooks. You use pre-commit to run one or more tools before allowing you to commit your code locally. For example, you might run the Flake8 linter or the <a href="https://www.blog.pythonlibrary.org/2023/10/25/the-ruff-formatter-pythons-fastest-formatter/">Ruff formatter</a> on your Python code in GitHub Actions or some other CI. But rather than waiting for CI to run, you want to run those checks locally and automatically.</p>
+<p>That is where pre-commit comes in. You tell pre-c0mmit what to run, and it will run right before it allows you to commit your code.If any of those checks fail, you must fix your code before committing it.</p>
+<h2>Installing pre-commit</h2>
+<p>pre-commit is a Python package, so you can install it using pip. Here&#8217;s the command you&#8217;ll need to run in your terminal:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic">pip install pre-commit</pre>
+<p>Once pre-commit is installed, you can confirm that it works by running the following:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic">pre-commit --version</pre>
+<h2>Adding the git Hooks</h2>
+<p>The next step is to navigate to one of your local GitHub code bases in your terminal. Once inside one of your repos, you will need to run this command:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic">pre-commit install</pre>
+<p>This command installs pre-commit in your <code>.git\hooks</code> folder so that pre-commit runs whenever you commit. But how does pre-commit know what to run?</p>
+<p>You have to define what <code>pre-commit</code> runs using a special YAML file. You&#8217;ll learn how in the next section!</p>
+<h2>Adding a pre-commit Configuration</h2>
+<p>You need to add a file named <strong>.pre-commit-config.yaml</strong> (note the leading period) into the root of your repo. If you want to generate a simple config file, you can run this command:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic">pre-commit sample-config</pre>
+<p>Here&#8217;s an example config for running Black on your code:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="yaml">repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+    -   id: black</pre>
+<p>Personally, I like to run the Ruff formatter and linter as well as a couple of defaults, so I use this config a lot:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="yaml">repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-added-large-files
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+  rev: v0.1.7
+  hooks:
+    # Run the linter.
+    - id: ruff
+    # Run the formatter.
+    - id: ruff-format
+</pre>
+<p>When you add a new rule to pre-commit, you should run that rule against all the files in your repo so you don&#8217;t have any surprises later on. To do that, you need to run this command:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic">pre-commit run --all-files</pre>
+<p>Once you have run all your new rules against all your code files, you can start working on your next feature or bug fix. Then, when you run,  <code>git commit</code> the pre-commit hooks will run, and you&#8217;ll see if your code is good enough to pass.</p>
+<h2>Wrapping Up</h2>
+<p>There are TONs of hooks you can add to pre-commit. A lot of them are mentioned on the <a href="https://pre-commit.com/">pre-commit website</a>. You can add Mypy, pytest, and much, much more to your pre-commit hooks. Just don&#8217;t get too crazy, or they may take too long to run, and you&#8217;ll go nuts waiting for it.</p>
+<p>Overall, running so many of your CI hooks locally is great because your machine is usually faster than waiting on a queue in CI. Give it a try and see what think!</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2024/12/23/an-intro-to-pre-commit/">An Intro to pre-commit</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>The Python Countdown to Christmas 2024 Giveaway</title>
+		<link>https://www.blog.pythonlibrary.org/2024/12/16/the-python-countdown-to-christmas-2024-giveaway/</link>
+		
+		<dc:creator><![CDATA[Mike]]></dc:creator>
+		<pubDate>Mon, 16 Dec 2024 20:41:50 +0000</pubDate>
+				<category><![CDATA[beginner]]></category>
+		<category><![CDATA[Python]]></category>
+		<guid isPermaLink="false">https://www.blog.pythonlibrary.org/?p=12512</guid>
+
+					<description><![CDATA[<p>Happy Holidays and Merry Christmas from me to you! I have been giving away hundreds of Python books and courses for Christmas for the last couple of years! From now until Christmas, I will be giving away hundreds more. You can start learning Python for free using my books or courses. All you have to [&#8230;]</p>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2024/12/16/the-python-countdown-to-christmas-2024-giveaway/">The Python Countdown to Christmas 2024 Giveaway</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>Happy Holidays and Merry Christmas from me to you! I have been giving away hundreds of Python books and courses for Christmas for the last couple of years!</p>
+<div style="width: 1200px;" class="wp-video"><!--[if lt IE 9]><script>document.createElement('video');</script><![endif]-->
+<video class="wp-video-shortcode" id="video-12512-1" width="1200" height="675" loop autoplay preload="metadata" controls="controls"><source type="video/mp4" src="https://www.blog.pythonlibrary.org/wp-content/uploads/2024/12/Countdown-to-christmas-1.mp4?_=1" /><a href="https://www.blog.pythonlibrary.org/wp-content/uploads/2024/12/Countdown-to-christmas-1.mp4">https://www.blog.pythonlibrary.org/wp-content/uploads/2024/12/Countdown-to-christmas-1.mp4</a></video></div>
+<p>From now until Christmas, I will be giving away hundreds more. You can start learning Python for free using my books or courses.</p>
+<p>All you have to do is follow me on one of these platforms and watch out for my post that describes how to get a free book or course:</p>
+<ul>
+<li><a href="https://x.com/driscollis/">X / Twitter</a></li>
+<li><a href="https://www.linkedin.com/in/driscollis/">LinkedIn</a></li>
+<li><a href="https://mastodon.social/@driscollis">Mastodon</a></li>
+<li><a href="https://www.threads.net/@driscollis">Threads</a></li>
+<li><a href="https://bsky.app/profile/teachmepython">BlueSky</a></li>
+</ul>
+<p>The post <a href="https://www.blog.pythonlibrary.org/2024/12/16/the-python-countdown-to-christmas-2024-giveaway/">The Python Countdown to Christmas 2024 Giveaway</a> appeared first on <a href="https://www.blog.pythonlibrary.org">Mouse Vs Python</a>.</p>
+]]></content:encoded>
+					
+		
+		<enclosure url="https://www.blog.pythonlibrary.org/wp-content/uploads/2024/12/Countdown-to-christmas-1.mp4" length="1138831" type="video/mp4" />
+
+			</item>
+	</channel>
+</rss>
