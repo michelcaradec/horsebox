@@ -6,7 +6,9 @@ jobs:
   # https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-python#running-tests-with-tox
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
+      fail-fast: false
       matrix:
         python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
