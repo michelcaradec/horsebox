@@ -2,6 +2,8 @@
 
 A versatile and autonomous command line tool for search.
 
+[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml)
+
 <details>
 <summary>Table of contents</summary>
 
