@@ -1,0 +1,30 @@
+name: Test Python Package
+
+on: [push]
+
+jobs:
+  # https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-python#running-tests-with-tox
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # https://docs.astral.sh/uv/guides/integration/github/
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install requirements (including dev)
+        run: |
+          uv sync --python ${{ matrix.python }} --active --all-extras
+
+      - name: Run test with tox
+        run: tox -e ${{ matrix.python }}
