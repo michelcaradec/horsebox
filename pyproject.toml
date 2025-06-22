@@ -36,6 +36,8 @@ Changelog = "https://github.com/michelcaradec/horsebox/blob/main/CHANGELOG.md"
 # Run `uv sync --extra dev`
 dev = [
     "ruff",
+    "tox>=4.27.0",
+    "pytest>=8.4.1",
 ]
 
 [build-system]
