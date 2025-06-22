@@ -72,4 +72,4 @@ def render_error(
     """
     click.echo(click.style(message, fg='red'), err=True)
     if exit:
-        quit()
+        quit(-1)
