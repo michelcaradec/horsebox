@@ -8,7 +8,10 @@ from typing import (
 import click
 import ijson
 
-from horsebox.cli import FILENAME_PREFIX
+from horsebox.cli import (
+    FILENAME_PREFIX,
+    OPTION_COLLECT_AS_JSONL,
+)
 from horsebox.indexer.factory import prepare_doc
 from horsebox.model import TDocument
 from horsebox.model.collector import Collector
@@ -37,7 +40,7 @@ class CollectorRaw(Collector):
         """Create an instance of the collector."""
         return CollectorRaw(
             kwargs['root_path'],
-            kwargs['collect_as_jsonl'],
+            kwargs[OPTION_COLLECT_AS_JSONL],
         )
 
     def collect(self) -> Iterable[TDocument]:
