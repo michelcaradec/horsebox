@@ -177,9 +177,9 @@ def __parse_query_string(
             )
 
             if str(t_query) == __EMPTY_QUERY:
-                render_error(f'Empty query: {query_string}', exit=True)
+                render_error(f'Empty query: {query_string}')
     except ValueError as e:
-        render_error(f'Query parse error: {e}', exit=True)
+        render_error(f'Query parse error: {e}')
 
     return t_query
 

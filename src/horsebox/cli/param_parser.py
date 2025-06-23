@@ -56,7 +56,7 @@ def parse_params_group(
     if params:
         params_group = params.split(__PARAM_GROUP_SEPARATOR)
         if len(params_group) != expected:
-            render_error(f'Incorrect number of parameters groups: {params} (expected: {expected})', exit=True)
+            render_error(f'Incorrect number of parameters groups: {params} (expected: {expected})')
         else:
             return params_group
     else:
@@ -97,12 +97,12 @@ def parse_params(
     for param in params.split(__PARAM_SEPARATOR):
         key_val = param.strip().split(__KEY_VALUE_SEPARATOR, 1)
         if len(key_val) != 2:
-            render_error(f'Invalid key-value parameter: {param}', exit=True)
+            render_error(f'Invalid key-value parameter: {param}')
 
         key, value = key_val
         typed_value = value if is_raw else __parse_typed_value(value)
         if typed_value is None:
-            render_error(f"Couldn't detect the type of the value: {param}", exit=True)
+            render_error(f"Couldn't detect the type of the value: {param}")
 
         parsed[key] = typed_value
 

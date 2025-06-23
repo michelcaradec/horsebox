@@ -58,18 +58,13 @@ def render_warning(message: str) -> Union[NoReturn, None]:
     click.echo(click.style(message, fg='yellow'))
 
 
-def render_error(
-    message: str,
-    exit: bool = False,
-) -> Union[NoReturn, None]:
+def render_error(message: str) -> NoReturn:
     """
-    Render an error message to the terminal.
+    Render an error message to the terminal and exit the program.
 
     Args:
         message (str): The error message to render.
-        exit (bool, optional): Whether the execution should stop or not.
-            Defaults to False.
     """
     click.echo(click.style(message, fg='red'), err=True)
-    if exit:
-        quit(-1)
+
+    quit(-1)
