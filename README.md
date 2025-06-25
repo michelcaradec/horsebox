@@ -25,6 +25,7 @@ A versatile and autonomous command line tool for search.
 - [Concepts](#concepts)
   - [Collectors](#collectors)
     - [Raw Collector](#raw-collector)
+    - [Guess Collector](#guess-collector)
   - [Index](#index)
   - [Strategies](#strategies)
 - [Annexes](#annexes)
@@ -344,6 +345,39 @@ The option `--jsonl` can be used to **force** the detection (this is for example
 Some examples can be found with the files [raw.json](./demo/raw.json) (array of objects) and [raw.jsonl](./demo/raw.jsonl) (JSON Lines).
 
 [^4]: Run the command `hb schema` for a full description.
+
+#### Guess Collector
+
+*Disclaimer: starting with version `0.5.0`.*
+
+The collector `guess` can be used to identify the best collector to use.  
+The detection is done in a best effort from the options `--from` and `--pattern`.  
+An error will be returned if no collector could be guessed.
+
+The collector `guess` is used by default, meaning that the option `--using` can be skipped.
+
+Examples:
+
+```bash
+hb search --from "https://planetpython.org/rss20.xml" --query "some text" --using rss
+# Can be simplified as (guess from the https scheme and the extension .xml)
+hb search --from "https://planetpython.org/rss20.xml" --query "some text"
+```
+
+```bash
+hb search --from ./raw.json --query "some text" --using raw
+# Can be simplified as (guess from the file extension .json)
+hb search --from ./raw.json --query "some text"
+```
+
+```bash
+hb search --from ./raw.jsonl --query "some text" --using raw --jsonl
+# Can be simplified as (guess from the file extension .jsonl)
+hb search --from ./raw.jsonl --query "some text"
+```
+
+This feature is mainly for command line usage, to help reduce the number of keystrokes.  
+When used in a script, it is advised to explicitly set the required collector with the option `--using`.
 
 ### Index
 

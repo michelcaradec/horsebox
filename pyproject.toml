@@ -3,12 +3,14 @@ name = "horsebox"
 version = "0.4.0"
 description = "You Know, for local Search."
 readme = "README.md"
+repository = "https://github.com/michelcaradec/horsebox"
 authors = [
     { name = "Michel Caradec", email = "mcaradec@proton.me" }
 ]
 maintainers = [
   { name = "Michel Caradec", email = "mcaradec@proton.me" }
 ]
+license = "MIT"
 keywords = ["Tantivy", "Search", "CLI"]
 classifiers = [
     "Programming Language :: Python :: 3.9",

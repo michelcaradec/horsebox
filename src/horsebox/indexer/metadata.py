@@ -25,7 +25,7 @@ __METADATA_BUILD_ARGS = 'build_args'
 
 def __read_metadata(index: str) -> Dict[str, Any]:
     if not tantivy.Index.exists(index):
-        render_error(f'No index was found at {index}', exit=True)
+        render_error(f'No index was found at {index}')
 
     with open(os.path.join(index, __METADATA_FILENAME), 'r') as file:
         meta = json.load(file)
@@ -38,7 +38,7 @@ def __write_metadata(
     metadata: Dict[str, Any],
 ) -> None:
     if not tantivy.Index.exists(index):
-        render_error(f'No index was found at {index}', exit=True)
+        render_error(f'No index was found at {index}')
 
     filename = os.path.join(index, __METADATA_FILENAME)
     # Make a backup copy of the file `meta.json` to recover from potential corruption

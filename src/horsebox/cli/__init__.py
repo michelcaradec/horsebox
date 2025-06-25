@@ -1,2 +1,4 @@
 FILENAME_PREFIX = '@'
 ELLIPSIS = '...'
+PATTERN_ANY = '*'
+OPTION_COLLECT_AS_JSONL = 'collect_as_jsonl'

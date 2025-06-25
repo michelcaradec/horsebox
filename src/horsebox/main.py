@@ -6,6 +6,10 @@ from typing import (
 import click
 
 from horsebox import __version__
+from horsebox.cli import (
+    OPTION_COLLECT_AS_JSONL,
+    PATTERN_ANY,
+)
 from horsebox.cli.combined_option import CombinedOption
 from horsebox.cli.render import Format
 from horsebox.collectors import CollectorType
@@ -92,20 +96,20 @@ def __config_cmd(**kwargs: Any) -> None:
     required=True,
     help='Datasource to index. Prefix filename with @.',
 )
-@click.option('--pattern', '-p', multiple=True, default=['*'], show_default=True, help='Containers to index.')
+@click.option('--pattern', '-p', multiple=True, default=[PATTERN_ANY], show_default=True, help='Containers to index.')
 @click.option('--index', '-i', required=True, help='Location where to persist the index.')
 @click.option(
     '--using',
     '-u',
     'collector_type',
     type=click.Choice(list(CollectorType), case_sensitive=False),
-    default=CollectorType.FILECONTENT,
+    default=CollectorType.GUESS,
     show_default=True,
     help='Collector to use for indexing.',
 )
 @click.option(
     '--jsonl',
-    'collect_as_jsonl',
+    OPTION_COLLECT_AS_JSONL,
     type=bool,
     is_flag=True,
     default=False,
@@ -196,13 +200,13 @@ def __inspect_cmd(**kwargs: Any) -> None:
     '-u',
     'collector_type',
     type=click.Choice(list(CollectorType), case_sensitive=False),
-    default=CollectorType.FILECONTENT,
+    default=CollectorType.GUESS,
     show_default=True,
     help='Collector to use for indexing.',
 )
 @click.option(
     '--jsonl',
-    'collect_as_jsonl',
+    OPTION_COLLECT_AS_JSONL,
     type=bool,
     is_flag=True,
     default=False,

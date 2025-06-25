@@ -12,3 +12,4 @@ class CollectorType(str, Enum):
     RSS = 'rss'
     RAW = 'raw'
     HTML = 'html'
+    GUESS = 'guess'
