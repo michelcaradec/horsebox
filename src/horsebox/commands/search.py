@@ -10,7 +10,10 @@ from typing import (
 
 import tantivy
 
-from horsebox.cli import ELLIPSIS
+from horsebox.cli import (
+    ELLIPSIS,
+    OPTION_COLLECT_AS_JSONL,
+)
 from horsebox.cli.config import config
 from horsebox.cli.render import (
     Format,
@@ -85,13 +88,17 @@ def search(
 
     if source and pattern:
         # Live search
-        collector = get_collector(collector_type)
+        collector, extra_args = get_collector(
+            collector_type,
+            source,
+            pattern,
+        )
 
         t_index, took_index = feed_index(
             collector.create_instance(
                 root_path=source,
                 pattern=pattern,
-                collect_as_jsonl=collect_as_jsonl,
+                **({OPTION_COLLECT_AS_JSONL: collect_as_jsonl} | extra_args),
             ),
             # If an index is provided, the index will be (re) built
             index,

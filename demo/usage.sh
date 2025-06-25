@@ -31,6 +31,9 @@ hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --c
 # Proximity search.
 hb search --from ./demo/raw.json --using raw --query "'engine inspired'~1" --highlight
 
+# Guess mode.
+hb search --from ./demo/raw.json --query "'engine inspired'~1" --highlight
+
 # Fuzzy search.
 hb search --from ./demo/raw.json --using raw --query "engne~1"
 
@@ -42,6 +45,13 @@ then
         --from "@demo/rss/planetpython.xml" \
         --from "@demo/rss/realpython.xml" \
         --using rss --query "duckdb" --highlight
+
+    # Guess mode.
+    hb search \
+        --from "@demo/rss/pythonlibrary.xml" \
+        --from "@demo/rss/planetpython.xml" \
+        --from "@demo/rss/realpython.xml" \
+        --query "duckdb" --highlight
 else
     hb search \
         --from "https://www.blog.pythonlibrary.org/feed/" \
@@ -115,6 +125,8 @@ hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --h
 if [[ "${HB_TEST_MODE}" == "1" ]]
 then
     hb search --from "@demo/rss/planetpython.xml" --using rss --top
+    # Guess mode.
+    hb search --from "@demo/rss/planetpython.xml" --top
 else
     hb search --from "https://planetpython.org/rss20.xml" --using rss --top
 fi
@@ -123,6 +135,8 @@ fi
 if [[ "${HB_TEST_MODE}" == "1" ]]
 then
     HB_RENDER_MAX_CONTENT=200 hb search --from "@demo/html/python_programming_language.html" --using html --query "python" --limit 5
+    # Guess mode.
+    HB_RENDER_MAX_CONTENT=200 hb search --from "@demo/html/python_programming_language.html" --query "python" --limit 5
 else
     HB_RENDER_MAX_CONTENT=200 hb search --from "https://en.wikipedia.org/wiki/Python_(programming_language)" --using html --query "python" --limit 5
 fi

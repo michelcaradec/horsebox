@@ -103,7 +103,7 @@ def __config_cmd(**kwargs: Any) -> None:
     '-u',
     'collector_type',
     type=click.Choice(list(CollectorType), case_sensitive=False),
-    default=CollectorType.FILECONTENT,
+    default=CollectorType.GUESS,
     show_default=True,
     help='Collector to use for indexing.',
 )
@@ -200,7 +200,7 @@ def __inspect_cmd(**kwargs: Any) -> None:
     '-u',
     'collector_type',
     type=click.Choice(list(CollectorType), case_sensitive=False),
-    default=CollectorType.FILECONTENT,
+    default=CollectorType.GUESS,
     show_default=True,
     help='Collector to use for indexing.',
 )

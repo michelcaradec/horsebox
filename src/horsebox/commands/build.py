@@ -1,5 +1,6 @@
 from typing import List
 
+from horsebox.cli import OPTION_COLLECT_AS_JSONL
 from horsebox.cli.render import Format
 from horsebox.collectors import CollectorType
 from horsebox.collectors.factory import get_collector
@@ -27,13 +28,17 @@ def build(
         collect_as_jsonl (bool): Whether the JSON documents should be collected as JSON Lines or not.
         format (Format): The rendering format to use.
     """
-    collector = get_collector(collector_type)
+    collector, extra_args = get_collector(
+        collector_type,
+        source,
+        pattern,
+    )
 
     feed_index(
         collector.create_instance(
             root_path=source,
             pattern=pattern,
-            collect_as_jsonl=collect_as_jsonl,
+            **({OPTION_COLLECT_AS_JSONL: collect_as_jsonl} | extra_args),
         ),
         index,
         IndexBuildArgs(
