@@ -11,6 +11,17 @@
 
 *NA*
 
+## [0.5.0] - 2025-06-25
+
+### Added
+
+- New collector `guess`, to identify the best collector to use.
+- Use of [Tox](https://tox.wiki/) for tests with multiple interpreters.
+
+### Changed
+
+- Return of the exit code `-1` on error.
+
 ## [0.4.0] - 2025-06-11
 
 ### Added
