@@ -311,14 +311,15 @@ It acts as a level of abstraction, which returns documents to be ingested.
 
 Horsebox supports different types of collectors:
 
-| Collector     | Description                                                    |
-| ------------- | -------------------------------------------------------------- |
-| `filename`    | One document per file, containing the name of the file only.   |
-| `filecontent` | One document per file, with the content of the file (default). |
-| `fileline`    | One document per line and per file.                            |
-| `rss`         | RSS feed, one document per article.                            |
-| `html`        | Collect the content of an HTML page.                           |
-| `raw`         | Collect ready to index [JSON documents](#raw-collector).       |
+| Collector     | Description                                                     |
+| ------------- | --------------------------------------------------------------- |
+| `filename`    | One document per file, containing the name of the file only.    |
+| `filecontent` | One document per file, with the content of the file (default).  |
+| `fileline`    | One document per line and per file.                             |
+| `rss`         | RSS feed, one document per article.                             |
+| `html`        | Collect the content of an HTML page.                            |
+| `raw`         | Collect ready to index [JSON documents](#raw-collector).        |
+| `guess`       | Used to identify the [best collector](#guess-collector) to use. |
 
 The collector to use is specified with the option `--using`.  
 The default collector is `filecontent`.
