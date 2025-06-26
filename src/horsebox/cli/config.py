@@ -129,7 +129,7 @@ class __Config:
 
     @property
     def string_normalize(self) -> bool:
-        """Custom list of stop-words."""
+        """Normalize strings when reading files."""
         return self.__string_normalize
 
     @property
