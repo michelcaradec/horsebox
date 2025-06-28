@@ -12,7 +12,12 @@ maintainers = [
 ]
 license = "MIT"
 keywords = ["Tantivy", "Search", "CLI"]
+# https://pypi.org/classifiers/
 classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Environment :: Console",
+    "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
