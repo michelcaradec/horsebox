@@ -34,17 +34,27 @@ class CollectorFS(Collector):
         Returns:
             Iterable[TDocument]: The collected documents.
         """
-        return itertools.chain.from_iterable(
-            # Parse the file...
-            self.parse(root_path, filename)
-            # ...for each folder...
-            for root_path in self.root_path
-            # ...for each file in the folder.
-            for filename in itertools.chain.from_iterable(
-                iglob(os.path.join(os.path.expanduser(root_path), f'**/{p}'), recursive=True) for p in self.pattern
-            )
-            if os.path.isfile(filename)
-        )
+        # For each file/folder
+        for root_path in self.root_path:
+            if os.path.isfile(root_path):
+                # Collect this file
+                yield from self.parse(
+                    os.path.dirname(root_path),
+                    root_path,
+                )
+            else:
+                # For each file in the folder
+                for filename in itertools.chain.from_iterable(
+                    iglob(
+                        os.path.join(os.path.expanduser(root_path), f'**/{p}'),
+                        recursive=True,
+                    )
+                    for p in self.pattern
+                ):
+                    if not os.path.isfile(filename):
+                        continue
+
+                    yield from self.parse(root_path, filename)
 
     @abstractmethod
     def parse(
