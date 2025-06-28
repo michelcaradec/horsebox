@@ -22,6 +22,9 @@ def normalize_string(
         str: The normalized string.
             Empty string in case of conversion error (silent fail).
     """
+    if not text:
+        return text
+
     # Normalize the string
     form = 'NFKC' if keep_accents else 'NFKD'
     normalized = ''.join(
