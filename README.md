@@ -2,7 +2,7 @@
 
 A versatile and autonomous command line tool for search.
 
-[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml)
+[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml) ![pypi badge](https://img.shields.io/pypi/v/horsebox)
 
 <details>
 <summary>Table of contents</summary>
