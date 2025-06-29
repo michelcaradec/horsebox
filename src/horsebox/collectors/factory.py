@@ -17,6 +17,7 @@ from horsebox.collectors.collector_guess import guess_collector
 from horsebox.collectors.collector_html import CollectorHtml
 from horsebox.collectors.collector_raw import CollectorRaw
 from horsebox.collectors.collector_rss import CollectorRSS
+from horsebox.collectors.collector_pdf import CollectorPdf
 from horsebox.model.collector import Collector
 
 __COLLECTORS: Dict[CollectorType, Type[Collector]] = {
@@ -26,6 +27,7 @@ __COLLECTORS: Dict[CollectorType, Type[Collector]] = {
     CollectorType.RSS: CollectorRSS,
     CollectorType.RAW: CollectorRaw,
     CollectorType.HTML: CollectorHtml,
+    CollectorType.PDF: CollectorPdf,
 }
 
 

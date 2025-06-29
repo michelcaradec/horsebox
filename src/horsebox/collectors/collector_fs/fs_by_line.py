@@ -81,5 +81,5 @@ class CollectorFSByLine(CollectorFS):
                     path=f'{file_path}#L{pos}',
                     size=stats.st_size,
                     # Time of most recent content modification expressed in seconds.
-                    updated=datetime.fromtimestamp(stats.st_mtime),
+                    date=datetime.fromtimestamp(stats.st_mtime),
                 )

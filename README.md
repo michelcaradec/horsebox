@@ -2,7 +2,7 @@
 
 A versatile and autonomous command line tool for search.
 
-[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml)
+[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml) ![pypi badge](https://img.shields.io/pypi/v/horsebox)
 
 <details>
 <summary>Table of contents</summary>
@@ -26,6 +26,7 @@ A versatile and autonomous command line tool for search.
   - [Collectors](#collectors)
     - [Raw Collector](#raw-collector)
     - [Guess Collector](#guess-collector)
+    - [Collectors Usage Matrix](#collectors-usage-matrix)
   - [Index](#index)
   - [Strategies](#strategies)
 - [Annexes](#annexes)
@@ -311,14 +312,16 @@ It acts as a level of abstraction, which returns documents to be ingested.
 
 Horsebox supports different types of collectors:
 
-| Collector     | Description                                                    |
-| ------------- | -------------------------------------------------------------- |
-| `filename`    | One document per file, containing the name of the file only.   |
-| `filecontent` | One document per file, with the content of the file (default). |
-| `fileline`    | One document per line and per file.                            |
-| `rss`         | RSS feed, one document per article.                            |
-| `html`        | Collect the content of an HTML page.                           |
-| `raw`         | Collect ready to index [JSON documents](#raw-collector).       |
+| Collector     | Description                                                     |
+| ------------- | --------------------------------------------------------------- |
+| `filename`    | One document per file, containing the name of the file only.    |
+| `filecontent` | One document per file, with the content of the file (default).  |
+| `fileline`    | One document per line and per file.                             |
+| `rss`         | RSS feed, one document per article.                             |
+| `html`        | Collect the content of an HTML page.                            |
+| `raw`         | Collect ready to index [JSON documents](#raw-collector).        |
+| `pdf`         | Collect the content of a PDF document.                          |
+| `guess`       | Used to identify the [best collector](#guess-collector) to use. |
 
 The collector to use is specified with the option `--using`.  
 The default collector is `filecontent`.
@@ -351,7 +354,7 @@ Some examples can be found with the files [raw.json](./demo/raw.json) (array of 
 *Disclaimer: starting with version `0.5.0`.*
 
 The collector `guess` can be used to identify the best collector to use.  
-The detection is done in a best effort from the options `--from` and `--pattern`.  
+The detection is done in a [best effort](#collectors-usage-matrix) from the options `--from` and `--pattern`.  
 An error will be returned if no collector could be guessed.
 
 The collector `guess` is used by default, meaning that the option `--using` can be skipped.
@@ -378,6 +381,24 @@ hb search --from ./raw.jsonl --query "some text"
 
 This feature is mainly for command line usage, to help reduce the number of keystrokes.  
 When used in a script, it is advised to explicitly set the required collector with the option `--using`.
+
+#### Collectors Usage Matrix
+
+The following table shows the options supported by each collector.
+
+| Collector     | Multi-Sources Mode               | Single Source Mode |
+| ------------- | -------------------------------- | ------------------ |
+| `filename`    | `--from $folder --pattern *.xxx` | -                  |
+| `filecontent` | `--from $folder --pattern *.xxx` | -                  |
+| `fileline`    | `--from $folder --pattern *.xxx` | -                  |
+| `rss`         | -                                | `--from $feed`     |
+| `html`        | -                                | `--from $page`     |
+| `raw`         | -                                | `--from $json`     |
+| `pdf`         | `--from $folder --pattern *.pdf` | `--from $file.pdf` |
+
+*`-`: not supported.*
+
+These options are also used by the [guess collector](#guess-collector) in its detection.
 
 ### Index
 

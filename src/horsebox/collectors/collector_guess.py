@@ -11,6 +11,7 @@ from horsebox.cli.render import render_error
 from horsebox.collectors import CollectorType
 from horsebox.collectors.guessers import (
     guess_html,
+    guess_pdf,
     guess_raw,
     guess_rss,
 )
@@ -45,6 +46,9 @@ def guess_collector(
     >>> guess_collector(CollectorType.GUESS, [], ['*.txt'])
     (<CollectorType.FILECONTENT: 'filecontent'>, {})
 
+    >>> guess_collector(CollectorType.GUESS, [], ['*.pdf'])
+    (<CollectorType.PDF: 'pdf'>, {})
+
     >>> guess_collector(CollectorType.GUESS, ['https://planetpython.org/rss20.xml'], [])
     (<CollectorType.RSS: 'rss'>, {})
 
@@ -60,6 +64,9 @@ def guess_collector(
     >>> guess_collector(CollectorType.GUESS, ['@Python_(programming_language).html'], [])
     (<CollectorType.HTML: 'html'>, {})
 
+    >>> guess_collector(CollectorType.GUESS, ['file.pdf'], [])
+    (<CollectorType.PDF: 'pdf'>, {})
+
     Args:
         collector_type (CollectorType): The provided type of the collector.
         source (List[str]): The provided locations from which to start indexing.
@@ -74,7 +81,10 @@ def guess_collector(
         return (collector_type, {})
 
     if pattern := [p for p in pattern if p != PATTERN_ANY]:
-        # Patterns are only supported by File System Collectors.
+        if guess := guess_pdf(pattern[0]):
+            return guess
+
+        # Other patterns are only supported by File System Collectors.
         # Use the File System Collector by default.
         return (CollectorType.FILECONTENT, {})
 
@@ -90,9 +100,16 @@ def guess_collector(
         elif parsed.scheme:
             render_error(f'Unsupported scheme {parsed.scheme}')
         elif (
-            (guess := guess_html(parsed.path)) or (guess := guess_rss(parsed.path)) or (guess := guess_raw(parsed.path))
+            (guess := guess_html(parsed.path))
+            or (guess := guess_rss(parsed.path))
+            or (guess := guess_raw(parsed.path))
+            or (guess := guess_pdf(parsed.path))
         ):
             # Offline source
             return guess
+
+        # Extra detection of files provided with the option "--from" may lead to ambiguous results:
+        # files with the extension .txt or .md can be detected with confidence, but what about other extensions?
+        # In such cases, it is better to explicitly provide the collector to use.
 
     return (collector_type, {})

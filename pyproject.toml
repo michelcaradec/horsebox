@@ -1,6 +1,6 @@
 [project]
 name = "horsebox"
-version = "0.5.0"
+version = "0.6.0"
 description = "You Know, for local Search."
 readme = "README.md"
 repository = "https://github.com/michelcaradec/horsebox"
@@ -12,7 +12,12 @@ maintainers = [
 ]
 license = "MIT"
 keywords = ["Tantivy", "Search", "CLI"]
+# https://pypi.org/classifiers/
 classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Environment :: Console",
+    "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -25,6 +30,7 @@ dependencies = [
     "click>=8.1.8,<8.2.0",
     "feedparser>=6.0.11",
     "ijson>=3.3.0",
+    "pdfminer-six>=20250506",
     "tantivy>=0.24.0",
 ]
 
