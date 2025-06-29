@@ -147,6 +147,11 @@ cat ./demo/raw.json | hb search --from - --using raw --query "adipiscing" --high
 # Search in JSONL documents (using pipe).
 cat ./demo/raw.jsonl | hb search --from - --using raw --query "adipiscing" --highlight --limit 5 --jsonl
 
+# Search in a PDF file.
+hb search --from ./demo/zen-of-python.pdf --using pdf --query "better" --highlight --limit 5
+# Guess mode.
+hb search --from ./demo/zen-of-python.pdf --query "better" --highlight --limit 5
+
 #######################
 # Analyzing Some Text #
 #######################

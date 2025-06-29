@@ -30,6 +30,7 @@ dependencies = [
     "click>=8.1.8,<8.2.0",
     "feedparser>=6.0.11",
     "ijson>=3.3.0",
+    "pdfminer-six>=20250506",
     "tantivy>=0.24.0",
 ]
 

@@ -319,6 +319,7 @@ Horsebox supports different types of collectors:
 | `rss`         | RSS feed, one document per article.                             |
 | `html`        | Collect the content of an HTML page.                            |
 | `raw`         | Collect ready to index [JSON documents](#raw-collector).        |
+| `pdf`         | Collect the content of a PDF document.                          |
 | `guess`       | Used to identify the [best collector](#guess-collector) to use. |
 
 The collector to use is specified with the option `--using`.  
