@@ -11,6 +11,22 @@
 
 *NA*
 
+## [0.6.0] - 2025-06-29
+
+### Added
+
+- New collector `pdf`, to process PDF documents.
+
+### Changed
+
+- The collection of the file by the file system collectors has been improved to support file patterns and names.
+
+### Fixed
+
+- The date of last modification of the files were not properly propagated by the file system collectors.
+- Early exit when normalizing empty strings.
+- Improve the display of the enumeration based values (string `txt` vs enumeration name `Format.TXT`).
+
 ## [0.5.0] - 2025-06-25
 
 ### Added
