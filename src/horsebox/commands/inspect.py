@@ -45,7 +45,7 @@ def inspect(
         timestamp=timestamp,
     )
     if build_args:
-        output['using'] = build_args.collector_type
+        output['using'] = build_args.collector_type.value
         output['from'] = build_args.source
         output['pattern'] = build_args.pattern
         output['jsonl'] = build_args.collect_as_jsonl

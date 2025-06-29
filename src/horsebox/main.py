@@ -55,7 +55,7 @@ def __cli() -> None:
 @click.option(
     '--format',
     type=click.Choice(list(Format), case_sensitive=False),
-    default=Format.TXT,
+    default=Format.TXT.value,
     show_default=True,
     help='Format of the output.',
 )
@@ -74,7 +74,7 @@ def __schema_cmd(**kwargs: Any) -> None:
 @click.option(
     '--format',
     type=click.Choice(list(Format), case_sensitive=False),
-    default=Format.TXT,
+    default=Format.TXT.value,
     show_default=True,
     help='Format of the output.',
 )
@@ -103,7 +103,7 @@ def __config_cmd(**kwargs: Any) -> None:
     '-u',
     'collector_type',
     type=click.Choice(list(CollectorType), case_sensitive=False),
-    default=CollectorType.GUESS,
+    default=CollectorType.GUESS.value,
     show_default=True,
     help='Collector to use for indexing.',
 )
@@ -121,7 +121,7 @@ def __config_cmd(**kwargs: Any) -> None:
 @click.option(
     '--format',
     type=click.Choice(list(Format), case_sensitive=False),
-    default=Format.TXT,
+    default=Format.TXT.value,
     show_default=True,
     help='Format of the output.',
 )
@@ -141,7 +141,7 @@ def __build_cmd(**kwargs: Any) -> None:
 @click.option(
     '--format',
     type=click.Choice(list(Format), case_sensitive=False),
-    default=Format.TXT,
+    default=Format.TXT.value,
     show_default=True,
     help='Format of the output.',
 )
@@ -161,7 +161,7 @@ def __refresh_cmd(**kwargs: Any) -> None:
 @click.option(
     '--format',
     type=click.Choice(list(Format), case_sensitive=False),
-    default=Format.TXT,
+    default=Format.TXT.value,
     show_default=True,
     help='Format of the output.',
 )
@@ -200,7 +200,7 @@ def __inspect_cmd(**kwargs: Any) -> None:
     '-u',
     'collector_type',
     type=click.Choice(list(CollectorType), case_sensitive=False),
-    default=CollectorType.GUESS,
+    default=CollectorType.GUESS.value,
     show_default=True,
     help='Collector to use for indexing.',
 )
@@ -230,7 +230,7 @@ def __inspect_cmd(**kwargs: Any) -> None:
 @click.option(
     '--format',
     type=click.Choice(list(Format), case_sensitive=False),
-    default=Format.TXT,
+    default=Format.TXT.value,
     show_default=True,
     help='Format of the output.',
 )
@@ -248,7 +248,7 @@ def __search_cmd(**kwargs: Any) -> None:
     '--tokenizer',
     'tokenizer_type',
     type=click.Choice(list(TokenizerType), case_sensitive=False),
-    default=TokenizerType.SIMPLE,
+    default=TokenizerType.SIMPLE.value,
     show_default=True,
     help='Tokenizer.',
 )
@@ -269,7 +269,7 @@ def __search_cmd(**kwargs: Any) -> None:
 @click.option(
     '--format',
     type=click.Choice(list(Format), case_sensitive=False),
-    default=Format.TXT,
+    default=Format.TXT.value,
     show_default=True,
     help='Format of the output.',
 )
