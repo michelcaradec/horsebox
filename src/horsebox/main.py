@@ -187,7 +187,7 @@ def __inspect_cmd(**kwargs: Any) -> None:
     '-p',
     type=str,
     multiple=True,
-    default=['*'],
+    default=[PATTERN_ANY],
     show_default=True,
     help='Containers to index.',
     cls=CombinedOption,
