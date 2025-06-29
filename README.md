@@ -26,6 +26,7 @@ A versatile and autonomous command line tool for search.
   - [Collectors](#collectors)
     - [Raw Collector](#raw-collector)
     - [Guess Collector](#guess-collector)
+    - [Collectors Usage Matrix](#collectors-usage-matrix)
   - [Index](#index)
   - [Strategies](#strategies)
 - [Annexes](#annexes)
@@ -353,7 +354,7 @@ Some examples can be found with the files [raw.json](./demo/raw.json) (array of 
 *Disclaimer: starting with version `0.5.0`.*
 
 The collector `guess` can be used to identify the best collector to use.  
-The detection is done in a best effort from the options `--from` and `--pattern`.  
+The detection is done in a [best effort](#collectors-usage-matrix) from the options `--from` and `--pattern`.  
 An error will be returned if no collector could be guessed.
 
 The collector `guess` is used by default, meaning that the option `--using` can be skipped.
@@ -380,6 +381,24 @@ hb search --from ./raw.jsonl --query "some text"
 
 This feature is mainly for command line usage, to help reduce the number of keystrokes.  
 When used in a script, it is advised to explicitly set the required collector with the option `--using`.
+
+#### Collectors Usage Matrix
+
+The following table shows the options supported by each collector.
+
+| Collector     | Multi-Sources Mode               | Single Source Mode |
+| ------------- | -------------------------------- | ------------------ |
+| `filename`    | `--from $folder --pattern *.xxx` | -                  |
+| `filecontent` | `--from $folder --pattern *.xxx` | -                  |
+| `fileline`    | `--from $folder --pattern *.xxx` | -                  |
+| `rss`         | -                                | `--from $feed`     |
+| `html`        | -                                | `--from $page`     |
+| `raw`         | -                                | `--from $json`     |
+| `pdf`         | `--from $folder --pattern *.pdf` | `--from $file.pdf` |
+
+*`-`: not supported.*
+
+These options are also used by the [guess collector](#guess-collector) in its detection.
 
 ### Index
 
