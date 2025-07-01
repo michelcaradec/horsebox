@@ -2,7 +2,13 @@ import os
 from datetime import datetime
 from time import monotonic_ns
 from typing import (
+    Any,
+    Dict,
+    Iterable,
+    List,
+    NoReturn,
     Optional,
+    OrderedDict,
     Tuple,
 )
 
@@ -11,6 +17,7 @@ import tantivy
 from horsebox.cli.config import config
 from horsebox.cli.render import (
     Format,
+    render,
     render_error,
     render_warning,
 )
@@ -20,6 +27,7 @@ from horsebox.indexer.metadata import (
     set_metadata,
 )
 from horsebox.indexer.schema import get_schema
+from horsebox.model import TDocument
 from horsebox.model.collector import Collector
 from horsebox.utils.batch import batched
 
@@ -28,6 +36,7 @@ def feed_index(
     collector: Collector,
     index: Optional[str] = None,
     build_args: Optional[IndexBuildArgs] = None,
+    format: Format = Format.TXT,
 ) -> Tuple[tantivy.Index, int]:
     """
     Build an index.
@@ -38,12 +47,16 @@ def feed_index(
             Defaults to None.
         build_args (Optional[IndexBuildArgs]): The arguments used to build the index.
             Defaults to None.
+        format (Format): The rendering format to use.
 
     Returns:
         Tuple[tantivy.Index, int]:
             (the index, the build time).
     """
     documents = collector.collect()
+
+    if collector.dry_run:
+        __collect_dry_mode(documents, format)
 
     if index:
         os.makedirs(index, exist_ok=True)
@@ -80,6 +93,25 @@ def feed_index(
     t_index.reload()
 
     return (t_index, took)
+
+
+def __collect_dry_mode(
+    documents: Iterable[TDocument],
+    format: Format,
+) -> NoReturn:
+    outputs: List[Dict[str, Any]] = []
+
+    for document in documents:
+        output = OrderedDict(
+            container=document['path'],
+        )
+        if size := document.get('size'):
+            output['size'] = size
+        outputs.append(output)
+
+    render(outputs, format)
+
+    quit(0)
 
 
 def open_index(

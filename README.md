@@ -234,7 +234,8 @@ Options used:
 - `--index`: location where to persist the index.
 
 By default, the [collector](#collectors) `filecontent` is used.  
-An alternate collector can be specified with the option `--using`.
+An alternate collector can be specified with the option `--using`.  
+The option `--dry-run` can be used to show the items to be index, without creating the index.
 
 The built index can be searched:
 
