@@ -1,6 +1,7 @@
 import os
 from typing import (
     Any,
+    Generator,
     Iterable,
     List,
 )
@@ -31,7 +32,10 @@ class CollectorRaw(Collector):
         self,
         root_path: List[str],
         collect_as_jsonl: bool,
+        **kwargs: Any,
     ) -> None:
+        super().__init__(**kwargs)
+
         self.root_path = root_path
         self.collect_as_jsonl = collect_as_jsonl
 
@@ -39,8 +43,9 @@ class CollectorRaw(Collector):
     def create_instance(**kwargs: Any) -> Collector:
         """Create an instance of the collector."""
         return CollectorRaw(
-            kwargs['root_path'],
-            kwargs[OPTION_COLLECT_AS_JSONL],
+            kwargs.pop('root_path'),
+            kwargs.pop(OPTION_COLLECT_AS_JSONL),
+            **kwargs,
         )
 
     def collect(self) -> Iterable[TDocument]:
@@ -51,17 +56,43 @@ class CollectorRaw(Collector):
             Iterable[TDocument]: The collected documents.
         """
         for root_path in self.root_path:
-            filename = root_path[1:] if root_path.startswith(FILENAME_PREFIX) else root_path
+            yield from self.parse(
+                '',
+                root_path[1:] if root_path.startswith(FILENAME_PREFIX) else root_path,
+            )
 
-            with click.open_file(filename, 'r') as file:
-                if self.__is_jsonl(filename):
-                    # See https://pypi.org/project/ijson/#options-1
-                    items = ijson.items(file, '', multiple_values=True)
-                else:
-                    items = ijson.items(file, 'item')
+    def parse(
+        self,
+        root_path: str,
+        file_path: str,
+    ) -> Generator[TDocument, Any, None]:
+        """
+        Parse a file for indexing by its content.
 
-                for item in items:
-                    yield prepare_doc(**item)
+        Args:
+            root_path (str): Base path of the file.
+            file_path (str): File to parse.
+
+        Yields:
+            Generator[TDocument, Any, None]: The document to index (one document per file).
+        """
+        filename = file_path
+
+        if self.dry_run:
+            yield prepare_doc(
+                path=file_path,
+            )
+            return
+
+        with click.open_file(filename, 'r') as file:
+            if self.__is_jsonl(filename):
+                # See https://pypi.org/project/ijson/#options-1
+                items = ijson.items(file, '', multiple_values=True)
+            else:
+                items = ijson.items(file, 'item')
+
+            for item in items:
+                yield prepare_doc(**item)
 
     def __is_jsonl(
         self,

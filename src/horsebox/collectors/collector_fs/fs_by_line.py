@@ -23,18 +23,21 @@ class CollectorFSByLine(CollectorFS):
         self,
         root_path: List[str],
         pattern: List[str],
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             root_path,
             pattern,
+            **kwargs,
         )
 
     @staticmethod
     def create_instance(**kwargs: Any) -> Collector:
         """Create an instance of the collector."""
         return CollectorFSByLine(
-            kwargs['root_path'],
-            kwargs['pattern'],
+            kwargs.pop('root_path'),
+            kwargs.pop('pattern'),
+            **kwargs,
         )
 
     def parse(
@@ -56,6 +59,17 @@ class CollectorFSByLine(CollectorFS):
 
         filename = file_path[len(root_path) :].strip('/')
         _, ext = os.path.splitext(filename)
+
+        if self.dry_run:
+            yield prepare_doc(
+                name=filename,
+                type=ext,
+                path=file_path,
+                size=stats.st_size,
+                # Time of most recent content modification expressed in seconds.
+                date=datetime.fromtimestamp(stats.st_mtime),
+            )
+            return
 
         parser_max_line = config.parser_max_line
 

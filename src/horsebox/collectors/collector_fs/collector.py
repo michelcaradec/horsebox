@@ -1,14 +1,13 @@
 import itertools
 import os
-from abc import abstractmethod
 from glob import iglob
 from typing import (
     Any,
-    Generator,
     Iterable,
     List,
 )
 
+from horsebox.cli import OPTION_DRY_RUN
 from horsebox.model import TDocument
 from horsebox.model.collector import Collector
 
@@ -23,9 +22,11 @@ class CollectorFS(Collector):
         self,
         root_path: List[str],
         pattern: List[str],
+        **kwargs: Any,
     ) -> None:
         self.root_path = root_path
         self.pattern = pattern
+        self.dry_run = kwargs.get(OPTION_DRY_RUN, False)
 
     def collect(self) -> Iterable[TDocument]:
         """
@@ -55,21 +56,3 @@ class CollectorFS(Collector):
                         continue
 
                     yield from self.parse(root_path, filename)
-
-    @abstractmethod
-    def parse(
-        self,
-        root_path: str,
-        file_path: str,
-    ) -> Generator[TDocument, Any, None]:
-        """
-        Parse a container for indexing.
-
-        Args:
-            root_path (str): Base path of the file.
-            file_path (str): File to parse.
-
-        Yields:
-            Generator[TDocument, Any, None]: The document to index.
-        """
-        ...
