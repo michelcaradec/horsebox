@@ -21,18 +21,21 @@ class CollectorFSByFilename(CollectorFS):
         self,
         root_path: List[str],
         pattern: List[str],
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             root_path,
             pattern,
+            **kwargs,
         )
 
     @staticmethod
     def create_instance(**kwargs: Any) -> Collector:
         """Create an instance of the collector."""
         return CollectorFSByFilename(
-            kwargs['root_path'],
-            kwargs['pattern'],
+            kwargs.pop('root_path'),
+            kwargs.pop('pattern'),
+            **kwargs,
         )
 
     def parse(
@@ -55,6 +58,7 @@ class CollectorFSByFilename(CollectorFS):
         filename = file_path[len(root_path) :].strip('/')
         _, ext = os.path.splitext(filename)
 
+        # No difference between the returned document in real-mode or in dry-mode
         yield prepare_doc(
             name=filename,
             type=ext,

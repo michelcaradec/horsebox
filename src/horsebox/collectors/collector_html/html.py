@@ -1,6 +1,7 @@
 import urllib.request
 from typing import (
     Any,
+    Generator,
     Iterable,
     List,
 )
@@ -9,7 +10,6 @@ from bs4 import BeautifulSoup
 
 from horsebox.cli import FILENAME_PREFIX
 from horsebox.indexer.factory import prepare_doc
-from horsebox.indexer.schema import SCHEMA_FIELD_CONTENT
 from horsebox.model import TDocument
 from horsebox.model.collector import Collector
 from horsebox.utils.ipv6 import ipv6_disabled
@@ -27,13 +27,19 @@ class CollectorHtml(Collector):
     def __init__(  # noqa: D107
         self,
         pages: List[str],
+        **kwargs: Any,
     ) -> None:
+        super().__init__(**kwargs)
+
         self.pages = pages
 
     @staticmethod
     def create_instance(**kwargs: Any) -> Collector:
         """Create an instance of the collector."""
-        return CollectorHtml(kwargs['root_path'])
+        return CollectorHtml(
+            kwargs.pop('root_path'),
+            **kwargs,
+        )
 
     def collect(self) -> Iterable[TDocument]:
         """
@@ -43,26 +49,49 @@ class CollectorHtml(Collector):
             Iterable[TDocument]: The collected documents.
         """
         for page in self.pages:
-            if page.startswith(FILENAME_PREFIX):
-                with open(page[1:], 'r') as file:
-                    content = file.read()
-            else:
-                with ipv6_disabled():
-                    with urllib.request.urlopen(page) as response:
-                        content = response.read()
+            yield from self.parse('', page)
 
-            soup = BeautifulSoup(content, 'html.parser')
+    def parse(
+        self,
+        root_path: str,
+        file_path: str,
+    ) -> Generator[TDocument, Any, None]:
+        """
+        Parse a file for indexing by its content.
 
-            name = (
-                title[0].get_text()
-                if (soup.html and (title := soup.html.find_all('title', limit=1)) and len(title))
-                else None
-            )
+        Args:
+            root_path (str): Base path of the file.
+            file_path (str): File to parse.
 
+        Yields:
+            Generator[TDocument, Any, None]: The document to index (one document per file).
+        """
+        if self.dry_run:
             yield prepare_doc(
-                **{
-                    'name': name,
-                    'path': page,
-                    SCHEMA_FIELD_CONTENT: soup.get_text(),
-                }
+                path=file_path[1:] if file_path.startswith(FILENAME_PREFIX) else file_path,
             )
+            return
+
+        if file_path.startswith(FILENAME_PREFIX):
+            with open(file_path[1:], 'r') as file:
+                content = file.read()
+        else:
+            with ipv6_disabled():
+                with urllib.request.urlopen(file_path) as response:
+                    content = response.read()
+
+        soup = BeautifulSoup(content, 'html.parser')
+
+        name = (
+            title[0].get_text()
+            if (soup.html and (title := soup.html.find_all('title', limit=1)) and len(title))
+            else None
+        )
+
+        yield prepare_doc(
+            **{
+                'name': name,
+                'path': file_path,
+                'content': soup.get_text(),
+            }
+        )

@@ -7,7 +7,9 @@ import click
 
 from horsebox import __version__
 from horsebox.cli import (
+    FALLBACK_VALUE,
     OPTION_COLLECT_AS_JSONL,
+    OPTION_DRY_RUN,
     PATTERN_ANY,
 )
 from horsebox.cli.combined_option import CombinedOption
@@ -97,7 +99,16 @@ def __config_cmd(**kwargs: Any) -> None:
     help='Datasource to index. Prefix filename with @.',
 )
 @click.option('--pattern', '-p', multiple=True, default=[PATTERN_ANY], show_default=True, help='Containers to index.')
-@click.option('--index', '-i', required=True, help='Location where to persist the index.')
+@click.option(
+    '--index',
+    '-i',
+    required=True,
+    help='Location where to persist the index.',
+    cls=CombinedOption,
+    required_if='index',
+    ignore_if=OPTION_DRY_RUN,
+    fallback_value=FALLBACK_VALUE,
+)
 @click.option(
     '--using',
     '-u',
@@ -117,6 +128,14 @@ def __config_cmd(**kwargs: Any) -> None:
 )
 @click.option(
     '--json', type=bool, is_flag=True, default=False, help='Format the output as JSON (same as --format json).'
+)
+@click.option(
+    '--dry-run',
+    OPTION_DRY_RUN,
+    type=bool,
+    is_flag=True,
+    default=False,
+    help='Simulate the index build without processing the containers nor creating the index.',
 )
 @click.option(
     '--format',

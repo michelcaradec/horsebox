@@ -48,5 +48,6 @@ def refresh(
         index,
         build_args.collector_type,
         build_args.collect_as_jsonl,
+        False,
         format,
     )

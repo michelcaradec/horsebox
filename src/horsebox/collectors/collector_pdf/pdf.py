@@ -13,7 +13,6 @@ from pdfminer.layout import LTTextContainer
 from horsebox.cli.config import config
 from horsebox.collectors.collector_fs.collector import CollectorFS
 from horsebox.indexer.factory import prepare_doc
-from horsebox.indexer.schema import SCHEMA_FIELD_CONTENT
 from horsebox.model import TDocument
 from horsebox.model.collector import Collector
 from horsebox.utils.normalize import normalize_string
@@ -33,18 +32,21 @@ class CollectorPdf(CollectorFS):
         self,
         root_path: List[str],
         pattern: List[str],
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             root_path,
             pattern,
+            **kwargs,
         )
 
     @staticmethod
     def create_instance(**kwargs: Any) -> Collector:
         """Create an instance of the collector."""
         return CollectorPdf(
-            kwargs['root_path'],
-            kwargs['pattern'],
+            kwargs.pop('root_path'),
+            kwargs.pop('pattern'),
+            **kwargs,
         )
 
     def parse(
@@ -71,6 +73,17 @@ class CollectorPdf(CollectorFS):
         # Time of most recent content modification expressed in seconds.
         file_date = datetime.fromtimestamp(stats.st_mtime)
 
+        if self.dry_run:
+            yield prepare_doc(
+                name=filename,
+                type=ext,
+                path=file_path,
+                size=stats.st_size,
+                # Time of most recent content modification expressed in seconds.
+                date=datetime.fromtimestamp(stats.st_mtime),
+            )
+            return
+
         for pos, page in enumerate(extract_pages(file_path), start=1):
             content: List[str] = []
             # Process file block-by-block to limit memory allocation during string normalization
@@ -91,7 +104,7 @@ class CollectorPdf(CollectorFS):
                     'name': filename,
                     'type': ext,
                     'path': f'{file_path}#L{pos}',
-                    SCHEMA_FIELD_CONTENT: content,
+                    'content': content,
                     'size': stats.st_size,
                     'date': file_date,
                 }

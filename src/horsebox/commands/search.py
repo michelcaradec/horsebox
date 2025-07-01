@@ -108,6 +108,7 @@ def search(
                 collector_type=collector_type,
                 collect_as_jsonl=collect_as_jsonl,
             ),
+            format,
         )
     elif index:
         # Search on an existing index

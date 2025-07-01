@@ -1,6 +1,9 @@
 from typing import List
 
-from horsebox.cli import OPTION_COLLECT_AS_JSONL
+from horsebox.cli import (
+    OPTION_COLLECT_AS_JSONL,
+    OPTION_DRY_RUN,
+)
 from horsebox.cli.render import Format
 from horsebox.collectors import CollectorType
 from horsebox.collectors.factory import get_collector
@@ -15,6 +18,7 @@ def build(
     index: str,
     collector_type: CollectorType,
     collect_as_jsonl: bool,
+    dry_run: bool,
     format: Format,
 ) -> None:
     """
@@ -26,6 +30,7 @@ def build(
         index (str): The location where to persist the index.
         collector_type (CollectorType): The collector to use.
         collect_as_jsonl (bool): Whether the JSON documents should be collected as JSON Lines or not.
+        dry_run (bool): Whether the build of the index should be simulated or done.
         format (Format): The rendering format to use.
     """
     collector, extra_args = get_collector(
@@ -38,7 +43,13 @@ def build(
         collector.create_instance(
             root_path=source,
             pattern=pattern,
-            **({OPTION_COLLECT_AS_JSONL: collect_as_jsonl} | extra_args),
+            **(
+                {
+                    OPTION_COLLECT_AS_JSONL: collect_as_jsonl,
+                    OPTION_DRY_RUN: dry_run,
+                }
+                | extra_args
+            ),
         ),
         index,
         IndexBuildArgs(
@@ -47,6 +58,7 @@ def build(
             collector_type=collector_type,
             collect_as_jsonl=collect_as_jsonl,
         ),
+        format,
     )
 
     inspect(index, format)

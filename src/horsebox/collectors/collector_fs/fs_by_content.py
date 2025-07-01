@@ -23,18 +23,21 @@ class CollectorFSByContent(CollectorFS):
         self,
         root_path: List[str],
         pattern: List[str],
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             root_path,
             pattern,
+            **kwargs,
         )
 
     @staticmethod
     def create_instance(**kwargs: Any) -> Collector:
         """Create an instance of the collector."""
         return CollectorFSByContent(
-            kwargs['root_path'],
-            kwargs['pattern'],
+            kwargs.pop('root_path'),
+            kwargs.pop('pattern'),
+            **kwargs,
         )
 
     def parse(
@@ -60,27 +63,28 @@ class CollectorFSByContent(CollectorFS):
 
         filename = file_path[len(root_path) :].strip('/')
         _, ext = os.path.splitext(filename)
-
-        parser_max_line = config.parser_max_line
-
         content: List[str] = []
-        with open(
-            file_path,
-            'r',
-            errors='surrogateescape',
-        ) as file:
-            # Process file line-by-line to limit memory allocation during string normalization
-            for line in file:
-                if parser_max_line is not None and len(line) > parser_max_line:
-                    continue
 
-                line = line.strip()
-                if config.string_normalize:
-                    line = normalize_string(line)
-                if not line:
-                    continue
+        if not self.dry_run:
+            parser_max_line = config.parser_max_line
 
-                content.append(line)
+            with open(
+                file_path,
+                'r',
+                errors='surrogateescape',
+            ) as file:
+                # Process file line-by-line to limit memory allocation during string normalization
+                for line in file:
+                    if parser_max_line is not None and len(line) > parser_max_line:
+                        continue
+
+                    line = line.strip()
+                    if config.string_normalize:
+                        line = normalize_string(line)
+                    if not line:
+                        continue
+
+                    content.append(line)
 
         yield prepare_doc(
             name=filename,

@@ -84,6 +84,9 @@ hb search --from ./demo/raw.json --using raw --query "date:[2025-01-01T10:00:00.
 # Building An Index #
 #####################
 
+# Get the files to be used to build an index.
+hb build --from ./demo/ --pattern "*.txt" --dry-run
+
 # Build an index `.index-demo` from the text files under the folder `demo`.
 hb build --from ./demo/ --pattern "*.txt" --index ./.index-demo
 
