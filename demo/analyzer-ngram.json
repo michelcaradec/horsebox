@@ -1,0 +1,21 @@
+{
+    "tokenizer": {
+        "ngram": {
+            "min_gram": 3,
+            "max_gram": 3,
+            "prefix_only": false
+        }
+    },
+    "filters": [
+        {
+            "custom_stopword": {
+                "stopwords": [
+                    "sea",
+                    "ear",
+                    "arc",
+                    "rch"
+                ]
+            }
+        }
+    ]
+}

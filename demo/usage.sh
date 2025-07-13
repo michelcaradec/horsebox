@@ -220,3 +220,43 @@ hb analyze --text "${TEXT}" --filter stopword --filter-params "language=english"
 
 # Analyze a string by converting to lower case, excluding words with 5 characters or more, and excluding a custom list of stop-words
 hb analyze --text "${TEXT}" --filter lowercase --filter remove_long --filter custom_stopword --filter-params "|length_limit=5|stopwords=[is,and,in]"
+
+#---------------#
+# Analyzer file #
+#---------------#
+
+hb analyze --text "${TEXT}" --analyzer ./demo/analyzer-ngram.json
+
+###################
+# Custom Analyzer #
+###################
+
+hb build \
+    --index .index-analyzer \
+    --from ./demo --pattern "*.py" \
+    --using fileline \
+    --analyzer ./demo/analyzer-python.json
+
+hb inspect --index .index-analyzer
+
+hb refresh --index .index-analyzer
+
+hb search \
+    --index .index-analyzer \
+    --query "word" \
+    --highlight
+
+hb search \
+    --index .index-analyzer \
+    --from ./demo --pattern "*.py" \
+    --using fileline \
+    --analyzer ./demo/analyzer-python.json \
+    --query "word" \
+    --highlight
+
+hb search \
+    --from ./demo --pattern "*.py" \
+    --using fileline \
+    --analyzer ./demo/analyzer-python.json \
+    --query "word" \
+    --highlight
