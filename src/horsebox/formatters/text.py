@@ -22,7 +22,7 @@ __BOLD = '\033[1m'
 
 __INDENT = '  '
 __LINE_BREAK = '* * * * *'
-LINE_BREAK = {}
+LINE_BREAK: Dict = {}
 """Line break item."""
 
 

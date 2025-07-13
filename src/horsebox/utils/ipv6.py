@@ -24,7 +24,7 @@ def ipv6_disabled(*args, **kwds) -> Generator[None, Any, None]:
         return getaddrinfo(host, port, socket.AF_INET, type, proto, flags)
 
     # Disable IPv6
-    socket.getaddrinfo = _getaddrinfo_ipv4_only
+    socket.getaddrinfo = _getaddrinfo_ipv4_only  # type: ignore[assignment]
     try:
         yield
     finally:

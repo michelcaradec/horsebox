@@ -84,6 +84,7 @@ def search(
     """
     # region Open index
 
+    t_index: Optional[tantivy.Index]
     took_index: Optional[int] = None
 
     if source and pattern:
@@ -235,7 +236,7 @@ def __search_impl(
             )
             snippet_generator.set_max_num_chars(config.highlight_max_chars)
 
-        outputs: TOutput = []
+        outputs: List[TOutput] = []
         for score, doc_address in result.hits:
             hit = searcher.doc(doc_address)
             doc = hit.to_dict()
@@ -322,7 +323,7 @@ def __top_keywords_impl(
 
     top_keywords = result[agg_name]
 
-    outputs: TOutput = []
+    outputs: List[TOutput] = []
     count = 0
     sum_other_doc_count = 0  # Discarded stop-words count
 
