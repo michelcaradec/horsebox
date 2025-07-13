@@ -3,7 +3,7 @@ from horsebox.cli.render import (
     render_warning,
 )
 from horsebox.collectors import FILENAME_PIPE
-from horsebox.commands import build
+from horsebox.commands import build_index
 from horsebox.indexer.index import open_index
 from horsebox.indexer.metadata import get_build_args
 
@@ -42,7 +42,7 @@ def refresh(
         render_warning(f'The index {index} has no identifiable data source')
         return
 
-    build(
+    build_index(
         build_args.source,
         build_args.pattern,
         index,

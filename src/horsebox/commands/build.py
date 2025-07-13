@@ -12,7 +12,7 @@ from horsebox.indexer.index import feed_index
 from horsebox.indexer.metadata import IndexBuildArgs
 
 
-def build(
+def build_index(
     source: List[str],
     pattern: List[str],
     index: str,

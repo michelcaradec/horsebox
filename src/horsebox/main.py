@@ -17,7 +17,7 @@ from horsebox.cli.render import Format
 from horsebox.collectors import CollectorType
 from horsebox.commands import (
     analyze,
-    build,
+    build_index,
     config,
     inspect,
     refresh,
@@ -145,7 +145,7 @@ def __config_cmd(**kwargs: Any) -> None:
     help='Format of the output.',
 )
 def __build_cmd(**kwargs: Any) -> None:
-    build(**__refine_args(**kwargs))
+    build_index(**__refine_args(**kwargs))
 
 
 # endregion
