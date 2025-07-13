@@ -127,6 +127,11 @@ def __config_cmd(**kwargs: Any) -> None:
     help='Collect JSON documents as JSON Lines (only with --using raw).',
 )
 @click.option(
+    '--analyzer',
+    type=click.Path(exists=True, dir_okay=False, file_okay=True),
+    help='File containing the definition of the custom analyzer.',
+)
+@click.option(
     '--json', type=bool, is_flag=True, default=False, help='Format the output as JSON (same as --format json).'
 )
 @click.option(
@@ -244,6 +249,11 @@ def __inspect_cmd(**kwargs: Any) -> None:
 @click.option('--count', type=bool, is_flag=True, default=False, help='Count the number of items found.')
 @click.option('--top', type=bool, is_flag=True, default=False, help='Get the top keywords of the result.')
 @click.option(
+    '--analyzer',
+    type=click.Path(exists=True, dir_okay=False, file_okay=True),
+    help='File containing the definition of the custom analyzer.',
+)
+@click.option(
     '--json', type=bool, is_flag=True, default=False, help='Format the output as JSON (same as --format json).'
 )
 @click.option(
@@ -282,6 +292,11 @@ def __search_cmd(**kwargs: Any) -> None:
     help='Filter.',
 )
 @click.option('--filter-params', 'filter_params', type=str, help='Filter parameters.')
+@click.option(
+    '--analyzer',
+    type=click.Path(exists=True, dir_okay=False, file_okay=True),
+    help='File containing the definition of the custom analyzer.',
+)
 @click.option(
     '--json', type=bool, is_flag=True, default=False, help='Format the output as JSON (same as --format json).'
 )

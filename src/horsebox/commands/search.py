@@ -26,14 +26,18 @@ from horsebox.formatters.text import (
     LINE_BREAK,
     snippet_add_style,
 )
+from horsebox.indexer.analyzer import CustomAnalyzerDef
+from horsebox.indexer.analyzer.factory import load_custom_analyzer_def
+from horsebox.indexer.build_args import IndexBuildArgs
 from horsebox.indexer.index import (
     feed_index,
     open_index,
 )
-from horsebox.indexer.metadata import IndexBuildArgs
 from horsebox.indexer.schema import (
     DEFAULT_FIELD_NAMES,
     SCHEMA_FIELD_CONTENT,
+    SCHEMA_FIELD_CONTENT_CUSTOM,
+    SCHEMA_FIELDS_CUSTOM,
     get_schema,
 )
 from horsebox.model import TOutput
@@ -63,6 +67,7 @@ def search(
     highlight: bool,
     count: bool,
     top: bool,
+    analyzer: Optional[str],
     format: Format,
 ) -> None:
     """
@@ -80,12 +85,14 @@ def search(
         highlight (bool): Whether the keywords found should be highlighted or not.
         count (bool): Whether a count operation should be done or not.
         top (bool): Whether the top list of keywords found should be returned or not.
+        analyzer (Optional[str]): The file containing the definition of the custom analyzer.
         format (Format): The rendering format to use.
     """
     # region Open index
 
     t_index: Optional[tantivy.Index]
     took_index: Optional[int] = None
+    build_args: Optional[IndexBuildArgs] = None
 
     if source and pattern:
         # Live search
@@ -95,6 +102,8 @@ def search(
             pattern,
         )
 
+        custom_analyzer: Optional[CustomAnalyzerDef] = load_custom_analyzer_def(analyzer) if analyzer else None
+
         t_index, took_index = feed_index(
             collector.create_instance(
                 root_path=source,
@@ -103,21 +112,24 @@ def search(
             ),
             # If an index is provided, the index will be (re) built
             index,
-            IndexBuildArgs(
+            build_args := IndexBuildArgs(
                 source=source,
                 pattern=pattern,
                 collector_type=collector_type,
                 collect_as_jsonl=collect_as_jsonl,
+                custom_analyzer=custom_analyzer,
             ),
             format,
         )
     elif index:
         # Search on an existing index
-        t_index, _ = open_index(index, format)
+        t_index, _, build_args = open_index(index, format)
         if not t_index:
             return
     else:
         raise ValueError('`--from` or `--index` must be specified')
+
+    use_custom_field: bool = bool(build_args and build_args.custom_analyzer)
 
     # endregion
     # region Prepare query
@@ -125,6 +137,7 @@ def search(
     t_query: tantivy.Query = __parse_query_string(
         t_index,
         query_string,
+        use_custom_field,
     )
 
     # endregion
@@ -143,6 +156,7 @@ def search(
     else:
         __search_impl(
             t_index,
+            use_custom_field,
             searcher,
             t_query,
             limit,
@@ -158,7 +172,10 @@ def search(
 def __parse_query_string(
     t_index: tantivy.Index,
     query_string: str,
+    use_custom_field: bool,
 ) -> tantivy.Query:
+    t_query: tantivy.Query
+
     try:
         if match := __RE_IS_FUZZY.match(query_string.strip()):
             # Basic implementation of the fuzzy search through a query string.
@@ -166,23 +183,25 @@ def __parse_query_string(
             # https://github.com/quickwit-oss/tantivy/issues/1112#issuecomment-880331994
             # Attention! Highlight will not work (see https://github.com/quickwit-oss/tantivy/issues/2576)
 
+            content_field = SCHEMA_FIELD_CONTENT_CUSTOM if use_custom_field else SCHEMA_FIELD_CONTENT
+
             distance = min(int(match['distance'] or __LEVENSHTEIN_DISTANCE_DEFAULT), __LEVENSHTEIN_DISTANCE_MAX)
             if (text := match['word']).startswith(f'{SCHEMA_FIELD_CONTENT}:'):
                 # The field must not be specified in the query string
-                text = text[len(f'{SCHEMA_FIELD_CONTENT}:') :]
+                text = text[len(f'{content_field}:') :]
 
-            t_query: tantivy.Query = tantivy.Query.fuzzy_term_query(
-                get_schema(),
-                SCHEMA_FIELD_CONTENT,
+            t_query = tantivy.Query.fuzzy_term_query(
+                get_schema(custom_fields=SCHEMA_FIELDS_CUSTOM if use_custom_field else None),
+                content_field,
                 text.strip(),
                 distance,
             )
         else:
             # https://docs.rs/tantivy/latest/tantivy/query/struct.QueryParser.html
             # Sample search: https://github.com/quickwit-oss/tantivy-py/blob/master/tests/tantivy_test.py
-            t_query: tantivy.Query = t_index.parse_query(
+            t_query = t_index.parse_query(
                 query_string,
-                DEFAULT_FIELD_NAMES,
+                default_field_names=DEFAULT_FIELD_NAMES + ([SCHEMA_FIELD_CONTENT_CUSTOM] if use_custom_field else []),
             )
 
             if str(t_query) == __EMPTY_QUERY:
@@ -195,6 +214,7 @@ def __parse_query_string(
 
 def __search_impl(
     t_index: tantivy.Index,
+    use_custom_field: bool,
     searcher: tantivy.Searcher,
     query: tantivy.Query,
     limit: int,
@@ -232,7 +252,7 @@ def __search_impl(
                 searcher,
                 query,
                 t_index.schema,
-                SCHEMA_FIELD_CONTENT,
+                SCHEMA_FIELD_CONTENT_CUSTOM if use_custom_field else SCHEMA_FIELD_CONTENT,
             )
             snippet_generator.set_max_num_chars(config.highlight_max_chars)
 

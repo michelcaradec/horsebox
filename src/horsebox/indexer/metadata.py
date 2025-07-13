@@ -1,22 +1,18 @@
 import json
 import os
 import shutil
-from dataclasses import (
-    asdict,
-    dataclass,
-)
+from dataclasses import asdict
 from datetime import datetime
 from typing import (
     Any,
     Dict,
-    List,
     Optional,
 )
 
 import tantivy
 
 from horsebox.cli.render import render_error
-from horsebox.collectors import CollectorType
+from horsebox.indexer.build_args import IndexBuildArgs
 
 __METADATA_FILENAME = 'meta.json'
 __METADATA_TIMESTAMP = 'timestamp'
@@ -78,20 +74,6 @@ def set_timestamp(
     __write_metadata(index, meta)
 
 
-@dataclass
-class IndexBuildArgs:
-    """Arguments used to build an index."""
-
-    source: List[str]
-    """Locations from which to start indexing."""
-    pattern: List[str]
-    """The containers to index."""
-    collector_type: CollectorType
-    """The collector to use."""
-    collect_as_jsonl: bool
-    """Whether the JSON documents should be collected as JSON Lines or not."""
-
-
 def get_build_args(index: str) -> Optional[IndexBuildArgs]:
     """
     Get the build arguments of an index.
@@ -101,12 +83,7 @@ def get_build_args(index: str) -> Optional[IndexBuildArgs]:
     """
     meta = __read_metadata(index)
     if build_args := meta.get(__METADATA_BUILD_ARGS):
-        build_args = IndexBuildArgs(**build_args)
-
-        # Set the collector type as enumeration as it was serialized as a string
-        build_args.collector_type = CollectorType(build_args.collector_type)
-
-        return build_args
+        return IndexBuildArgs(**build_args)
 
     return None
 

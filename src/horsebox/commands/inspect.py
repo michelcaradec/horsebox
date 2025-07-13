@@ -1,5 +1,6 @@
 import os
 from collections import OrderedDict
+from dataclasses import asdict
 from functools import reduce
 from typing import Any
 
@@ -24,7 +25,7 @@ def inspect(
         index (str): The location of the persisted index.
         format (Format): The rendering format to use.
     """
-    t_index, timestamp = open_index(index, format)
+    t_index, timestamp, build_args = open_index(index, format)
     if not t_index:
         return
 
@@ -49,5 +50,7 @@ def inspect(
         output['from'] = build_args.source
         output['pattern'] = build_args.pattern
         output['jsonl'] = build_args.collect_as_jsonl
-        
+        if custom_analyzer := (build_args and build_args.custom_analyzer):
+            output['analyzer'] = asdict(custom_analyzer)
+
     render(output, format)
