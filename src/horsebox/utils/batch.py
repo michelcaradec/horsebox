@@ -1,6 +1,6 @@
 from itertools import (
-    islice,
     chain,
+    islice,
 )
 from typing import (
     Iterable,

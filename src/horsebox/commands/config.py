@@ -1,5 +1,6 @@
-from collections import OrderedDict
 import os
+from collections import OrderedDict
+
 from horsebox.cli.config import CONFIGS
 from horsebox.cli.render import (
     Format,
