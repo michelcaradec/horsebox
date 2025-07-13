@@ -1,1 +1,1 @@
-from horsebox.collectors.collector_html.html import CollectorHtml  # noqa: F401
+from .html import CollectorHtml  # noqa: F401
