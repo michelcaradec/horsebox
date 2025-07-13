@@ -7,6 +7,7 @@ from typing import (
 )
 
 from horsebox.cli.render import render_error
+from horsebox.utils.strings import split_with_escaped
 
 __PARAM_GROUP_SEPARATOR = '|'
 __PARAM_SEPARATOR = ';'
@@ -94,7 +95,7 @@ def parse_params(
 
     parsed: Dict[str, Any] = {}
 
-    for param in params.split(__PARAM_SEPARATOR):
+    for param in split_with_escaped(params, __PARAM_SEPARATOR):
         key_val = param.strip().split(__KEY_VALUE_SEPARATOR, 1)
         if len(key_val) != 2:
             render_error(f'Invalid key-value parameter: {param}')
@@ -137,13 +138,13 @@ def __parse_typed_value(value: str) -> Optional[Union[int, str, bool, List[str]]
     value = value.strip()
 
     if value.startswith(__VALUE_LIST_BEGIN_MARKER) and value.endswith(__VALUE_LIST_END_MARKER):
-        values = value.strip(__VALUE_LIST_BEGIN_MARKER).strip(__VALUE_LIST_END_MARKER).split(__VALUE_LIST_SEPARATOR)
-        return list(
-            map(
-                lambda v: v.strip(__VALUE_STRING_MARKER),
-                values,
+        return [
+            v.strip(__VALUE_STRING_MARKER)
+            for v in split_with_escaped(
+                value.strip(__VALUE_LIST_BEGIN_MARKER).strip(__VALUE_LIST_END_MARKER),
+                __VALUE_LIST_SEPARATOR,
             )
-        )
+        ]
     elif value.lower() == 'true':
         return True
     elif value.lower() == 'false':
