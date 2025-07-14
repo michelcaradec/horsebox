@@ -1,5 +1,7 @@
 from typing import List
 
+from horsebox.cli import ELLIPSIS
+
 
 def split_with_escaped(
     text: str,
@@ -41,3 +43,32 @@ def split_with_escaped(
         # Split the escaped string according to the (non-escaped) separators
         in escaped.split(sep)
     ]
+
+
+def ellipsize(
+    text: str,
+    size: int,
+) -> str:
+    """
+    Get the content of a string, limited to a maximum size.
+
+    >>> ellipsize('', 0)
+    ''
+
+    >>> ellipsize('lorem', 3)
+    '...'
+
+    >>> ellipsize('lorem', 5)
+    'lorem'
+
+    >>> ellipsize('lorem', 10)
+    'lorem'
+
+    >>> ellipsize('lorem ipsum', 10)
+    'lorem i...'
+
+    Args:
+        text (str): The text to get the content from.
+        size (int): The maximum size to return.
+    """
+    return text if len(text) <= max(size, len(ELLIPSIS)) else text[: size - len(ELLIPSIS)] + ELLIPSIS

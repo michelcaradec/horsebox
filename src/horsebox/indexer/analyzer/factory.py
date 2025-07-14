@@ -1,5 +1,6 @@
 import json
 from typing import (
+    Any,
     Dict,
     List,
     Optional,
@@ -12,12 +13,14 @@ from horsebox.cli.param_parser import (
     parse_params,
     parse_params_group,
 )
+from horsebox.cli.render import render_error
 from horsebox.indexer.analyzer import (
     CustomAnalyzerDef,
     FilterType,
     TokenizerType,
 )
 from horsebox.indexer.analyzer.custom_analyzer_def import CustomAnalyzerArgs
+from horsebox.utils.strings import ellipsize
 
 
 def get_custom_analyzer_def(
@@ -59,9 +62,20 @@ def load_custom_analyzer_def(filename: str) -> CustomAnalyzerDef:
     Args:
         filename (str): The name of the file.
     """
-    with click.open_file(filename, 'r') as file:
-        content = json.load(file)
+    content: Dict[str, Any]
+
+    try:
+        with click.open_file(filename, 'r') as file:
+            content = json.load(file)
+    except json.decoder.JSONDecodeError as e:
+        render_error(f'Invalid custom analyzer JSON file: {filename} - {e}')
+
+    try:
         return CustomAnalyzerDef(**content)
+    except Exception as e:
+        dump = json.dumps(content)
+        render_error(f'Error while parsing custom analyzer definition: {filename} - {e} - {ellipsize(dump, 50)}')
+        raise
 
 
 def get_analyzer(custom_analyzer: CustomAnalyzerDef) -> tantivy.TextAnalyzer:
