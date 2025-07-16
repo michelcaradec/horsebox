@@ -262,7 +262,7 @@ hb refresh --index ./.index-demo
 There are cases where an index can't be refreshed:
 
 - The index was built with a version prior to `0.4.0`.
-- The index data source was provided by pipe (see [Raw Collector](#raw-collector)).
+- The index data source was provided by pipe (see the section [Collectors Usage Matrix](#collectors-usage-matrix)).
 
 ### Inspecting An Index
 
@@ -392,15 +392,15 @@ When used in a script, it is advised to explicitly set the required collector wi
 
 The following table shows the options supported by each collector.
 
-| Collector     | Multi-Sources Mode               | Single Source Mode |
-| ------------- | -------------------------------- | ------------------ |
-| `filename`    | `--from $folder --pattern *.xxx` | -                  |
-| `filecontent` | `--from $folder --pattern *.xxx` | -                  |
-| `fileline`    | `--from $folder --pattern *.xxx` | -                  |
-| `rss`         | -                                | `--from $feed`     |
-| `html`        | -                                | `--from $page`     |
-| `raw`         | -                                | `--from $json`     |
-| `pdf`         | `--from $folder --pattern *.pdf` | `--from $file.pdf` |
+| Collector     | Multi-Sources Mode               | Single Source Mode | Pipe Support                   |
+| ------------- | -------------------------------- | ------------------ | ------------------------------ |
+| `filename`    | `--from $folder --pattern *.xxx` | -                  | -                              |
+| `filecontent` | `--from $folder --pattern *.xxx` | -                  | `--from - --using filecontent` |
+| `fileline`    | `--from $folder --pattern *.xxx` | -                  | `--from - --using fileline`    |
+| `rss`         | -                                | `--from $feed`     | -                              |
+| `html`        | -                                | `--from $page`     | -                              |
+| `raw`         | -                                | `--from $json`     | `--from - --using raw`         |
+| `pdf`         | `--from $folder --pattern *.pdf` | `--from $file.pdf` | -                              |
 
 *`-`: not supported.*
 

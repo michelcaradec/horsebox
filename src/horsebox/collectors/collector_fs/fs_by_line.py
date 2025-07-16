@@ -4,8 +4,12 @@ from typing import (
     Any,
     Generator,
     List,
+    Optional,
 )
 
+import click
+
+from horsebox.collectors import FILENAME_PIPE
 from horsebox.collectors.collector_fs.collector import CollectorFS
 from horsebox.indexer.factory import prepare_doc
 from horsebox.indexer.index import config
@@ -55,9 +59,15 @@ class CollectorFSByLine(CollectorFS):
         Yields:
             Generator[TDocument, Any, None]: The document to index (one document per line).
         """
-        stats: os.stat_result = os.stat(file_path)
+        stats: Optional[os.stat_result] = None
+        filename: str
 
-        filename = file_path[len(root_path) :].strip('/')
+        if file_path == FILENAME_PIPE:
+            filename = FILENAME_PIPE
+        else:
+            stats = os.stat(file_path)
+            filename = file_path[len(root_path) :].strip('/')
+
         _, ext = os.path.splitext(filename)
 
         if self.dry_run:
@@ -65,15 +75,15 @@ class CollectorFSByLine(CollectorFS):
                 name=filename,
                 type=ext,
                 path=file_path,
-                size=stats.st_size,
+                size=stats.st_size if stats else None,
                 # Time of most recent content modification expressed in seconds.
-                date=datetime.fromtimestamp(stats.st_mtime),
+                date=datetime.fromtimestamp(stats.st_mtime) if stats else None,
             )
             return
 
         parser_max_line = config.parser_max_line
 
-        with open(
+        with click.open_file(
             file_path,
             'r',
             errors='surrogateescape',
@@ -93,7 +103,7 @@ class CollectorFSByLine(CollectorFS):
                     type=ext,
                     content=line,
                     path=f'{file_path}#L{pos}',
-                    size=stats.st_size,
+                    size=stats.st_size if stats else None,
                     # Time of most recent content modification expressed in seconds.
-                    date=datetime.fromtimestamp(stats.st_mtime),
+                    date=datetime.fromtimestamp(stats.st_mtime) if stats else None,
                 )

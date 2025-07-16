@@ -4,9 +4,13 @@ from typing import (
     Any,
     Generator,
     List,
+    Optional,
 )
 
+import click
+
 from horsebox.cli.config import config
+from horsebox.collectors import FILENAME_PIPE
 from horsebox.collectors.collector_fs.collector import CollectorFS
 from horsebox.indexer.factory import prepare_doc
 from horsebox.model.collector import (
@@ -55,20 +59,25 @@ class CollectorFSByContent(CollectorFS):
         Yields:
             Generator[TDocument, Any, None]: The document to index (one document per file).
         """
-        parser_max_content = config.parser_max_content
+        stats: Optional[os.stat_result] = None
+        filename: str
 
-        stats: os.stat_result = os.stat(file_path)
-        if parser_max_content is not None and stats.st_size > parser_max_content:
-            return
+        if file_path == FILENAME_PIPE:
+            filename = FILENAME_PIPE
+        else:
+            stats = os.stat(file_path)
+            if config.parser_max_content is not None and stats.st_size > config.parser_max_content:
+                return
 
-        filename = file_path[len(root_path) :].strip('/')
+            filename = file_path[len(root_path) :].strip('/')
+
         _, ext = os.path.splitext(filename)
         content: List[str] = []
 
         if not self.dry_run:
             parser_max_line = config.parser_max_line
 
-            with open(
+            with click.open_file(
                 file_path,
                 'r',
                 errors='surrogateescape',
@@ -91,7 +100,7 @@ class CollectorFSByContent(CollectorFS):
             type=ext,
             content=content,
             path=file_path,
-            size=stats.st_size,
+            size=stats.st_size if stats else None,
             # Time of most recent content modification expressed in seconds.
-            date=datetime.fromtimestamp(stats.st_mtime),
+            date=datetime.fromtimestamp(stats.st_mtime) if stats else None,
         )
