@@ -102,7 +102,7 @@ class CollectorFSByLine(CollectorFS):
                     name=filename,
                     type=ext,
                     content=line,
-                    path=f'{file_path}#L{pos}',
+                    path=f'{file_path}#{pos}',
                     size=stats.st_size if stats else None,
                     # Time of most recent content modification expressed in seconds.
                     date=datetime.fromtimestamp(stats.st_mtime) if stats else None,
