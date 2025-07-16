@@ -35,6 +35,9 @@ A versatile and autonomous command line tool for search.
   - [Manual Testing In Docker](#manual-testing-in-docker)
   - [Samples](#samples)
     - [Advanced Searches](#advanced-searches)
+  - [Using A Custom Analyzer](#using-a-custom-analyzer)
+    - [Custom Analyzer Definition](#custom-analyzer-definition)
+    - [Custom Analyzer Limitations](#custom-analyzer-limitations)
   - [Configuration](#configuration)
   - [Where Does This Name Come From](#where-does-this-name-come-from)
 
@@ -277,6 +280,8 @@ hb search --index ./.index-demo --top
 
 ### Analyzing Some Text
 
+**Attention!** The version `0.7.0` introduced a [new option](#using-a-custom-analyzer) `--analyzer`, which replaces the legacy ones (`--tokenizer`, `--tokenizer-params`, `--filter` and `--filter-params`). Even-though the use of this new option is strongly recommended, the legacies are still available with the command `analyze`.
+
 The command `analyze` is used to play with the [tokenizers](https://docs.rs/tantivy/latest/tantivy/tokenizer/trait.Tokenizer.html) and [filters](https://docs.rs/tantivy/latest/tantivy/tokenizer/trait.TokenFilter.html) supported by Tantivy to index documents.
 
 To tokenize a text:
@@ -295,7 +300,7 @@ hb analyze \
     --filter lowercase
 ```
 
-Multiple examples can be found in the script [usage.sh](./demo/usage.sh).
+*Multiple examples can be found in the script [usage.sh](./demo/usage.sh).*
 
 ## Concepts
 
@@ -559,6 +564,71 @@ The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tan
 
 [^5]: See <https://github.com/quickwit-oss/tantivy/issues/2576>.  
 [^6]: Even though Tantivy implements it with [FuzzyTermQuery](https://docs.rs/tantivy/latest/tantivy/query/struct.FuzzyTermQuery.html).
+
+### Using A Custom Analyzer
+
+*Disclaimer: starting with version `0.7.0`.*
+
+By default, the [content of a container](#naming-conventions) is indexed in the [field](#raw-collector) `content` using the [default](https://docs.rs/tantivy/latest/tantivy/tokenizer/#default) [text analyzer](https://docs.rs/tantivy/latest/tantivy/tokenizer/), which splits the text on every white space and punctuation [^8], removes words (a.k.a tokens) that are longer than 40 characters [^9], and lowercases the text [^10].
+
+While this text analyzer fits most of the cases, it may not be suitable for more specific content such as code.
+
+The option `--analyzer` can be used with the commands `build` and `search` to apply a custom tokenizer and filters to the content to be indexed.  
+The [definition of the custom analyzer](#custom-analyzer-definition) is described in a JSON file.  
+The analyzed content will be indexed to an extra field `custom`.
+
+To build an index `.index-analyzer` with a custom analyzer `analyzer-python.json`:
+
+```bash
+hb build \
+    --index .index-analyzer \
+    --from ./demo --pattern "*.py" \
+    --using fileline \
+    --analyzer ./demo/analyzer-python.json
+```
+
+A full set of examples can be found in the script [usage.sh](./demo/usage.sh).
+
+#### Custom Analyzer Definition
+
+The custom analyzer definition is described in a JSON file.
+
+It is composed of two parts:
+
+- `tokenizer`: the tokenizer to use to split the content. There must be one and only one tokenizer.
+- `filters`: the filters to use to transform and select the tokenized content. There can be zero or more filters.
+
+```json
+{
+    "tokenizer": {
+        "$tokenize_type": {...}
+    },
+    "filters": [
+        {
+            "$filter_type": {...}
+        },
+        {
+            "$filter_type": {...}
+        }
+    ]
+}
+```
+
+Each object `$tokenize_type` and `$filter_type` may contain extra configuration fields.
+
+The file [analyzer-schema.json](./demo/analyzer-schema.json) is a [JSON Schema](https://json-schema.org/) which can be used to **validate** any custom analyzer definition.  
+The site [JSON Editor Online](https://jsoneditoronline.org/) proposes a [playground](https://jsoneditoronline.org/indepth/validate/json-schema-validator/#Try_it_out) to test it from your browser.  
+The Python library [jsonschema](https://pypi.org/project/jsonschema/) proposes an implementation of JSON Schema validation.
+
+#### Custom Analyzer Limitations
+
+- When a custom analyzer is defined, the [highlight](#searching) is done of the field `custom`.
+- The tokenizer [regex](https://docs.rs/tantivy/latest/tantivy/tokenizer/struct.RegexTokenizer.html) uses the pattern syntax supported by the [Regex](https://docs.rs/tantivy-fst/latest/tantivy_fst/struct.Regex.html) implementation.
+- The option `--top` is not applied on the field `custom`, due to the [fast](https://docs.rs/tantivy/latest/tantivy/fastfield/) mode required for aggregation, but not compatible with the tokenizer [regex](https://docs.rs/tantivy/latest/tantivy/tokenizer/struct.RegexTokenizer.html).
+
+[^8]: Using the tokenizer [simple](https://docs.rs/tantivy/latest/tantivy/tokenizer/struct.SimpleTokenizer.html).  
+[^9]: Using the filter [remove_long](https://docs.rs/tantivy/latest/tantivy/tokenizer/struct.RemoveLongFilter.html).  
+[^10]: Using the filter [lowercase](https://docs.rs/tantivy/latest/tantivy/tokenizer/struct.LowerCaser.html).
 
 ### Configuration
 

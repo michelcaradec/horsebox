@@ -46,6 +46,7 @@ dev = [
     "ruff",
     "tox>=4.27.0",
     "pytest>=8.4.1",
+    "mypy>=1.16.1",
 ]
 
 [build-system]

@@ -3,7 +3,6 @@ from typing import (
     Dict,
     NoReturn,
     Optional,
-    Union,
 )
 
 import click
@@ -48,7 +47,7 @@ def render(
         click.echo(line)
 
 
-def render_warning(message: str) -> Union[NoReturn, None]:
+def render_warning(message: str) -> None:
     """
     Render a warning message to the terminal.
 

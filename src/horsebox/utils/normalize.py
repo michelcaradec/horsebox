@@ -26,14 +26,8 @@ def normalize_string(
         return text
 
     # Normalize the string
-    form = 'NFKC' if keep_accents else 'NFKD'
-    normalized = ''.join(
-        [
-            c
-            for c in unicodedata.normalize(form, text)
-            if not unicodedata.combining(c)
-        ]
-    )
+    form: unicodedata._NormalizationForm = 'NFKC' if keep_accents else 'NFKD'
+    normalized = ''.join([c for c in unicodedata.normalize(form, text) if not unicodedata.combining(c)])
     # Convert Unicode escapes
     try:
         unescaped = normalized.encode('utf-16', 'surrogatepass').decode('utf-16')

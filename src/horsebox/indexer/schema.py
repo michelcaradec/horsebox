@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
+from typing import (
+    List,
+    Optional,
+)
 
 import tantivy
 
@@ -65,13 +68,31 @@ DEFAULT_FIELD_NAMES = [
 Fields used to search if no field is specifically defined in the query.
 By default, all tokenized and indexed fields are default fields.
 """
+SCHEMA_ANALYZER_CUSTOM = 'custom'
+SCHEMA_FIELD_CONTENT_CUSTOM = 'custom'
+SCHEMA_FIELDS_CUSTOM: List[Field] = [
+    Field(
+        SCHEMA_FIELD_CONTENT_CUSTOM,
+        FieldType.TEXT,
+        'Content of the container with custom analyzer',
+        # Required to support highlight, with the trade-off a bigger storage
+        stored=True,
+        tokenizer_name=SCHEMA_ANALYZER_CUSTOM,
+    ),
+]
 
 
-def get_schema() -> tantivy.Schema:
-    """Get the schema of the index."""
+def get_schema(custom_fields: Optional[List[Field]] = None) -> tantivy.Schema:
+    """
+    Get the schema of the index.
+
+    Args:
+        custom_fields (Optional[List[Field]]): The custom fields to add to the default schema.
+            Defaults to None.
+    """
     builder = tantivy.SchemaBuilder()
 
-    for field in SCHEMA_FIELDS:
+    for field in SCHEMA_FIELDS + (custom_fields or []):
         if field.type == FieldType.TEXT:
             builder = builder.add_text_field(
                 field.name,

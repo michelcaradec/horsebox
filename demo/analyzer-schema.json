@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Go to https://jsoneditoronline.org/indepth/validate/json-schema-validator/ to test the schema",
+  "type": "object",
+  "properties": {
+    "tokenizer": {
+      "description": "https://docs.rs/tantivy/latest/tantivy/tokenizer/trait.Tokenizer.html",
+      "properties": {
+        "raw": {
+          "$ref": "#/definitions/tokenizer_raw"
+        },
+        "simple": {
+          "$ref": "#/definitions/tokenizer_simple"
+        },
+        "whitespace": {
+          "$ref": "#/definitions/tokenizer_whitespace"
+        },
+        "facet": {
+          "$ref": "#/definitions/tokenizer_facet"
+        },
+        "regex": {
+          "$ref": "#/definitions/tokenizer_regex"
+        },
+        "ngram": {
+          "$ref": "#/definitions/tokenizer_ngram"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "raw"
+          ]
+        },
+        {
+          "required": [
+            "simple"
+          ]
+        },
+        {
+          "required": [
+            "whitespace"
+          ]
+        },
+        {
+          "required": [
+            "facet"
+          ]
+        },
+        {
+          "required": [
+            "regex"
+          ]
+        },
+        {
+          "required": [
+            "ngram"
+          ]
+        }
+      ]
+    },
+    "filters": {
+      "description": "https://docs.rs/tantivy/latest/tantivy/tokenizer/trait.TokenFilter.html",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "alphanum_only": {
+            "$ref": "#/definitions/filter_alphanum_only"
+          },
+          "ascii_fold": {
+            "$ref": "#/definitions/filter_ascii_fold"
+          },
+          "lowercase": {
+            "$ref": "#/definitions/filter_lowercase"
+          },
+          "remove_long": {
+            "$ref": "#/definitions/filter_remove_long"
+          },
+          "remove_stemmer": {
+            "$ref": "#/definitions/filter_stemmer"
+          },
+          "stopword": {
+            "$ref": "#/definitions/filter_stopword"
+          },
+          "custom_stopword": {
+            "$ref": "#/definitions/filter_custom_stopword"
+          },
+          "split_compound": {
+            "$ref": "#/definitions/filter_split_compound"
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "alphanum_only"
+            ]
+          },
+          {
+            "required": [
+              "ascii_fold"
+            ]
+          },
+          {
+            "required": [
+              "lowercase"
+            ]
+          },
+          {
+            "required": [
+              "remove_long"
+            ]
+          },
+          {
+            "required": [
+              "remove_stemmer"
+            ]
+          },
+          {
+            "required": [
+              "stopword"
+            ]
+          },
+          {
+            "required": [
+              "custom_stopword"
+            ]
+          },
+          {
+            "required": [
+              "split_compound"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "tokenizer"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "tokenizer_raw": {
+      "description": "For each value of the field, emit a single unprocessed token",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "tokenizer_simple": {
+      "description": "Tokenize the text by splitting on whitespaces and punctuation",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "tokenizer_whitespace": {
+      "description": "Tokenize the text by splitting on whitespaces",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "tokenizer_facet": {
+      "description": "Process a Facet binary representation and emits a token for all of its parent",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "tokenizer_regex": {
+      "description": "Tokenize the text by using a regex pattern to split",
+      "type": "object",
+      "properties": {
+        "pattern": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "pattern"
+      ],
+      "additionalProperties": false
+    },
+    "tokenizer_ngram": {
+      "description": "Tokenize the text by splitting words into n-grams of the given size(s)",
+      "type": "object",
+      "properties": {
+        "min_gram": {
+          "type": "integer"
+        },
+        "max_gram": {
+          "type": "integer"
+        },
+        "prefix_only": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "filter_alphanum_only": {
+      "description": "Removes all tokens that contain non ascii alphanumeric characters",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "filter_ascii_fold": {
+      "description": "Converts alphabetic, numeric, and symbolic Unicode characters which are not in the first 127 ASCII characters into their ASCII equivalents, if one exists",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "filter_lowercase": {
+      "description": "Lowercase terms",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "filter_remove_long": {
+      "description": "Removes tokens that are longer than a given number of bytes",
+      "type": "object",
+      "properties": {
+        "length_limit": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "length_limit"
+      ],
+      "additionalProperties": false
+    },
+    "filter_stemmer": {
+      "description": "Tokens are expected to be lowercased beforehand",
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "language"
+      ],
+      "additionalProperties": false
+    },
+    "filter_stopword": {
+      "description": "Removes stop words for a given language",
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "language"
+      ]
+    },
+    "filter_custom_stopword": {
+      "description": "Removes stop words from a given a list",
+      "type": "object",
+      "properties": {
+        "stopwords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "stopwords"
+      ]
+    },
+    "filter_split_compound": {
+      "description": "Splits compound words into their parts based on a given dictionary",
+      "type": "object",
+      "properties": {
+        "constituent_words": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "constituent_words"
+      ]
+    }
+  }
+}

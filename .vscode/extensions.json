@@ -5,6 +5,7 @@
         "ms-python.vscode-pylance",
         "ms-python.debugpy",
         "charliermarsh.ruff",
+        "ms-python.mypy-type-checker",
         "SonarSource.sonarlint-vscode",
         // Extra
         "KaustubhPaturi.py-scope",

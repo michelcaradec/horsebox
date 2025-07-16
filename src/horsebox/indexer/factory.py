@@ -11,7 +11,7 @@ from typing import (
     cast,
 )
 
-from feedparser.datetimes import _parse_date
+from feedparser.datetimes import _parse_date  # type: ignore[import-untyped]
 
 from horsebox.indexer.schema import SCHEMA_FIELD_CONTENT
 from horsebox.model import TDocument

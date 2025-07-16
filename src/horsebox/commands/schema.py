@@ -1,4 +1,5 @@
 from collections import OrderedDict
+
 from horsebox.cli.render import (
     Format,
     render,

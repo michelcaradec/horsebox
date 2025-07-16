@@ -4,6 +4,8 @@ from typing import (
     cast,
 )
 
+import tantivy
+
 from horsebox.cli import FILENAME_PREFIX
 from horsebox.cli.render import (
     Format,
@@ -12,7 +14,11 @@ from horsebox.cli.render import (
 from horsebox.indexer.analyzer import (
     FilterType,
     TokenizerType,
+)
+from horsebox.indexer.analyzer.factory import (
     get_analyzer,
+    get_custom_analyzer_def,
+    load_custom_analyzer_def,
 )
 
 
@@ -22,6 +28,7 @@ def analyze(
     tokenizer_params: Optional[str],
     filter_types: List[FilterType],
     filter_params: Optional[str],
+    analyzer: Optional[str],
     format: Format,
 ) -> None:
     """
@@ -33,20 +40,27 @@ def analyze(
         tokenizer_params (Optional[str]): The parameters of the tokenizer.
         filter_types (List[FilterType]): The filters to use.
         filter_params (Optional[str]): The parameters of the filters.
+        analyzer (Optional[str]): The file containing the definition of the custom analyzer.
         format (Format): The rendering format to use.
     """
-    analyzer = get_analyzer(
-        tokenizer_type,
-        tokenizer_params,
-        filter_types,
-        filter_params,
+    _analyzer: tantivy.TextAnalyzer = (
+        get_analyzer(load_custom_analyzer_def(analyzer))
+        if analyzer
+        else get_analyzer(
+            get_custom_analyzer_def(
+                tokenizer_type,
+                tokenizer_params,
+                filter_types,
+                filter_params,
+            ),
+        )
     )
 
     if text.startswith(FILENAME_PREFIX):
         with open(text[1:], 'r') as file:
             text = file.read()
 
-    analyzed: List[str] = analyzer.analyze(cast(str, text))
+    analyzed: List[str] = _analyzer.analyze(cast(str, text))
 
     output = {'analyzed': analyzed}
 

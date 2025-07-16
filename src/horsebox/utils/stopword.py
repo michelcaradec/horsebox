@@ -1,4 +1,5 @@
 from typing import (
+    Dict,
     List,
     Optional,
 )
@@ -6,12 +7,14 @@ from typing import (
 import tantivy
 
 from horsebox.cli.config import config
-from horsebox.cli.param_parser import build_params_group
+from horsebox.cli.param_parser import parse_params
 from horsebox.indexer.analyzer import (
+    CustomAnalyzerDef,
     FilterType,
     TokenizerType,
-    get_analyzer,
 )
+from horsebox.indexer.analyzer.custom_analyzer_def import CustomAnalyzerArgs
+from horsebox.indexer.analyzer.factory import get_analyzer
 
 __analyzer: Optional[tantivy.TextAnalyzer] = None
 
@@ -51,30 +54,27 @@ def is_stopword(word: str) -> bool:
     global __analyzer
 
     if not __analyzer:
-        filter_types: List[FilterType] = [
-            FilterType.ALPHANUM_ONLY,
-            FilterType.REMOVE_LONG,
-            FilterType.LOWERCASE,
-            FilterType.STOPWORD,
-            FilterType.STOPWORD,
+        filters: List[Dict[FilterType, CustomAnalyzerArgs]] = [
+            {FilterType.ALPHANUM_ONLY: {}},
+            {FilterType.REMOVE_LONG: {'length_limit': 40}},
+            {FilterType.LOWERCASE: {}},
+            {FilterType.STOPWORD: {'language': 'english'}},
+            {FilterType.STOPWORD: {'language': 'french'}},
         ]
-        filter_params = [
-            '',
-            'length_limit=40',
-            '',
-            'language=english',
-            'language=french',
-        ]
-
         if config.custom_stopwords:
-            filter_types.append(FilterType.CUSTOM_STOPWORD)
-            filter_params.append(f'stopwords=[{config.custom_stopwords}]')
+            filters.append(
+                {
+                    FilterType.CUSTOM_STOPWORD: parse_params(f'stopwords=[{config.custom_stopwords}]'),
+                }
+            )
 
         __analyzer = get_analyzer(
-            TokenizerType.RAW,
-            None,
-            filter_types,
-            build_params_group(filter_params),
+            CustomAnalyzerDef(
+                tokenizer={
+                    TokenizerType.RAW: {},
+                },
+                filters=filters,
+            ),
         )
 
     analyzed: List[str] = __analyzer.analyze(word)

@@ -1,1 +1,1 @@
-from horsebox.collectors.collector_rss.rss import CollectorRSS  # noqa: F401
+from .rss import CollectorRSS  # noqa: F401

@@ -1,5 +1,10 @@
-from collections import OrderedDict
 import os
+from collections import OrderedDict
+from typing import (
+    List,
+    cast,
+)
+
 from horsebox.cli.config import CONFIGS
 from horsebox.cli.render import (
     Format,
@@ -16,7 +21,7 @@ def config(format: Format) -> None:
     Args:
         format (Format): The rendering format to use.
     """
-    outputs: TOutput = []
+    outputs: List[TOutput] = []
 
     for name, config in CONFIGS.items():
         outputs.append(
@@ -30,4 +35,4 @@ def config(format: Format) -> None:
         if format == Format.TXT:
             outputs.append(LINE_BREAK)
 
-    render(outputs, format)
+    render(cast(TOutput, outputs), format)

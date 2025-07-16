@@ -1,1 +1,1 @@
-from horsebox.collectors.collector_pdf.pdf import CollectorPdf  # noqa: F401
+from .pdf import CollectorPdf  # noqa: F401
