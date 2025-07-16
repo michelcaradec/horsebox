@@ -124,6 +124,10 @@ hb search --from ./demo/ --pattern "*.txt" --using filecontent --query "better" 
 # Search in text files under the folder `demo`, each line of a file is is indexed as a separate document.
 hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --highlight --limit 5
 
+# Search in a text file (using pipe).
+cat ./demo/zen-of-python.txt | hb search --from - --using filecontent --query better --highlight
+cat ./demo/zen-of-python.txt | hb search --from - --using fileline --query better --highlight
+
 # Get the top keywords of an RSS feed.
 if [[ "${HB_TEST_MODE}" == "1" ]]
 then

@@ -1,5 +1,6 @@
 import re
 from collections import OrderedDict
+from shlex import quote
 from time import monotonic_ns
 from typing import (
     Any,
@@ -271,10 +272,15 @@ def __search_impl(
             else:
                 content = None
 
+            path: Optional[str] = v[0] if (v := doc.get('path')) else None
+            if path and format == Format.TXT:
+                # Make the path link clickable
+                path = quote(path)
+
             output = OrderedDict(
                 name=doc['name'][0],
                 content=content,
-                path=v[0] if (v := doc.get('path')) else None,
+                path=path,
                 size=v[0] if (v := doc.get('size')) else None,
                 date=v[0] if (v := doc.get('date')) else None,
                 score=score,

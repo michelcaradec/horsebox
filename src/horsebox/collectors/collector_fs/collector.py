@@ -8,6 +8,7 @@ from typing import (
 )
 
 from horsebox.cli import OPTION_DRY_RUN
+from horsebox.collectors import FILENAME_PIPE
 from horsebox.model import TDocument
 from horsebox.model.collector import Collector
 
@@ -37,7 +38,13 @@ class CollectorFS(Collector):
         """
         # For each file/folder
         for root_path in self.root_path:
-            if os.path.isfile(root_path):
+            if root_path == FILENAME_PIPE:
+                # Collect from piped content
+                yield from self.parse(
+                    FILENAME_PIPE,
+                    FILENAME_PIPE,
+                )
+            elif os.path.isfile(root_path):
                 # Collect this file
                 yield from self.parse(
                     os.path.dirname(root_path),
