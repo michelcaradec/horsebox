@@ -26,12 +26,12 @@ classifiers = [
 ]
 requires-python = ">=3.9,<3.14"
 dependencies = [
-    "beautifulsoup4>=4.13.4",
     "click>=8.1.8,<8.2.0",
     "feedparser>=6.0.11",
     "ijson>=3.3.0",
     "pdfminer-six>=20250506",
     "tantivy>=0.24.0",
+    "trafilatura>=2.0.0",
 ]
 
 [project.urls]
