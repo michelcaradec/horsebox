@@ -11,12 +11,14 @@ from typing import (
 
 import tantivy
 
+from horsebox import __version__
 from horsebox.cli.render import render_error
 from horsebox.indexer.build_args import IndexBuildArgs
 
 __METADATA_FILENAME = 'meta.json'
 __METADATA_TIMESTAMP = 'timestamp'
 __METADATA_BUILD_ARGS = 'build_args'
+__METADATA_VERSION = 'version'
 
 
 def __read_metadata(index: str) -> Dict[str, Any]:
@@ -39,6 +41,8 @@ def __write_metadata(
     filename = os.path.join(index, __METADATA_FILENAME)
     # Make a backup copy of the file `meta.json` to recover from potential corruption
     shutil.copyfile(filename, filename + '.bak')
+
+    metadata[__METADATA_VERSION] = __version__
 
     with open(filename, 'w') as file:
         json.dump(metadata, file)

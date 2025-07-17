@@ -1,3 +1,4 @@
+import os
 import urllib.request
 from typing import (
     Any,
@@ -6,7 +7,7 @@ from typing import (
     List,
 )
 
-from bs4 import BeautifulSoup
+from trafilatura import extract
 
 from horsebox.cli import FILENAME_PREFIX
 from horsebox.indexer.factory import prepare_doc
@@ -80,18 +81,16 @@ class CollectorHtml(Collector):
                 with urllib.request.urlopen(file_path) as response:
                     content = response.read()
 
-        soup = BeautifulSoup(content, 'html.parser')
-
-        name = (
-            title[0].get_text()
-            if (soup.html and (title := soup.html.find_all('title', limit=1)) and len(title))
-            else None
-        )
-
-        yield prepare_doc(
-            **{
-                'name': name,
-                'path': file_path,
-                'content': soup.get_text(),
-            }
-        )
+        if extracted := extract(
+            content,
+            include_tables=False,
+            deduplicate=True,
+            include_comments=False,
+        ):
+            yield prepare_doc(
+                **{
+                    'name': os.path.basename(file_path),
+                    'path': file_path,
+                    'content': extracted,
+                }
+            )
