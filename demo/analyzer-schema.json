@@ -250,7 +250,7 @@
       ]
     },
     "filter_custom_stopword": {
-      "description": "Removes stop words from a given a list",
+      "description": "Removes stop words from a given list",
       "type": "object",
       "properties": {
         "stopwords": {
