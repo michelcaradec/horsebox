@@ -11,6 +11,26 @@
 
 *NA*
 
+## [0.7.0] - 2025-07-18
+
+### Added
+
+- New option `--dry-run` for the command `build` to show the items to be indexed, without creating the index.
+- New option `--analyzer` for the commands `build` and `search` to apply a custom tokenizer and filters to the content to be indexed.
+- Pipe support to the collectors `filecontent` and `fileline`.
+
+### Changed
+
+- Significant code refactoring to separate the datasource collection from its parsing.
+- Significant code refactoring to support a custom analyzer.
+- Replace the library [beautifulsoup4](https://pypi.org/project/beautifulsoup4/) by [trafilatura](https://pypi.org/project/trafilatura/) for the HTML page extraction in the collector `html`.
+- Store of the version in the metadata of the index.
+
+### Fixed
+
+- The path to the container is quoted to make its link clickable in text mode.
+- The collector `fileline` fills the field `path` with and expression of the form `${CONTAINER_PATH}#${LINE}` to allow opening the file at the specific line number (the previous suffix was `#L${LINE}`).
+
 ## [0.6.0] - 2025-06-29
 
 ### Added
