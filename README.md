@@ -27,6 +27,7 @@ A versatile and autonomous command line tool for search.
     - [Raw Collector](#raw-collector)
     - [Guess Collector](#guess-collector)
     - [Collectors Usage Matrix](#collectors-usage-matrix)
+    - [Collectors Simplified Patterns](#collectors-simplified-patterns)
   - [Index](#index)
   - [Strategies](#strategies)
 - [Annexes](#annexes)
@@ -406,6 +407,27 @@ The following table shows the options supported by each collector.
 *`-`: not supported.*
 
 These options are also used by the [guess collector](#guess-collector) in its detection.
+
+#### Collectors Simplified Patterns
+
+*Disclaimer: starting with version `0.8.0`.*
+
+The file system [collectors](#collectors) use the combined options `--from` and `--pattern` to specify the folder to (recursively) scan, and the files to index.
+
+For example, the options `--from ./demo` and `--from ./demo/ --pattern "*.txt"` will index the files with the extension `.txt` located under the folder `./demo`.
+
+While this syntax makes a clear separation between the [datasource and the containers](#naming-conventions), it can be long to type, especially for standard patterns.
+
+The list of arguments can be **simplified** by combining both options.
+
+Examples:
+
+- `--from ./demo --from ./demo/ --pattern "*.txt"` can be passed as `--from "./demo/*.txt"`.
+- `--from . --pattern "*.pdf"` can be passed as `--from "*.pdf"`.
+
+**Attention!** The pattern must be enclosed in quotes to prevent wildcard expansion.
+
+This new syntax still allows the use of the option `--pattern` (for example, `--from "*.pdf" --pattern "*.pdf"` will index all the files with the extension `.txt` or `.pdf`from the current folder).
 
 ### Index
 

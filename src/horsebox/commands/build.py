@@ -11,6 +11,7 @@ from horsebox.cli import (
 from horsebox.cli.render import Format
 from horsebox.collectors import CollectorType
 from horsebox.collectors.factory import get_collector
+from horsebox.collectors.pattern import explode_pattern
 from horsebox.commands.inspect import inspect
 from horsebox.indexer.analyzer import CustomAnalyzerDef
 from horsebox.indexer.analyzer.factory import load_custom_analyzer_def
@@ -44,8 +45,10 @@ def build_index(
     """
     collector, extra_args = get_collector(
         collector_type,
-        source,
-        pattern,
+        *explode_pattern(
+            source,
+            pattern,
+        ),
     )
 
     custom_analyzer: Optional[CustomAnalyzerDef] = None
