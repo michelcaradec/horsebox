@@ -39,6 +39,7 @@ A versatile and autonomous command line tool for search.
     - [Custom Analyzer Definition](#custom-analyzer-definition)
     - [Custom Analyzer Limitations](#custom-analyzer-limitations)
   - [Configuration](#configuration)
+  - [VSCode Integration](#vscode-integration)
   - [Where Does This Name Come From](#where-does-this-name-come-from)
 
 </details>
@@ -655,6 +656,12 @@ hb config
 *The default and current values are displayed.*
 
 [^7]: The normalization of a string consists in replacing the accented characters by their non-accented equivalent, and converting Unicode escaped characters. This is a CPU intensive process, which may not be required for some datasources.
+
+### VSCode Integration
+
+If you use [Visual Studio Code](https://code.visualstudio.com), you can integrate Horsebox using [tasks](https://code.visualstudio.com/docs/debugtest/tasks).
+
+The file [tasks.json](./demo/vscode/tasks.json) provides some sample tasks to index and search Markdown files in the current project.
 
 ### Where Does This Name Come From
 
