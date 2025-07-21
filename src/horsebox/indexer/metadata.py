@@ -26,7 +26,7 @@ def __read_metadata(index: str) -> Dict[str, Any]:
         render_error(f'No index was found at {index}')
 
     with open(os.path.join(index, __METADATA_FILENAME), 'r') as file:
-        meta = json.load(file)
+        meta: Dict[str, Any] = json.load(file)
 
     return meta
 

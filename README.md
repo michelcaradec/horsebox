@@ -2,7 +2,7 @@
 
 A versatile and autonomous command line tool for search.
 
-[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml) ![pypi badge](https://img.shields.io/pypi/v/horsebox)
+[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml) ![pypi badge](https://img.shields.io/pypi/v/horsebox) [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit) ![mypy](https://img.shields.io/badge/type-mypy-039dfc)
 
 <details>
 <summary>Table of contents</summary>
@@ -13,6 +13,8 @@ A versatile and autonomous command line tool for search.
 - [Tool Installation](#tool-installation)
 - [Project Setup](#project-setup)
   - [Python Environment](#python-environment)
+  - [Pre-Commit Setup](#pre-commit-setup)
+    - [Pre-Commit Tips](#pre-commit-tips)
 - [Usage](#usage)
   - [Naming Conventions](#naming-conventions)
   - [Getting Help](#getting-help)
@@ -27,6 +29,7 @@ A versatile and autonomous command line tool for search.
     - [Raw Collector](#raw-collector)
     - [Guess Collector](#guess-collector)
     - [Collectors Usage Matrix](#collectors-usage-matrix)
+    - [Collectors Simplified Patterns](#collectors-simplified-patterns)
   - [Index](#index)
   - [Strategies](#strategies)
 - [Annexes](#annexes)
@@ -39,6 +42,7 @@ A versatile and autonomous command line tool for search.
     - [Custom Analyzer Definition](#custom-analyzer-definition)
     - [Custom Analyzer Limitations](#custom-analyzer-limitations)
   - [Configuration](#configuration)
+  - [VSCode Integration](#vscode-integration)
   - [Where Does This Name Come From](#where-does-this-name-come-from)
 
 </details>
@@ -149,6 +153,40 @@ All the commands described in this project rely on the Python package and projec
     ```
 
 5. [Use](#usage) the tool.
+
+### Pre-Commit Setup
+
+1. Install the git hook scripts:
+
+    ```bash
+    pre-commit install
+    ```
+
+2. [Update the hooks](https://pre-commit.com/#updating-hooks-automatically) to the latest version automatically:
+
+    ```bash
+    pre-commit autoupdate
+    ```
+
+#### Pre-Commit Tips
+
+- Manually run against all the files:
+
+    ```bash
+    pre-commit run --all-files --show-diff-on-failure
+    ```
+
+- Bypass pre-commit when committing:
+
+    ```bash
+    git commit --no-verify
+    ```
+
+- Un-install the git hook scripts:
+
+    ```bash
+    pre-commit uninstall
+    ```
 
 ## Usage
 
@@ -406,6 +444,27 @@ The following table shows the options supported by each collector.
 
 These options are also used by the [guess collector](#guess-collector) in its detection.
 
+#### Collectors Simplified Patterns
+
+*Disclaimer: starting with version `0.8.0`.*
+
+The file system [collectors](#collectors) use the combined options `--from` and `--pattern` to specify the folder to (recursively) scan, and the files to index.
+
+For example, the options `--from ./demo` and `--from ./demo/ --pattern "*.txt"` will index the files with the extension `.txt` located under the folder `./demo`.
+
+While this syntax makes a clear separation between the [datasource and the containers](#naming-conventions), it can be long to type, especially for standard patterns.
+
+The list of arguments can be **simplified** by combining both options.
+
+Examples:
+
+- `--from ./demo --from ./demo/ --pattern "*.txt"` can be passed as `--from "./demo/*.txt"`.
+- `--from . --pattern "*.pdf"` can be passed as `--from "*.pdf"`.
+
+**Attention!** The pattern must be enclosed in quotes to prevent wildcard expansion.
+
+This new syntax still allows the use of the option `--pattern` (for example, `--from "*.pdf" --pattern "*.pdf"` will index all the files with the extension `.txt` or `.pdf`from the current folder).
+
 ### Index
 
 The index is the place where the [collected](#collectors) information lies. It is required to allow the search.
@@ -655,6 +714,12 @@ hb config
 *The default and current values are displayed.*
 
 [^7]: The normalization of a string consists in replacing the accented characters by their non-accented equivalent, and converting Unicode escaped characters. This is a CPU intensive process, which may not be required for some datasources.
+
+### VSCode Integration
+
+If you use [Visual Studio Code](https://code.visualstudio.com), you can integrate Horsebox using [tasks](https://code.visualstudio.com/docs/debugtest/tasks).
+
+The file [tasks.json](./demo/vscode/tasks.json) provides some sample tasks to index and search Markdown files in the current project.
 
 ### Where Does This Name Come From
 

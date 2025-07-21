@@ -4,7 +4,6 @@ from typing import (
     Any,
     Generator,
     List,
-    cast,
 )
 
 from horsebox.formatters import DATE_FORMAT
@@ -27,7 +26,7 @@ def __encoder(value: Any) -> str:
     if value is None:
         return ''
     elif isinstance(value, datetime):
-        return cast(datetime, value).strftime(DATE_FORMAT)
+        return value.strftime(DATE_FORMAT)
 
     return str(value)
 

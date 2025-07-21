@@ -1,0 +1,101 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "problemMatcher": [],
+    "presentation": {
+        "reveal": "always"
+    },
+    "inputs": [
+        {
+            "id": "query_string",
+            "description": "Query string:",
+            "default": "",
+            "type": "promptString"
+        }
+    ],
+    "tasks": [
+        {
+            "label": "Index: Build",
+            "detail": "Build the index.",
+            "command": "horsebox",
+            "type": "shell",
+            "args": [
+                "build",
+                "--index",
+                ".index",
+                "--from",
+                "${workspaceFolder}",
+                "--pattern",
+                "'*.md'"
+            ],
+            "options": {
+                "env": {
+                    "HB_HIGHLIGHT_MAX_CHARS": "500"
+                }
+            }
+        },
+        {
+            "label": "Index: Inspect",
+            "detail": "Show information on the index.",
+            "command": "horsebox",
+            "type": "shell",
+            "args": [
+                "inspect",
+                "--index",
+                ".index"
+            ]
+        },
+        {
+            "label": "Index: Refresh",
+            "detail": "Refresh the index.",
+            "command": "horsebox",
+            "type": "shell",
+            "args": [
+                "refresh",
+                "--index",
+                ".index"
+            ]
+        },
+        {
+            "label": "Index: Search",
+            "detail": "Search in the existing index.",
+            "command": "horsebox",
+            "type": "shell",
+            "args": [
+                "search",
+                "--index",
+                ".index",
+                "--query",
+                "${input:query_string}",
+                "--highlight"
+            ],
+            "options": {
+                "env": {
+                    "HB_HIGHLIGHT_MAX_CHARS": "500"
+                }
+            }
+        },
+        {
+            "label": "Index: Search (live)",
+            "detail": "Search in the local project.",
+            "command": "horsebox",
+            "type": "shell",
+            "args": [
+                "search",
+                "--from",
+                "${workspaceFolder}",
+                "--pattern",
+                "'*.md'",
+                "--query",
+                "${input:query_string}",
+                "--highlight"
+            ],
+            "options": {
+                "env": {
+                    "HB_HIGHLIGHT_MAX_CHARS": "500"
+                }
+            }
+        }
+    ]
+}

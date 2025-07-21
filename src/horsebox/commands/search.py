@@ -23,6 +23,7 @@ from horsebox.cli.render import (
 )
 from horsebox.collectors import CollectorType
 from horsebox.collectors.factory import get_collector
+from horsebox.collectors.pattern import explode_pattern
 from horsebox.formatters.text import (
     LINE_BREAK,
     snippet_add_style,
@@ -99,8 +100,10 @@ def search(
         # Live search
         collector, extra_args = get_collector(
             collector_type,
-            source,
-            pattern,
+            *explode_pattern(
+                source,
+                pattern,
+            ),
         )
 
         custom_analyzer: Optional[CustomAnalyzerDef] = load_custom_analyzer_def(analyzer) if analyzer else None
@@ -240,7 +243,7 @@ def __search_impl(
                     'index': took_index,
                     'search': took,
                 },
-                'count': result.count,  # type: ignore
+                'count': result.count,
             },
             format,
         )

@@ -9,14 +9,12 @@ from typing import (
 
 import click
 
+from horsebox.cli.config import config
 from horsebox.collectors import FILENAME_PIPE
 from horsebox.collectors.collector_fs.collector import CollectorFS
 from horsebox.indexer.factory import prepare_doc
-from horsebox.indexer.index import config
-from horsebox.model.collector import (
-    Collector,
-    TDocument,
-)
+from horsebox.model import TDocument
+from horsebox.model.collector import Collector
 from horsebox.utils.normalize import normalize_string
 
 
