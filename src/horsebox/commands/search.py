@@ -243,7 +243,7 @@ def __search_impl(
                     'index': took_index,
                     'search': took,
                 },
-                'count': result.count,  # type: ignore
+                'count': result.count,
             },
             format,
         )

@@ -9,7 +9,7 @@ from typing import (
 
 
 @contextmanager
-def ipv6_disabled(*args, **kwds) -> Generator[None, Any, None]:
+def ipv6_disabled(*args: Any, **kwds: Any) -> Generator[None, Any, None]:
     """IPv6 disabling context manager."""
     getaddrinfo = socket.getaddrinfo
 

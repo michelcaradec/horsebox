@@ -11,7 +11,7 @@ from typing import (
     cast,
 )
 
-from feedparser.datetimes import _parse_date  # type: ignore[import-untyped]
+from feedparser.datetimes import _parse_date
 
 from horsebox.indexer.schema import SCHEMA_FIELD_CONTENT
 from horsebox.model import TDocument
@@ -46,7 +46,7 @@ def prepare_doc(**kwargs: Any) -> TDocument:
                     dt = _parse_date(value)
                     value = datetime.fromtimestamp(mktime(cast(struct_time, dt))) if dt else None
                 elif isinstance(value, struct_time):
-                    value = datetime.fromtimestamp(mktime(cast(struct_time, value)))
+                    value = datetime.fromtimestamp(mktime(value))
             elif field == SCHEMA_FIELD_CONTENT:
                 value = (
                     [strip_spaces(html.unescape(strip_html_tags(v))) for v in value]

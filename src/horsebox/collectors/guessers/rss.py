@@ -35,12 +35,7 @@ def guess_rss(item: str) -> Optional[Tuple[CollectorType, Dict[str, Any]]]:
         - The type of the collector.
         - Some extra arguments to use with the collector.
     """
-    if (
-        item.endswith('.xml')
-        or item.endswith('.atom')
-        or item.endswith('/feed')
-        or item.endswith('/rss')
-    ):
+    if item.endswith('.xml') or item.endswith('.atom') or item.endswith('/feed') or item.endswith('/rss'):
         return (CollectorType.RSS, {})
 
     return None

@@ -98,7 +98,7 @@ def get_schema(custom_fields: Optional[List[Field]] = None) -> tantivy.Schema:
                 field.name,
                 stored=field.stored,
                 # `fast` added in https://github.com/quickwit-oss/tantivy-py/pull/458
-                fast=field.fast,  # type: ignore
+                fast=field.fast,
                 tokenizer_name=field.tokenizer_name,
                 index_option=field.index_option,
             )

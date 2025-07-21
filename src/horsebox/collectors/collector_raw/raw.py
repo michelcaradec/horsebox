@@ -7,7 +7,7 @@ from typing import (
 )
 
 import click
-import ijson  # type: ignore[import-untyped]
+import ijson
 
 from horsebox.cli import (
     FILENAME_PREFIX,

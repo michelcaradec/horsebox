@@ -8,10 +8,8 @@ from typing import (
 
 from horsebox.collectors.collector_fs.collector import CollectorFS
 from horsebox.indexer.factory import prepare_doc
-from horsebox.model.collector import (
-    Collector,
-    TDocument,
-)
+from horsebox.model import TDocument
+from horsebox.model.collector import Collector
 
 
 class CollectorFSByFilename(CollectorFS):

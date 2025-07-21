@@ -8,7 +8,7 @@ from typing import (
     cast,
 )
 
-import feedparser  # type: ignore[import-untyped]
+import feedparser
 
 from horsebox.cli import FILENAME_PREFIX
 from horsebox.indexer.factory import prepare_doc

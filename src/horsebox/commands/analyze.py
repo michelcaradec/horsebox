@@ -1,7 +1,6 @@
 from typing import (
     List,
     Optional,
-    cast,
 )
 
 import tantivy
@@ -60,7 +59,7 @@ def analyze(
         with open(text[1:], 'r') as file:
             text = file.read()
 
-    analyzed: List[str] = _analyzer.analyze(cast(str, text))
+    analyzed: List[str] = _analyzer.analyze(text)
 
     output = {'analyzed': analyzed}
 

@@ -5,7 +5,6 @@ from typing import (
     Generator,
     List,
     Optional,
-    cast,
 )
 
 import tantivy
@@ -57,7 +56,7 @@ def format_txt(output: TOutput) -> Generator[str, Any, None]:
                 if isinstance(value, float):
                     value = round(value, 3)
                 elif isinstance(value, datetime):
-                    value = cast(datetime, value).strftime(DATE_FORMAT)
+                    value = value.strftime(DATE_FORMAT)
                 elif isinstance(value, List):
                     value = ','.join(value)
 
@@ -74,7 +73,9 @@ def snippet_add_style(snippet: tantivy.Snippet) -> Optional[str]:
     Returns:
         Optional[str]: The decorated snippet.
     """
-    content = snippet.to_html().replace(__SNIPPET_BEGIN, __BOLD + __COLOR_GREEN).replace(__SNIPPET_END, __COLOR_RESET)
+    content: str = (
+        snippet.to_html().replace(__SNIPPET_BEGIN, __BOLD + __COLOR_GREEN).replace(__SNIPPET_END, __COLOR_RESET)
+    )
 
     # NOTE The code below has been disabled as the ranges may not be accurate with Unicode (emojis) characters
     """
