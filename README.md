@@ -2,7 +2,7 @@
 
 A versatile and autonomous command line tool for search.
 
-[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml) ![pypi badge](https://img.shields.io/pypi/v/horsebox)
+[![tests badge](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/michelcaradec/horsebox/actions/workflows/python-tests.yml) ![pypi badge](https://img.shields.io/pypi/v/horsebox) [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit) ![mypy](https://img.shields.io/badge/type-mypy-039dfc)
 
 <details>
 <summary>Table of contents</summary>
@@ -13,6 +13,8 @@ A versatile and autonomous command line tool for search.
 - [Tool Installation](#tool-installation)
 - [Project Setup](#project-setup)
   - [Python Environment](#python-environment)
+  - [Pre-Commit Setup](#pre-commit-setup)
+    - [Pre-Commit Tips](#pre-commit-tips)
 - [Usage](#usage)
   - [Naming Conventions](#naming-conventions)
   - [Getting Help](#getting-help)
@@ -151,6 +153,40 @@ All the commands described in this project rely on the Python package and projec
     ```
 
 5. [Use](#usage) the tool.
+
+### Pre-Commit Setup
+
+1. Install the git hook scripts:
+
+    ```bash
+    pre-commit install
+    ```
+
+2. [Update the hooks](https://pre-commit.com/#updating-hooks-automatically) to the latest version automatically:
+
+    ```bash
+    pre-commit autoupdate
+    ```
+
+#### Pre-Commit Tips
+
+- Manually run against all the files:
+
+    ```bash
+    pre-commit run --all-files --show-diff-on-failure
+    ```
+
+- Bypass pre-commit when committing:
+
+    ```bash
+    git commit --no-verify
+    ```
+
+- Un-install the git hook scripts:
+
+    ```bash
+    pre-commit uninstall
+    ```
 
 ## Usage
 
