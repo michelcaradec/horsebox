@@ -30,7 +30,7 @@ class Field:
     # It will chop your text on punctuation and whitespaces,
     # removes tokens that are longer than 40 chars, and lowercase your text.
     # https://docs.rs/tantivy/latest/tantivy/tokenizer/#default
-    tokenizer_name: str = 'default'
+    analyzer: str = 'default'
     """
     'default', 'raw' or 'en_stem'
 
@@ -77,7 +77,7 @@ SCHEMA_FIELDS_CUSTOM: List[Field] = [
         'Content of the container with custom analyzer',
         # Required to support highlight, with the trade-off a bigger storage
         stored=True,
-        tokenizer_name=SCHEMA_ANALYZER_CUSTOM,
+        analyzer=SCHEMA_ANALYZER_CUSTOM,
     ),
 ]
 
@@ -99,7 +99,7 @@ def get_schema(custom_fields: Optional[List[Field]] = None) -> tantivy.Schema:
                 stored=field.stored,
                 # `fast` added in https://github.com/quickwit-oss/tantivy-py/pull/458
                 fast=field.fast,
-                tokenizer_name=field.tokenizer_name,
+                tokenizer_name=field.analyzer,
                 index_option=field.index_option,
             )
         elif field.type == FieldType.INTEGER:
