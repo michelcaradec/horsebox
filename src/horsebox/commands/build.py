@@ -43,12 +43,11 @@ def build_index(
             The file containing the definition of the custom analyzer, or the custom analyzer definition.
         format (Format): The rendering format to use.
     """
+    source, pattern = explode_pattern(source, pattern)
     collector, extra_args = get_collector(
         collector_type,
-        *explode_pattern(
-            source,
-            pattern,
-        ),
+        source,
+        pattern,
     )
 
     custom_analyzer: Optional[CustomAnalyzerDef] = None
