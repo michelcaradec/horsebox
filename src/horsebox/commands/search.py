@@ -98,12 +98,11 @@ def search(
 
     if source and pattern:
         # Live search
+        source, pattern = explode_pattern(source, pattern)
         collector, extra_args = get_collector(
             collector_type,
-            *explode_pattern(
-                source,
-                pattern,
-            ),
+            source,
+            pattern,
         )
 
         custom_analyzer: Optional[CustomAnalyzerDef] = load_custom_analyzer_def(analyzer) if analyzer else None
