@@ -11,6 +11,14 @@
 
 *NA*
 
+## [0.8.0] - 2025-07-23
+
+### Added
+
+- Simplification of the options `--from` and `--pattern` for file system collectors.
+- Documentation on how to integrate with Visual Studio Code.
+- Use of [pre-commit](https://pre-commit.com/) for project development support.
+
 ## [0.7.0] - 2025-07-18
 
 ### Added
