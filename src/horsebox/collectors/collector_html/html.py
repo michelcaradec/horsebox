@@ -84,7 +84,6 @@ class CollectorHtml(Collector):
         if extracted := extract(
             content,
             include_tables=False,
-            deduplicate=True,
             include_comments=False,
         ):
             yield prepare_doc(

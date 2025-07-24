@@ -11,6 +11,12 @@
 
 *NA*
 
+## [0.8.1] - 2025-07-24
+
+### Fixed
+
+- Some HTML pages were not properly extracted due to the failure of the deduplication process of [trafilatura](https://pypi.org/project/trafilatura/).
+
 ## [0.8.0] - 2025-07-23
 
 ### Added
