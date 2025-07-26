@@ -22,6 +22,12 @@ hb config
 # Search in text files under the folder `demo`.
 hb search --from ./demo/ --pattern "*.txt" --query "better" --highlight
 
+# Search in text files under the folder `demo`, with source filtering.
+hb search --from ./demo/ --pattern "*.txt" --query "better" --source path,content
+
+# Search in text files under the folder `demo`, with source filtering and highlight.
+hb search --from ./demo/ --pattern "*.txt" --query "better" --source path,content --highlight
+
 # Search in text files under the folder `demo`, using a line-by-line collector.
 hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --highlight --limit 5
 

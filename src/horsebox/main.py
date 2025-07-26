@@ -248,6 +248,7 @@ def __inspect_cmd(**kwargs: Any) -> None:
 @click.option('--highlight', type=bool, is_flag=True, default=False, help='Highlight the found keywords.')
 @click.option('--count', type=bool, is_flag=True, default=False, help='Count the number of items found.')
 @click.option('--top', type=bool, is_flag=True, default=False, help='Get the top keywords of the result.')
+@click.option('--source', 'fields', type=str, multiple=True, help='Fields of the indexed documents to output.')
 @click.option(
     '--analyzer',
     type=click.Path(exists=True, dir_okay=False, file_okay=True),
