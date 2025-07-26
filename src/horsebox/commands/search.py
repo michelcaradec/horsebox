@@ -1,5 +1,6 @@
 import re
 from collections import OrderedDict
+from itertools import chain
 from shlex import quote
 from time import monotonic_ns
 from typing import (
@@ -7,6 +8,7 @@ from typing import (
     Dict,
     List,
     Optional,
+    Set,
 )
 
 import tantivy
@@ -56,6 +58,7 @@ __LEVENSHTEIN_DISTANCE_DEFAULT = 1
 __LEVENSHTEIN_DISTANCE_MAX = 2
 
 __EMPTY_QUERY = 'Query(EmptyQuery)'
+__FIELD_HIGHLIGHT = 'highlight'
 
 
 def search(
@@ -69,6 +72,7 @@ def search(
     highlight: bool,
     count: bool,
     top: bool,
+    fields: List[str],
     analyzer: Optional[str],
     format: Format,
 ) -> None:
@@ -87,6 +91,7 @@ def search(
         highlight (bool): Whether the keywords found should be highlighted or not.
         count (bool): Whether a count operation should be done or not.
         top (bool): Whether the top list of keywords found should be returned or not.
+        fields (List[str]): The list of fields to output.
         analyzer (Optional[str]): The file containing the definition of the custom analyzer.
         format (Format): The rendering format to use.
     """
@@ -165,6 +170,7 @@ def search(
             limit,
             highlight,
             count,
+            fields,
             format,
             took_index,
         )
@@ -223,6 +229,7 @@ def __search_impl(
     limit: int,
     highlight: bool,
     count: bool,
+    fields: List[str],
     format: Format,
     took_index: Optional[int] = None,
 ) -> None:
@@ -247,6 +254,9 @@ def __search_impl(
             format,
         )
     else:
+        # Unique list of source fields (can be passed by multiple options or as a comma-separated list)
+        source_filtering: Set[str] = {f.strip() for f in chain.from_iterable((f.split(',') for f in fields))}
+
         snippet_generator: Optional[tantivy.SnippetGenerator] = None
         if highlight:
             # https://docs.rs/tantivy/latest/tantivy/snippet/struct.SnippetGenerator.html
@@ -295,7 +305,13 @@ def __search_impl(
                 )
                 if highlight_output:
                     # Highlights will be generated for search based on text fields.
-                    output['highlight'] = highlight_output
+                    output[__FIELD_HIGHLIGHT] = highlight_output
+
+            if source_filtering:
+                if SCHEMA_FIELD_CONTENT in source_filtering and __FIELD_HIGHLIGHT in output:
+                    # Use the highlighted content if any in place of the content
+                    output[SCHEMA_FIELD_CONTENT] = output.pop(__FIELD_HIGHLIGHT)
+                output = OrderedDict(**{k: v for (k, v) in output.items() if k in source_filtering})
 
             if format == Format.TXT:
                 outputs.append(LINE_BREAK)
