@@ -11,6 +11,12 @@
 
 *NA*
 
+## [0.9.0] - 2025-07-30
+
+### Added
+
+- Source filtering option `--source` to limit the number of index fields returned by the command `search`.
+
 ## [0.8.1] - 2025-07-24
 
 ### Fixed
