@@ -1,6 +1,6 @@
 [project]
 name = "horsebox"
-version = "0.8.1"
+version = "0.9.0"
 description = "You Know, for local Search."
 readme = "README.md"
 repository = "https://github.com/michelcaradec/horsebox"
