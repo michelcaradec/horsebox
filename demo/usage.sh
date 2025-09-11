@@ -43,6 +43,10 @@ hb search --from ./demo/raw.json --query "'engine inspired'~1" --highlight
 # Fuzzy search.
 hb search --from ./demo/raw.json --using raw --query "engne~1"
 
+# Phrase prefix search.
+# See https://docs.rs/tantivy/latest/tantivy/query/struct.PhrasePrefixQuery.html.
+hb search --from "./demo/*.txt" --using fileline --query '"the implement"*' --highlight
+
 # Search on multiple datasources.
 if [[ "${HB_TEST_MODE}" == "1" ]]
 then
