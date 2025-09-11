@@ -70,7 +70,7 @@ source $HOME/.local/bin/env
 uv tool install horsebox
 
 # Alternative: install from the repository
-# For the impatient user who want the latest features before they are published on PyPi
+# For the impatient users who wants the latest features before they are published on PyPi
 uv tool install git+https://github.com/michelcaradec/horsebox
 ```
 
