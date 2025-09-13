@@ -83,20 +83,19 @@ def feed_index(
         t_index.register_tokenizer(SCHEMA_ANALYZER_CUSTOM, analyzer)
 
     num_threads = (os.cpu_count() or 0) // 4
-    writer: tantivy.IndexWriter = t_index.writer(num_threads=num_threads)
-
     start = monotonic_ns()
 
-    for batch in batched(documents, config.index_batch_size):
-        for document in batch:
-            if use_custom_field:
-                document[SCHEMA_FIELD_CONTENT_CUSTOM] = document[SCHEMA_FIELD_CONTENT]
+    with t_index.writer(num_threads=num_threads) as writer:
+        for batch in batched(documents, config.index_batch_size):
+            for document in batch:
+                if use_custom_field:
+                    document[SCHEMA_FIELD_CONTENT_CUSTOM] = document[SCHEMA_FIELD_CONTENT]
 
-            writer.add_document(tantivy.Document(**document))
+                writer.add_document(tantivy.Document(**document))
 
-        writer.commit()
+            writer.commit()
 
-    writer.wait_merging_threads()
+        writer.wait_merging_threads()
 
     took = monotonic_ns() - start
 
