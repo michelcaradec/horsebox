@@ -37,7 +37,7 @@ A versatile and autonomous command line tool for search.
   - [Unit Tests](#unit-tests)
   - [Manual Testing In Docker](#manual-testing-in-docker)
   - [Samples](#samples)
-    - [Advanced Searches](#advanced-searches)
+  - [Advanced Searches](#advanced-searches)
   - [Using A Custom Analyzer](#using-a-custom-analyzer)
     - [Custom Analyzer Definition](#custom-analyzer-definition)
     - [Custom Analyzer Limitations](#custom-analyzer-limitations)
@@ -557,7 +557,7 @@ The script [usage.sh](./demo/usage.sh) contains multiple sample commands:
 bash ./demo/usage.sh
 ```
 
-#### Advanced Searches
+### Advanced Searches
 
 The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tantivy/latest/tantivy/query/struct.QueryParser.html).
 
@@ -625,8 +625,18 @@ The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tan
 
     *Will find all documents where the words "engine" and "inspired" are separated by a maximum of 1 word.*
 
+- Query explanation:  
+    The result of a query can be explained with the help of the option `--explain`.
+
+    ```bash
+    hb search --from "./demo/*.txt" --using fileline --query "better" --explain --json --limit 2
+    ```
+
+    For each document found, a field `explain` will be returned, with details on why it was selected [^11].
+
 [^5]: See <https://github.com/quickwit-oss/tantivy/issues/2576>.  
-[^6]: Even though Tantivy implements it with [FuzzyTermQuery](https://docs.rs/tantivy/latest/tantivy/query/struct.FuzzyTermQuery.html).
+[^6]: Even though Tantivy implements it with [FuzzyTermQuery](https://docs.rs/tantivy/latest/tantivy/query/struct.FuzzyTermQuery.html).  
+[^11]: See <https://docs.rs/tantivy/latest/tantivy/query/struct.Explanation.html>.
 
 ### Using A Custom Analyzer
 

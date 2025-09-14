@@ -34,6 +34,9 @@ hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --h
 # Count the number of results found
 hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --count
 
+# Explain the result of a search.
+hb search --from "./demo/*.txt" --using fileline --query "better" --explain --json --limit 2
+
 # Proximity search.
 hb search --from ./demo/raw.json --using raw --query "'engine inspired'~1" --highlight
 
