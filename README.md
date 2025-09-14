@@ -237,8 +237,11 @@ hb search --from ./demo/ --pattern "*.txt" --query "better" --highlight
 Options used:
 
 - `--from`: folder to (recursively) index.
-- `--pattern`: files to index.  
-    **Attention!** The pattern must be enclosed in quotes to prevent wildcard expansion.
+- `--pattern`: files to index.
+
+    > [!IMPORTANT]
+    > The pattern must be enclosed in quotes to prevent wildcard expansion.
+
 - `--query`: search query.
 - `--highlight`: shows the places where the result was found in the content of the files.
 
@@ -274,8 +277,11 @@ hb build --from ./demo/ --pattern "*.txt" --index ./.index-demo
 Options used:
 
 - `--from`: folder to (recursively) index.
-- `--pattern`: files to index.  
-    **Attention!** The pattern must be enclosed in quotes to prevent wildcard expansion.
+- `--pattern`: files to index.
+
+    > [!IMPORTANT]
+    > The pattern must be enclosed in quotes to prevent wildcard expansion.
+
 - `--index`: location where to persist the index.
 
 By default, the [collector](#collectors) `filecontent` is used.  
@@ -322,7 +328,8 @@ hb search --index ./.index-demo --top
 
 ### Analyzing Some Text
 
-**Attention!** The version `0.7.0` introduced a [new option](#using-a-custom-analyzer) `--analyzer`, which replaces the legacy ones (`--tokenizer`, `--tokenizer-params`, `--filter` and `--filter-params`). Even-though the use of this new option is strongly recommended, the legacies are still available with the command `analyze`.
+> [!NOTE]
+> The version `0.7.0` introduced a [new option](#using-a-custom-analyzer) `--analyzer`, which replaces the legacy ones (`--tokenizer`, `--tokenizer-params`, `--filter` and `--filter-params`). Even-though the use of this new option is strongly recommended, the legacies are still available with the command `analyze`.
 
 The command `analyze` is used to play with the [tokenizers](https://docs.rs/tantivy/latest/tantivy/tokenizer/trait.Tokenizer.html) and [filters](https://docs.rs/tantivy/latest/tantivy/tokenizer/trait.TokenFilter.html) supported by Tantivy to index documents.
 
@@ -465,7 +472,8 @@ Examples:
 - `--from ./demo --from ./demo/ --pattern "*.txt"` can be passed as `--from "./demo/*.txt"`.
 - `--from . --pattern "*.pdf"` can be passed as `--from "*.pdf"`.
 
-**Attention!** The pattern must be enclosed in quotes to prevent wildcard expansion.
+> [!IMPORTANT]
+> The pattern must be enclosed in quotes to prevent wildcard expansion.
 
 This new syntax still allows the use of the option `--pattern` (for example, `--from "*.pdf" --pattern "*.pdf"` will index all the files with the extension `.txt` or `.pdf`from the current folder).
 
@@ -614,7 +622,8 @@ The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tan
     hb search --from ./demo/raw.json --using raw --query "engne~1"
     ```
 
-    **Attention!** The highlight (option `--highlight`) will not work [^5].
+    > [!IMPORTANT]
+    > The highlight (option `--highlight`) will not work [^5].
 
 - Proximity search:  
     The two words to search are enclosed in single quotes, followed by the maximum distance.
