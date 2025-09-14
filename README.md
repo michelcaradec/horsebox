@@ -37,7 +37,7 @@ A versatile and autonomous command line tool for search.
   - [Unit Tests](#unit-tests)
   - [Manual Testing In Docker](#manual-testing-in-docker)
   - [Samples](#samples)
-    - [Advanced Searches](#advanced-searches)
+  - [Advanced Searches](#advanced-searches)
   - [Using A Custom Analyzer](#using-a-custom-analyzer)
     - [Custom Analyzer Definition](#custom-analyzer-definition)
     - [Custom Analyzer Limitations](#custom-analyzer-limitations)
@@ -70,7 +70,7 @@ source $HOME/.local/bin/env
 uv tool install horsebox
 
 # Alternative: install from the repository
-# For the impatient user who want the latest features before they are published on PyPi
+# For the impatient users who wants the latest features before they are published on PyPi
 uv tool install git+https://github.com/michelcaradec/horsebox
 ```
 
@@ -237,8 +237,11 @@ hb search --from ./demo/ --pattern "*.txt" --query "better" --highlight
 Options used:
 
 - `--from`: folder to (recursively) index.
-- `--pattern`: files to index.  
-    **Attention!** The pattern must be enclosed in quotes to prevent wildcard expansion.
+- `--pattern`: files to index.
+
+    > [!IMPORTANT]
+    > The pattern must be enclosed in quotes to prevent wildcard expansion.
+
 - `--query`: search query.
 - `--highlight`: shows the places where the result was found in the content of the files.
 
@@ -274,8 +277,11 @@ hb build --from ./demo/ --pattern "*.txt" --index ./.index-demo
 Options used:
 
 - `--from`: folder to (recursively) index.
-- `--pattern`: files to index.  
-    **Attention!** The pattern must be enclosed in quotes to prevent wildcard expansion.
+- `--pattern`: files to index.
+
+    > [!IMPORTANT]
+    > The pattern must be enclosed in quotes to prevent wildcard expansion.
+
 - `--index`: location where to persist the index.
 
 By default, the [collector](#collectors) `filecontent` is used.  
@@ -322,7 +328,8 @@ hb search --index ./.index-demo --top
 
 ### Analyzing Some Text
 
-**Attention!** The version `0.7.0` introduced a [new option](#using-a-custom-analyzer) `--analyzer`, which replaces the legacy ones (`--tokenizer`, `--tokenizer-params`, `--filter` and `--filter-params`). Even-though the use of this new option is strongly recommended, the legacies are still available with the command `analyze`.
+> [!NOTE]
+> The version `0.7.0` introduced a [new option](#using-a-custom-analyzer) `--analyzer`, which replaces the legacy ones (`--tokenizer`, `--tokenizer-params`, `--filter` and `--filter-params`). Even-though the use of this new option is strongly recommended, the legacies are still available with the command `analyze`.
 
 The command `analyze` is used to play with the [tokenizers](https://docs.rs/tantivy/latest/tantivy/tokenizer/trait.Tokenizer.html) and [filters](https://docs.rs/tantivy/latest/tantivy/tokenizer/trait.TokenFilter.html) supported by Tantivy to index documents.
 
@@ -465,7 +472,8 @@ Examples:
 - `--from ./demo --from ./demo/ --pattern "*.txt"` can be passed as `--from "./demo/*.txt"`.
 - `--from . --pattern "*.pdf"` can be passed as `--from "*.pdf"`.
 
-**Attention!** The pattern must be enclosed in quotes to prevent wildcard expansion.
+> [!IMPORTANT]
+> The pattern must be enclosed in quotes to prevent wildcard expansion.
 
 This new syntax still allows the use of the option `--pattern` (for example, `--from "*.pdf" --pattern "*.pdf"` will index all the files with the extension `.txt` or `.pdf`from the current folder).
 
@@ -557,7 +565,7 @@ The script [usage.sh](./demo/usage.sh) contains multiple sample commands:
 bash ./demo/usage.sh
 ```
 
-#### Advanced Searches
+### Advanced Searches
 
 The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tantivy/latest/tantivy/query/struct.QueryParser.html).
 
@@ -614,7 +622,8 @@ The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tan
     hb search --from ./demo/raw.json --using raw --query "engne~1"
     ```
 
-    **Attention!** The highlight (option `--highlight`) will not work [^5].
+    > [!IMPORTANT]
+    > The highlight (option `--highlight`) will not work [^5].
 
 - Proximity search:  
     The two words to search are enclosed in single quotes, followed by the maximum distance.
@@ -625,8 +634,18 @@ The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tan
 
     *Will find all documents where the words "engine" and "inspired" are separated by a maximum of 1 word.*
 
+- Query explanation:  
+    The result of a query can be explained with the help of the option `--explain`.
+
+    ```bash
+    hb search --from "./demo/*.txt" --using fileline --query "better" --explain --json --limit 2
+    ```
+
+    For each document found, a field `explain` will be returned, with details on why it was selected [^11].
+
 [^5]: See <https://github.com/quickwit-oss/tantivy/issues/2576>.  
-[^6]: Even though Tantivy implements it with [FuzzyTermQuery](https://docs.rs/tantivy/latest/tantivy/query/struct.FuzzyTermQuery.html).
+[^6]: Even though Tantivy implements it with [FuzzyTermQuery](https://docs.rs/tantivy/latest/tantivy/query/struct.FuzzyTermQuery.html).  
+[^11]: See <https://docs.rs/tantivy/latest/tantivy/query/struct.Explanation.html>.
 
 ### Using A Custom Analyzer
 

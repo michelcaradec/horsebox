@@ -250,6 +250,13 @@ def __inspect_cmd(**kwargs: Any) -> None:
 @click.option('--top', type=bool, is_flag=True, default=False, help='Get the top keywords of the result.')
 @click.option('--source', 'fields', type=str, multiple=True, help='Fields of the indexed documents to output.')
 @click.option(
+    '--explain',
+    type=bool,
+    is_flag=True,
+    default=False,
+    help='Explain how the query matches a given document.',
+)
+@click.option(
     '--analyzer',
     type=click.Path(exists=True, dir_okay=False, file_okay=True),
     help='File containing the definition of the custom analyzer.',

@@ -1,3 +1,4 @@
+import json
 import re
 from collections import OrderedDict
 from itertools import chain
@@ -59,6 +60,7 @@ __LEVENSHTEIN_DISTANCE_MAX = 2
 
 __EMPTY_QUERY = 'Query(EmptyQuery)'
 __FIELD_HIGHLIGHT = 'highlight'
+__FIELD_EXPLAIN = 'explain'
 
 
 def search(
@@ -73,6 +75,7 @@ def search(
     count: bool,
     top: bool,
     fields: List[str],
+    explain: bool,
     analyzer: Optional[str],
     format: Format,
 ) -> None:
@@ -92,6 +95,7 @@ def search(
         count (bool): Whether a count operation should be done or not.
         top (bool): Whether the top list of keywords found should be returned or not.
         fields (List[str]): The list of fields to output.
+        explain (bool): Whether some explanation on why the document was found should be given or not.
         analyzer (Optional[str]): The file containing the definition of the custom analyzer.
         format (Format): The rendering format to use.
     """
@@ -171,6 +175,7 @@ def search(
             highlight,
             count,
             fields,
+            explain,
             format,
             took_index,
         )
@@ -230,6 +235,7 @@ def __search_impl(
     highlight: bool,
     count: bool,
     fields: List[str],
+    explain: bool,
     format: Format,
     took_index: Optional[int] = None,
 ) -> None:
@@ -312,6 +318,12 @@ def __search_impl(
                     # Use the highlighted content if any in place of the content
                     output[SCHEMA_FIELD_CONTENT] = output.pop(__FIELD_HIGHLIGHT)
                 output = OrderedDict(**{k: v for (k, v) in output.items() if k in source_filtering})
+
+            if explain:
+                # https://docs.rs/tantivy/latest/tantivy/query/trait.Query.html#method.explain
+                # https://github.com/quickwit-oss/tantivy-py/blob/master/docs/tutorials.md#debugging-queries-with-explain
+                explanation = query.explain(searcher, doc_address)
+                output[__FIELD_EXPLAIN] = json.loads(explanation.to_json())
 
             if format == Format.TXT:
                 outputs.append(LINE_BREAK)

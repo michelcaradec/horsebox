@@ -34,6 +34,9 @@ hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --h
 # Count the number of results found
 hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --count
 
+# Explain the result of a search.
+hb search --from "./demo/*.txt" --using fileline --query "better" --explain --json --limit 2
+
 # Proximity search.
 hb search --from ./demo/raw.json --using raw --query "'engine inspired'~1" --highlight
 
@@ -42,6 +45,10 @@ hb search --from ./demo/raw.json --query "'engine inspired'~1" --highlight
 
 # Fuzzy search.
 hb search --from ./demo/raw.json --using raw --query "engne~1"
+
+# Phrase prefix search.
+# See https://docs.rs/tantivy/latest/tantivy/query/struct.PhrasePrefixQuery.html.
+hb search --from "./demo/*.txt" --using fileline --query '"the implement"*' --highlight
 
 # Search on multiple datasources.
 if [[ "${HB_TEST_MODE}" == "1" ]]
@@ -175,14 +182,14 @@ TEXT="Tantivy is a full-text search engine library inspired by Apache Lucene and
 # Tokenizers #
 #------------#
 
-# Simple (i.e. non-configurable) tokenizers
+# Simple (i.e. non-configurable) tokenizers.
 for TOKENIZER in raw simple whitespace facet
 do
     hb analyze --text "${TEXT}" --tokenizer ${TOKENIZER}
 done
 
-# Regular expression tokenizer
-# Extract Capitalized words only
+# Regular expression tokenizer.
+# Extract Capitalized words only.
 hb analyze --text "${TEXT}" --tokenizer regex --tokenizer-params "pattern=[A-Z][a-z]+"
 
 # NGram tokenizer
@@ -192,16 +199,16 @@ hb analyze --text "${TEXT}" --tokenizer ngram --tokenizer-params "min_gram=3;max
 # Filters #
 #---------#
 
-# Simple (i.e. non-configurable) filters
+# Simple (i.e. non-configurable) filters.
 for FILTER in alphanum_only ascii_fold lowercase
 do
     hb analyze --text "${TEXT}" --filter ${FILTER}
 done
 
-# Exclude long words
+# Exclude long words.
 hb analyze --text "${TEXT}" --filter remove_long --filter-params "length_limit=7"
 
-# Stem
+# Stem.
 # Tokens are expected to be lowercased beforehand.
 hb analyze --text "${TEXT}" --filter lowercase --filter stemmer --filter-params "|language=english"
 
@@ -212,8 +219,8 @@ hb analyze --text "${TEXT}" --filter stopword --filter-params "language=english"
 # See also the configuration `HB_CUSTOM_STOPWORDS`.
 hb analyze --text "${TEXT}" --filter custom_stopword --filter-params "stopwords=[is,and,in]"
 
-# Split compound words (i.e. words made of multiple ones)
-# See https://docs.rs/tantivy/latest/tantivy/tokenizer/struct.SplitCompoundWords.html
+# Split compound words (i.e. words made of multiple ones).
+# See https://docs.rs/tantivy/latest/tantivy/tokenizer/struct.SplitCompoundWords.html.
 hb analyze --text "As a countermeasure, we decided to order a cheeseburger" --filter split_compound --filter-params "constituent_words=[counter,measure,cheese,burger]"
 # Using the default analyzer
 hb analyze --text "As a countermeasure, we decided to order a cheeseburger"
@@ -225,10 +232,10 @@ hb analyze --text "As a countermeasure, we decided to order a cheeseburger"
 # Analyze a string by converting to lower case, and excluding words with 7 characters or more.
 hb analyze --text "${TEXT}" --filter lowercase --filter remove_long --filter-params "|length_limit=7"
 
-# Analyze a string by excluding english stop-words
+# Analyze a string by excluding english stop-words.
 hb analyze --text "${TEXT}" --filter stopword --filter-params "language=english"
 
-# Analyze a string by converting to lower case, excluding words with 5 characters or more, and excluding a custom list of stop-words
+# Analyze a string by converting to lower case, excluding words with 5 characters or more, and excluding a custom list of stop-words.
 hb analyze --text "${TEXT}" --filter lowercase --filter remove_long --filter custom_stopword --filter-params "|length_limit=5|stopwords=[is,and,in]"
 
 #---------------#
