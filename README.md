@@ -239,8 +239,8 @@ Options used:
 - `--from`: folder to (recursively) index.
 - `--pattern`: files to index.
 
-    > [!IMPORTANT]
-    > The pattern must be enclosed in quotes to prevent wildcard expansion.
+> [!IMPORTANT]
+> The pattern must be enclosed in quotes to prevent wildcard expansion.
 
 - `--query`: search query.
 - `--highlight`: shows the places where the result was found in the content of the files.
@@ -279,8 +279,8 @@ Options used:
 - `--from`: folder to (recursively) index.
 - `--pattern`: files to index.
 
-    > [!IMPORTANT]
-    > The pattern must be enclosed in quotes to prevent wildcard expansion.
+> [!IMPORTANT]
+> The pattern must be enclosed in quotes to prevent wildcard expansion.
 
 - `--index`: location where to persist the index.
 
@@ -622,8 +622,8 @@ The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tan
     hb search --from ./demo/raw.json --using raw --query "engne~1"
     ```
 
-    > [!IMPORTANT]
-    > The highlight (option `--highlight`) will not work [^5].
+> [!IMPORTANT]
+> The highlight (option `--highlight`) will not work [^5].
 
 - Proximity search:  
     The two words to search are enclosed in single quotes, followed by the maximum distance.
