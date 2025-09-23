@@ -53,7 +53,6 @@ SCHEMA_FIELDS: List[Field] = [
         SCHEMA_FIELD_CONTENT,
         FieldType.TEXT,
         'Content of the container',
-        # Required to aggregation
         fast=True,
     ),
     Field('path', FieldType.TEXT, 'Full path to the content', indexed=False),
