@@ -10,6 +10,7 @@ from typing import (
     List,
     Optional,
     Set,
+    Tuple,
 )
 
 import tantivy
@@ -75,6 +76,7 @@ def search(
     count: bool,
     top: bool,
     fields: List[str],
+    sort_field: Optional[str],
     explain: bool,
     analyzer: Optional[str],
     format: Format,
@@ -95,6 +97,7 @@ def search(
         count (bool): Whether a count operation should be done or not.
         top (bool): Whether the top list of keywords found should be returned or not.
         fields (List[str]): The list of fields to output.
+        sort_field (Optional[str]): The field to sort by the result.
         explain (bool): Whether some explanation on why the document was found should be given or not.
         analyzer (Optional[str]): The file containing the definition of the custom analyzer.
         format (Format): The rendering format to use.
@@ -175,6 +178,7 @@ def search(
             highlight,
             count,
             fields,
+            sort_field,
             explain,
             format,
             took_index,
@@ -235,14 +239,22 @@ def __search_impl(
     highlight: bool,
     count: bool,
     fields: List[str],
+    sort_field: Optional[str],
     explain: bool,
     format: Format,
     took_index: Optional[int] = None,
 ) -> None:
     # region Search
 
+    order_by_field, order = __get_order_by_field(sort_field)
+
     start = monotonic_ns()
-    result: tantivy.SearchResult = searcher.search(query, 1 if count else max(limit, 1))
+    result: tantivy.SearchResult = searcher.search(
+        query,
+        limit=1 if count else max(limit, 1),
+        order_by_field=order_by_field,
+        order=order,
+    )
     took = monotonic_ns() - start
 
     # endregion
@@ -435,3 +447,35 @@ def __build_output_from_snippet(snippet: tantivy.Snippet) -> Optional[Dict[str, 
             for h in highlighted
         ],
     }
+
+
+def __get_order_by_field(sort_field: Optional[str]) -> Tuple[Optional[str], tantivy.Order]:
+    """
+    Get the field and the order to use to sort the search result.
+
+    >>> __get_order_by_field(None)
+    (None, Order.Desc)
+
+    >>> __get_order_by_field('')
+    (None, Order.Desc)
+
+    >>> __get_order_by_field('+size')
+    ('size', Order.Asc)
+
+    >>> __get_order_by_field('-size')
+    ('size', Order.Desc)
+
+    >>> __get_order_by_field('size')
+    ('size', Order.Desc)
+    """
+    order_by_field: Optional[str] = None
+    order: tantivy.Order = tantivy.Order.Desc
+
+    if sort_field:
+        if (sign := sort_field[0]) in ['+', '-']:
+            order_by_field = sort_field[1:]
+            order = tantivy.Order.Desc if sign == '-' else tantivy.Order.Asc
+        else:
+            order_by_field = sort_field
+
+    return (order_by_field, order)

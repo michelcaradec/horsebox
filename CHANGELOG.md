@@ -11,6 +11,18 @@
 
 *NA*
 
+## [0.10.0] - 2025-09-24
+
+### Added
+
+- New option `--explain` on the command `search` to explain how the query matches a given document.
+- New option `--sort` on the command `search` to sort the result by a given field.
+
+### Changed
+
+- Use of version `0.25.0` of Tantivy.
+- The fields `name`, `type`, `size` and `date` are declared in [fast](https://docs.rs/tantivy/latest/tantivy/fastfield/) mode, to allow their use as a sort field.
+
 ## [0.9.0] - 2025-07-30
 
 ### Added

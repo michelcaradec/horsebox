@@ -46,19 +46,38 @@ class Field:
 
 SCHEMA_FIELD_CONTENT = 'content'
 SCHEMA_FIELDS: List[Field] = [
-    Field('name', FieldType.TEXT, 'Name of the container (file, etc.)'),
-    Field('type', FieldType.TEXT, 'Type of the container'),
+    Field(
+        'name',
+        FieldType.TEXT,
+        'Name of the container (file, etc.)',
+        fast=True,
+    ),
+    Field(
+        'type',
+        FieldType.TEXT,
+        'Type of the container',
+        fast=True,
+    ),
     # `fast` mode is required to aggregate on `content`
     Field(
         SCHEMA_FIELD_CONTENT,
         FieldType.TEXT,
         'Content of the container',
-        # Required to aggregation
         fast=True,
     ),
     Field('path', FieldType.TEXT, 'Full path to the content', indexed=False),
-    Field('size', FieldType.INTEGER, 'Size of the content'),
-    Field('date', FieldType.DATE, 'Date-time of the content'),
+    Field(
+        'size',
+        FieldType.INTEGER,
+        'Size of the content',
+        fast=True,
+    ),
+    Field(
+        'date',
+        FieldType.DATE,
+        'Date-time of the content',
+        fast=True,
+    ),
 ]
 DEFAULT_FIELD_NAMES = [
     'name',

@@ -37,6 +37,11 @@ hb search --from ./demo/ --pattern "*.txt" --using fileline --query "better" --c
 # Explain the result of a search.
 hb search --from "./demo/*.txt" --using fileline --query "better" --explain --json --limit 2
 
+# Sort the result of a search.
+hb search --from "./demo/size/*.txt" --query "file" --sort "+size"
+hb search --from "./demo/size/*.txt" --query "file" --sort "-size"
+hb search --from "./demo/size/*.txt" --query "file" --sort "size"
+
 # Proximity search.
 hb search --from ./demo/raw.json --using raw --query "'engine inspired'~1" --highlight
 
