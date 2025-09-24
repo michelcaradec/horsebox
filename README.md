@@ -643,6 +643,23 @@ The query string syntax conforms to [Tantivy's query parser](https://docs.rs/tan
 
     For each document found, a field `explain` will be returned, with details on why it was selected [^11].
 
+- Sort the result:  
+    The result of a query can be ordered by a **single** field with the help of the option `--sort`.
+
+    ```bash
+    # Ascending order
+    hb search --from "./demo/size/*.txt" --query "file" --sort "+size"
+    # Descending order
+    hb search --from "./demo/size/*.txt" --query "file" --sort "-size"
+    hb search --from "./demo/size/*.txt" --query "file" --sort "size"
+    ```
+
+    The field prefix `+` is used for **ascending** order, `-` for **descending** order (set by default if missing).
+
+> [!IMPORTANT]
+> This option was introduced with the version `0.10.0`. It requires an existing index to be [refreshed](#refreshing-an-index) to make it work.  
+> Only the fields `name`, `type`, `content`, `size` and `date` can be used.
+
 [^5]: See <https://github.com/quickwit-oss/tantivy/issues/2576>.  
 [^6]: Even though Tantivy implements it with [FuzzyTermQuery](https://docs.rs/tantivy/latest/tantivy/query/struct.FuzzyTermQuery.html).  
 [^11]: See <https://docs.rs/tantivy/latest/tantivy/query/struct.Explanation.html>.
