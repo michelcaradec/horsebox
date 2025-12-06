@@ -2,7 +2,7 @@
 line-length = 120
 indent-width = 4
 
-target-version = "py39"
+target-version = "py310"
 
 [format]
 # Like Black, use double quotes for strings.
