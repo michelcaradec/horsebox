@@ -1,7 +1,7 @@
 # Just Programmer's Manual: https://just.systems/man/en/
 # Just Cheat Sheet: https://cheatography.com/linux-china/cheat-sheets/justfile/
 
-env_list := "3.9 3.10 3.11 3.12 3.13"
+env_list := "3.9 3.10 3.11 3.12 3.13 3.14"
 
 default:
     just --list
