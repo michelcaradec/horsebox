@@ -11,7 +11,7 @@
 
 *NA*
 
-## [0.11.0] - 2025-12-06
+## [0.11.0] - 2026-06-03
 
 ### Added
 
@@ -21,7 +21,7 @@
 
 ### Changed
 
-- Use of version `0.25.1` of Tantivy.
+- Use of version `0.26.0` of Tantivy.
 
 ### Removed
 

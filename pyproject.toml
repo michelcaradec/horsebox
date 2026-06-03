@@ -29,8 +29,9 @@ dependencies = [
     "click>=8.1.8,<8.2.0",
     "feedparser>=6.0.11",
     "ijson>=3.3.0",
+    "lxml>=6.1.1",
     "pdfminer-six>=20250506",
-    "tantivy==0.25.1",
+    "tantivy==0.26.0",
     "trafilatura>=2.0.0",
 ]
 
