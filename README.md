@@ -74,6 +74,13 @@ uv tool install horsebox
 uv tool install git+https://github.com/michelcaradec/horsebox
 ```
 
+> [!TIP]
+> The installation can even be faster (thanks to the service <https://uvx.sh/> released by Astral on 2026-01):
+>
+> ```bash
+> curl -LsSf uvx.sh/horsebox/install.sh | sh
+> ```
+
 You are ready to [search](#searching).
 
 ## Requirements

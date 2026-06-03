@@ -11,6 +11,22 @@
 
 *NA*
 
+## [0.11.0] - 2026-06-03
+
+### Added
+
+- Support of Python 3.14.
+- [just](https://github.com/casey/just) command runner support for local tests.
+- Use of [tox-uv](https://pypi.org/project/tox-uv/) for a better integration of [uv](https://docs.astral.sh/uv/) with [Tox](https://tox.wiki/).
+
+### Changed
+
+- Use of version `0.26.0` of Tantivy.
+
+### Removed
+
+- Support of Python 3.9.
+
 ## [0.10.0] - 2025-09-24
 
 ### Added

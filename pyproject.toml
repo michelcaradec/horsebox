@@ -1,6 +1,6 @@
 [project]
 name = "horsebox"
-version = "0.10.0"
+version = "0.11.0"
 description = "You Know, for local Search."
 readme = "README.md"
 repository = "https://github.com/michelcaradec/horsebox"
@@ -18,19 +18,20 @@ classifiers = [
     "Intended Audience :: Developers",
     "Environment :: Console",
     "Development Status :: 5 - Production/Stable",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.10,<3.15"
 dependencies = [
     "click>=8.1.8,<8.2.0",
     "feedparser>=6.0.11",
     "ijson>=3.3.0",
+    "lxml>=6.1.1",
     "pdfminer-six>=20250506",
-    "tantivy==0.25.0",
+    "tantivy==0.26.0",
     "trafilatura>=2.0.0",
 ]
 
@@ -44,10 +45,12 @@ Changelog = "https://github.com/michelcaradec/horsebox/blob/main/CHANGELOG.md"
 # Run `uv sync --extra dev`
 dev = [
     "ruff",
-    "tox>=4.27.0",
+    "tox>=4.30.3,<4.31.0",
+    "tox-uv==1.28.1",
     "pytest>=8.4.1",
     "mypy>=1.16.1",
     "pre-commit>=4.2.0",
+    "rust-just",
 ]
 
 [build-system]
